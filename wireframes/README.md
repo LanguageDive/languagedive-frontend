@@ -12,9 +12,9 @@ Si algo que ves aquí no coincide con el código, lo más probable es que aún n
  
 ## Contenido
 
-- `wireframe-login.jpg` — Pantalla principal / dashboard del estudiante
-- `wireframe-registrarse.png` — Vista de lectura con palabras marcadas
-- `wireframe-vocabulario.png` — Lista de vocabulario guardado
+- `wireframe-login.jpg` — Pantalla de  login - inicio de sesión.
+- `wireframe-registrarse.png` — Pantalla de registro para nuevo usuario.
+- `wireframe-vocabulario.png` — Pantalla con muestra de la palabra aún en aprendizaje.
  
 ## Herramienta
  
