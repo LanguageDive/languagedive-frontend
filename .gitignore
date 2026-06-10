@@ -1,22 +1,57 @@
+# ==========================
+# Secretos y variables de entorno
+# ==========================
+.env
+.env.local
+.env.*.local
+
+# ==========================
+# Sistemas operativos
+# ==========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
 # Windows
 Thumbs.db
+ehthumbs.db
 Desktop.ini
+$RECYCLE.BIN/
 
-# VS Code
+# Linux
+*~
+
+# ==========================
+# Editores e IDEs
+# ==========================
+# VSCode
 .vscode/
+!.vscode/extensions.json   # Este sí se suele compartir
 
-# Node / Frontend
+# JetBrains (WebStorm, etc.)
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==========================
+# Logs y archivos temporales
+# ==========================
+*.log
+*.tmp
+*.temp
+
+# ==========================
+# Node
+# ==========================
 node_modules/
 dist/
 build/
-.env
-.env.local
+.cache/
 
-# Python / Backend
-__pycache__/
-.venv/
-venv/
-.env
 
-# Logs
-*.log
+html-boilerplate/
+odin-links-and-images/
