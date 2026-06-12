@@ -16,7 +16,7 @@ Si algo que ves aquí no coincide con el código, lo más probable es que aún n
 - `wireframe-registrarse.png` — Pantalla de registro para nuevo usuario.
 - `wireframe-vocabulario-vista_oracion.png` — Pantalla con muestra de la palabra aún en aprendizaje para la vista de oración.
 - `wireframe-vocabulario-vista_pagina.png` — Pantalla con muestra de la palabra aún en aprendizaje para la vista de página.
- 
+- `wireframe-vocabulario.png` - Pantalla con tabla donde se muestran las palabras aprendidas o en progreso junto con las traducciones, contexto con una oración en donde se encontró dicha palabra y el preogreso de nivel.
 ## Herramienta
  
 Diseñados en [Figma](https://figma.com).
