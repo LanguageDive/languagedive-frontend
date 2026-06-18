@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="root">
+
+        <!-- HEADER -->
+        <div id="header">
+            <div class="links">
+
+                <a class="header links main" href="../index.html">LOGO</a>
+
+                <a class="header links login" href="../login/login.html" >Iniciar Sesión</a>
+                
+            </div>
+
+            <div class="hr"></div>
+        </div>
+
+        <!-- REGISTER -->
+
+        <div id="register">
+
+            <p class="register label-register">Registro</p>
+
+            <form id="register-registerForm" class="register register-form">
+
+                <label for="username">Nombre de usuario</label>
+                <input type="text" name="username" id="username" placeholder="Usuario">
+
+                <label for="correo">Correo electrónico</label>
+                <input type="text" name="coreo" id="correo" placeholder="Correo electrónico">
+
+
+                <label for="password" class="pwd">Contraseña</label>
+                <input type="password" name="password" id="password" placeholder="Contraseña">
+
+                <label for="rptPassword" class="rptPwd">Repetir contraseña</label>
+                <input type="password" name="rptPassword" id="rptPassword" placeholder="Contraseña">
+
+            </form>
+
+            <div class="buttons">
+                <button type="submit" form="register-registerForm">Registrarse</button>
+
+                <a href="../login/login.html">
+                    <button type="button">Cancelar</button>
+                </a>
+                
+            </div>
+        </div>
+
+    </div>
+    
+</body>
+</html>

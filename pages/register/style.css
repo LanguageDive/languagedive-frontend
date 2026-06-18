@@ -22,12 +22,18 @@ body{
     background-color: var(--first-color);
 }
 
+
+/* GLOBAL LINKS*/
+
+a{
+    text-decoration: none;
+}
+
 #root{
     display: flex;
     flex-direction: column;
-    gap: 139px;
+    gap: 120px;
 
-    
 }
 
 /* HEADER  */
@@ -48,12 +54,12 @@ div.links{
         height: 97px;
     }
 
-    .main, .register{
+    .main, .login{
         color: var(--second-color);
         &:hover{
             background-color: var(--first-color);
             color: var(--fourth-color);
-            border-radius: 0 10px 10px 0;
+            /* border-radius: 0 10px 10px 0; */
         }
     }
 
@@ -65,7 +71,7 @@ div.links{
         background-color: var(--first-color);
     }
     }
-    .register{
+    .login{
         padding: 34px 20px;
         font-size: 20px;
     }
@@ -78,46 +84,38 @@ div.links{
 
 /* LOGIN */
 
-div#login{
+div#register{
     display: flex;
     flex-direction: column;
-    width: 453px;
+    width: 592px;
     gap: 39px;
     margin: auto;
 
-    .label-login, 
-    .forgot-pwd,
-    .hr{
+    .label-register, .buttons{
         align-self: center;
     }
 }
 
-div#no-acc{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 39px;
-}
-
-div#login .hr{
-    width: 80%;
-}
-
-#login-loginForm{
+#register-registerForm{
     display: flex;
     flex-direction: column;
     gap: 27px;    
 }
 
-#login-loginForm input{
+#register-registerForm input{
     height: 50px;
     padding: 10px;
 }
 
-#login button{
+#register .buttons{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#register button{
     width: 148px;
     height: 44px;
-    align-self: center;
     
     border-radius: 20px;
     cursor: pointer;
@@ -129,36 +127,17 @@ div#login .hr{
     
 }
 
-#login a:hover{
-    /* text-decoration: none; */
-    text-decoration: underline;
-    color: #3F72AF;
-
-}
-
-/* GLOBAL LINKS*/
-
-a{
-    text-decoration: none;
-}
-
 
 /* FONT SIZES */
 
-#login{
-    .label-login{
+#register{
+    .label-register{
         font-size: 36px;
     }
 
-    label{
-        font-size: 24px;
-    }
-
-    button, 
-    .forgot-pwd,
-    .no-acc.label,
-    .no-acc.register{
+    label, button{
         font-size: 20px;
     }
+
 }
 
