@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div id="root">
+
+        <!-- HEADER: INCLUDES
+                                - BUTTON FOR LOGO TO MAIN PAGE 
+                                - REGISTER BUTTON
+        -->
+        <div id="header">
+            <div class="links">
+
+                <a class="header links main" href="./index.html">LOGO</a>
+
+                <a class="header links register" href="./register.html" >Registrarse</a>
+                
+            </div>
+
+            <div class="hr"></div>
+        </div>
+
+
+        <!-- LOGIN: INCLUDES
+                                - ANYTHING RELATED TO LOGIN
+         -->
+        <div id="login">
+
+            <p class="login label-login">Iniciar Sesión</p>
+
+            <form id="login-loginForm" class="login login-form">
+
+                <label for="username">Correo / Nombre de usuario</label>
+                <input type="text" name="username" id="username" placeholder="Usuario">
+
+                <label for="password" class="pwd">Contraseña</label>
+                <input type="password" name="password" id="password" placeholder="Contraseña">
+
+            </form>
+
+            <button type="submit" form="login-loginForm">Iniciar Sesión</button>
+
+            <div id="no-acc">
+
+                <a class="no-acc forgot-pwd" href="./forgot-password.html">¿Olvidaste tu contraseña?</a>
+
+                <div class="hr"></div>
+
+                <p class="no-acc label">¿No tienes cuenta?</p>
+
+                <a class="no-acc register" href="./register.html">Regístrate aquí</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

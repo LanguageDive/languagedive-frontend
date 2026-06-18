@@ -1,0 +1,164 @@
+:root{
+    --first-color: #F9F7F7;
+    --second-color: #DBE2EF;
+    --third-color: #3F72AF;
+    --fourth-color: #112D4E;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    color: black;
+    
+}
+
+.hr{
+    border: 1px solid rgb(0, 0, 0);
+}
+
+body{
+    background-color: var(--first-color);
+}
+
+#root{
+    display: flex;
+    flex-direction: column;
+    gap: 139px;
+
+    
+}
+
+/* HEADER  */
+#header{
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--third-color);
+}
+
+div.links{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: inherit;
+
+    a{
+        height: 97px;
+    }
+
+    .main, .register{
+        color: var(--second-color);
+        &:hover{
+            background-color: var(--first-color);
+            color: var(--fourth-color);
+            /* border-radius: 0 10px 10px 0; */
+        }
+    }
+
+
+    .main{
+        padding:  34px 20px;
+        font-size: 24px;
+        &:hover{
+        background-color: var(--first-color);
+    }
+    }
+    .register{
+        padding: 34px 20px;
+        font-size: 20px;
+    }
+    
+}
+
+#header .hr{
+    margin-top: auto;
+}
+
+/* LOGIN */
+
+div#login{
+    display: flex;
+    flex-direction: column;
+    width: 453px;
+    gap: 39px;
+    margin: auto;
+
+    .label-login, 
+    .forgot-pwd,
+    .hr{
+        align-self: center;
+    }
+}
+
+div#no-acc{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 39px;
+}
+
+div#login .hr{
+    width: 80%;
+}
+
+#login-loginForm{
+    display: flex;
+    flex-direction: column;
+    gap: 27px;    
+}
+
+#login-loginForm input{
+    height: 50px;
+    padding: 10px;
+}
+
+#login button{
+    width: 148px;
+    height: 44px;
+    align-self: center;
+    
+    border-radius: 20px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: var(--third-color);
+        color: var(--first-color);
+    }
+    
+}
+
+#login a:hover{
+    /* text-decoration: none; */
+    text-decoration: underline;
+    color: #3F72AF;
+
+}
+
+/* GLOBAL LINKS*/
+
+a{
+    text-decoration: none;
+}
+
+
+/* FONT SIZES */
+
+#login{
+    .label-login{
+        font-size: 36px;
+    }
+
+    label{
+        font-size: 24px;
+    }
+
+    button, 
+    .forgot-pwd,
+    .no-acc.label,
+    .no-acc.register{
+        font-size: 20px;
+    }
+}
+
