@@ -96,16 +96,49 @@ div#register{
     }
 }
 
-#register-registerForm{
+#registerForm{
     display: flex;
     flex-direction: column;
     gap: 27px;    
 }
 
-#register-registerForm input{
+#registerForm input{
     height: 50px;
     padding: 10px;
 }
+
+#errorMessage.display{
+    display: none;
+}
+
+#errorMessage{
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #ff3333;
+    background-color: rgb(255, 172, 172);
+}
+
+#errorMessage p{
+    font-weight: bold;
+    color: #2f2d2d;
+}
+
+#successMessage.display{
+    display: none;
+}
+
+#successMessage{
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #108600;
+    background-color: #1086001f;
+}
+
+#successMessage p{
+    font-weight: bold;
+    color: #2f2d2d;
+}
+
 
 #register .buttons{
     width: 100%;
@@ -126,7 +159,6 @@ div#register{
     }
     
 }
-
 
 /* FONT SIZES */
 

@@ -103,13 +103,13 @@ div#login .hr{
     width: 80%;
 }
 
-#login-loginForm{
+#loginForm{
     display: flex;
     flex-direction: column;
     gap: 27px;    
 }
 
-#login-loginForm input{
+#loginForm input{
     height: 50px;
     padding: 10px;
 }

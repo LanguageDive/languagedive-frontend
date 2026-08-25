@@ -32,25 +32,32 @@
 
             <p class="register label-register">Registro</p>
 
-            <form id="register-registerForm" class="register register-form">
+            <form id="registerForm" class="register register-form">
 
                 <label for="username">Nombre de usuario</label>
-                <input type="text" name="username" id="username" placeholder="Usuario">
+                <input type="text" name="username" id="username" placeholder="Usuario" required>
 
-                <label for="correo">Correo electrónico</label>
-                <input type="text" name="coreo" id="correo" placeholder="Correo electrónico">
+                <label for="email">Correo electrónico</label>
+                <input type="email" name="email" id="email" placeholder="Correo electrónico" required>
 
 
                 <label for="password" class="pwd">Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Contraseña">
+                <input minlength="8" type="password" name="password" id="password" placeholder="Contraseña" required>
 
                 <label for="rptPassword" class="rptPwd">Repetir contraseña</label>
-                <input type="password" name="rptPassword" id="rptPassword" placeholder="Contraseña">
+                <input minlength="8" type="password" name="rptPassword" id="rptPassword" placeholder="Contraseña" required>
 
+                <div id="errorMessage" class="register-form display">
+                    <p>Error al crear el usuario: correo /contraseña ya están(n) en uso</p>
+                </div>
+
+                <div id="successMessage" class="register-form display">
+                    <p>¡Registro Exitoso!</p>
+                </div>
             </form>
 
             <div class="buttons">
-                <button type="submit" form="register-registerForm">Registrarse</button>
+                <button type="submit" form="registerForm">Registrarse</button>
 
                 <a href="/login">
                     <button type="button">Cancelar</button>
@@ -60,6 +67,8 @@
         </div>
 
     </div>
+
+    <script src="script.js"></script>
     
 </body>
 </html>
