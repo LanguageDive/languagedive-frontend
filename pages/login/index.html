@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
+
 <body>
 
     <div id="root">
@@ -22,8 +26,8 @@
 
                 <a class="header links main" href="../index.html">LOGO</a>
 
-                <a class="header links register" href="/register" >Registrarse</a>
-                
+                <a class="header links register" href="/register">Registrarse</a>
+
             </div>
 
             <div class="hr"></div>
@@ -40,10 +44,18 @@
             <form id="loginForm" class="login login-form">
 
                 <label for="username">Correo / Nombre de usuario</label>
-                <input type="text" name="username" id="username" placeholder="Usuario">
+                <input type="text" name="identifier" id="username" placeholder="Usuario" required>
 
                 <label for="password" class="pwd">Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Contraseña">
+                <input type="password" name="password" id="password" placeholder="Contraseña" required>
+
+                <div id="errorMessage" class="register-form display">
+                    <p>Usuario y / o contraseña incorrectos</p>
+                </div>
+
+                <div id="successMessage" class="register-form display">
+                    <p>¡Inicio de sesión exitoso!</p>
+                </div>
 
             </form>
 
@@ -68,4 +80,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>

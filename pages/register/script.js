@@ -5,42 +5,42 @@ registerForm.addEventListener('submit',
 
 const errorMessage = document.querySelector("#errorMessage");
 const successMessage = document.querySelector("#successMessage");
-let userAlreadyExistsTry = false;
-let userSuccessTry = false;
+let loginError = false;
+let loginSuccess = false;
+
 /* 
 ============================================
                 FUNCTIONS
 ============================================
 */
 function printFieldsContent(event) {
+
+    //Evitar que el formulario se mande, de esta manera no se actualiza la pagina.
     event.preventDefault();
 
-    let formObject = {}
+    let userRegistrationData = {}
 
     const inputs = registerForm.querySelectorAll("input");
 
     for (const input of inputs) {
         const fieldName = input.name;
         const fieldValue = input.value;
-        formObject[`${fieldName}`] = fieldValue;
+        userRegistrationData[`${fieldName}`] = fieldValue;
     }
 
-    if (formObject.password !== formObject.rptPassword) {
+    if (userRegistrationData.password !== userRegistrationData.rptPassword) {
         alert("Las contrasennias no coinciden");
         return
     }
 
-    const userData = {
-        "username": formObject.username,
-        "email": formObject.email,
-        "password": formObject.password
-    }
-
-    tryGET(userData);
+    registerGet(userRegistrationData);
 }
 
 
-async function tryGET(userData) {
+async function registerGet(userRegistrationData) {
+
+    const waitTimer = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     try {
         const response = await fetch('https://languagedive.bryanrodriguez.tech/api/auth/register', {
             method: 'POST',
@@ -48,40 +48,41 @@ async function tryGET(userData) {
                 'Content-Type': 'application/json'
             },
             body:
-                JSON.stringify(userData)
+                JSON.stringify(userRegistrationData)
         }).then(response => {
             if (!response.ok) {
                 throw new Error("El usuario ya esta creado> ", response);
             }
             return response.json()
-        }).then(data => {
-            return data;
-        });
+        }).then(data => data);
 
         console.log("Usuario creado!\n", response);
 
         successMessage.classList.toggle("display");
-        userSuccessTry = true;
+        loginSuccess = true;
 
-        if (userAlreadyExistsTry) {
+        if (loginError) {
             errorMessage.classList.toggle("display");
-            userAlreadyExistsTry = false;
+            loginError = false;
         }
+
+        await waitTimer(2000); 
+
+        location.assign("/login/index.html");
 
     }
     catch (error) {
 
-
         console.log("Error al crear al usuario:", error);
 
-        if(userSuccessTry){
+        if (loginSuccess) {
             successMessage.classList.toggle("display");
-            userSuccessTry = false;
+            loginSuccess = false;
         }
 
-        if (!userAlreadyExistsTry) {
+        if (!loginError) {
             errorMessage.classList.toggle("display");
-            userAlreadyExistsTry = true;
+            loginError = true;
         }
     }
 }
