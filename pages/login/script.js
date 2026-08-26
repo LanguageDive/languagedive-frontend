@@ -65,6 +65,7 @@ async function loginGet(userLoginData) {
 
         //Convertimos a texto y guardamos en el localStorage para poder usarlas en library/index.html
         const serializedUser = JSON.stringify(loginCredentials);
+        //Guardamos nombre y accessTokens del usuario en variable "userData"
         localStorage.setItem("userData", serializedUser);
 
         location.assign("/library/index.html");
