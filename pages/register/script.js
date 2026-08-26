@@ -42,6 +42,7 @@ function printFieldsContent(event) {
 
 async function registerGet(userRegistrationData) {
 
+    //Crear función de timer para futura espera.
     const waitTimer = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     try {
@@ -69,11 +70,14 @@ async function registerGet(userRegistrationData) {
             loginError = false;
         }
 
+        //Deshabilitar los botones para evitar errores de formulario
         registerButton.disabled = true;
         cancelButton.disabled = true;
 
+        //Esperar 2 segundos para efectos de ver la ventana con mensaje de éxito
         await waitTimer(2000); 
 
+        //Window.location, manda a otra página
         location.assign("/login/index.html");
 
     }

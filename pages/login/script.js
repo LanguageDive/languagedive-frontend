@@ -4,6 +4,30 @@ const loginFormElement = document.querySelector("#loginForm");
 let loginError = false;
 let loginSuccess = false;
 
+class Student {
+    constructor(name, email, password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    getData() {
+        return {
+            name: this.name,
+            email: this.email,
+            password: this.password
+        };
+    }
+
+    updateName(name) {
+        this.name = name;
+    }
+
+    isValid() {
+        return Boolean(this.name && this.email && this.password);
+    }
+}
+
 
 
 /* 
@@ -27,8 +51,6 @@ function printFieldsContent(event) {
     for (const field of loginFormFields) {
         userLoginData[`${field.name}`] = field.value;
     }
-
-    console.log(userLoginData);
 
     loginGet(userLoginData);
 
@@ -59,6 +81,20 @@ async function loginGet(userLoginData) {
             errorMessage.classList.toggle("display");
             loginError = false;
         }
+
+        //Guardamos credenciales del usuario en un objeto
+        const loginCredentials = {
+            "username" : response.user.username,
+            "accessToken" : response.accessToken,
+            "refreshToken" : response.refreshToken
+        }
+
+        //Convertimos a texto y guardamos en el localStorage para poder usarlas en library/index.html
+        const serializedUser = JSON.stringify(loginCredentials);
+        localStorage.setItem("userData", serializedUser);
+
+        location.assign("/library/index.html");
+
     }
     catch (error) {
         console.log(error);
