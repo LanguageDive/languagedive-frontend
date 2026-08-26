@@ -4,32 +4,6 @@ const loginFormElement = document.querySelector("#loginForm");
 let loginError = false;
 let loginSuccess = false;
 
-class Student {
-    constructor(name, email, password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-
-    getData() {
-        return {
-            name: this.name,
-            email: this.email,
-            password: this.password
-        };
-    }
-
-    updateName(name) {
-        this.name = name;
-    }
-
-    isValid() {
-        return Boolean(this.name && this.email && this.password);
-    }
-}
-
-
-
 /* 
 ============================================
                 FUNCTIONS
