@@ -3,6 +3,9 @@ registerForm.addEventListener('submit',
     (event) => { printFieldsContent(event); }
 )
 
+const registerButton = document.querySelector("#registerButton");
+const cancelButton = document.querySelector("#cancelButton");
+
 const errorMessage = document.querySelector("#errorMessage");
 const successMessage = document.querySelector("#successMessage");
 let loginError = false;
@@ -65,6 +68,9 @@ async function registerGet(userRegistrationData) {
             errorMessage.classList.toggle("display");
             loginError = false;
         }
+
+        registerButton.disabled = true;
+        cancelButton.disabled = true;
 
         await waitTimer(2000); 
 
