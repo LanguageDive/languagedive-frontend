@@ -14,8 +14,13 @@
 }
 
 /* TODO> HEADER */
+
+.card img{
+    height: 186px;
+}
+
 #header {
-    height: 70px;
+    height: 98px;
     display: flex;
     flex-direction: column;
     background-color: var(--third-color);
@@ -58,42 +63,77 @@
 /* ! FIN HEADER */
 
 /* TODO> MAIN */
-#main-container {
-    height: calc(100vh - 70px);
-
-    border: solid;
-
-    display: grid;
-    grid-template-rows: 100px repeat(2, 1fr);
+#main-container{
+    margin: 22px 47px 0px;
 }
 
-.row.courses{
+#import-courses .import-label,
+#import-courses input{
+    font-size: 24px;
+    width: fit-content;
+    height: 47px;
+    padding: 10px;
+}
+
+#all-courses{
+    margin-top: 25px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
-.cards{
-    height: 100%;
+.header{
     display: flex;
-    justify-content: space-evenly;
-}
-
-.card{
-    width: 20%;
-    display: flex;
-    flex-direction: column;
     justify-content: space-between;
 }
 
-.course-info{
+.header .title{
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.header .actions{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    gap: 44px;
 }
 
-.row,
+.header .actions *{
+font-size: 24px;
+}
+
+.cards{
+    margin-top: 10px;
+    padding: 17px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 70px;
+    flex-wrap: wrap;
+}
+
 .card{
-    border: solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
+.card .course-creation{
+    font-size: 16px;
+}
+
+.card .course-info{
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+}
+
+.card .course-info > div:last-child{
+    font-weight: bold;
+}
+
+#in-progress-courses{
+    margin-top: 70px;
+}
 
 /* ! FIN MAIN */
