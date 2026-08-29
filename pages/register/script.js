@@ -51,8 +51,7 @@ async function registerGet(userRegistrationData) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:
-                JSON.stringify(userRegistrationData)
+            body: JSON.stringify(userRegistrationData)
         }).then(response => {
             if (!response.ok) {
                 throw new Error("El usuario ya esta creado> ", response);
