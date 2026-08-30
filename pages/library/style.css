@@ -14,11 +14,6 @@
 }
 
 /* TODO> HEADER */
-
-.card img{
-    height: 186px;
-}
-
 #header {
     height: 98px;
     display: flex;
@@ -67,6 +62,11 @@
     margin: 22px 47px 0px;
 }
 
+#api-errors{
+    width: fit-content;
+    margin: 0 auto;
+}
+
 #import-courses .import-label,
 #import-courses input{
     font-size: 24px;
@@ -87,7 +87,8 @@
     justify-content: space-between;
 }
 
-.header .title{
+.header .title,
+#api-errors{
     font-size: 32px;
     font-weight: bold;
 }
@@ -106,7 +107,7 @@ font-size: 24px;
     margin-top: 10px;
     padding: 17px 0;
     display: flex;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     gap: 70px;
     flex-wrap: wrap;
 }
@@ -116,16 +117,21 @@ font-size: 24px;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    width: min-content;
 }
 
 .card .course-creation{
     font-size: 16px;
 }
 
+.card img{
+    height: 186px;
+}
+
 .card .course-info{
     display: flex;
     gap: 20px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .card .course-info > div:last-child{
@@ -140,7 +146,19 @@ font-size: 24px;
     display: none;
 }
 
-.noCoursesContainer{
+.no-courses-container{
     margin: 0 auto;
+}
+
+#error-message-container{
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #ff3333;
+    background-color: rgb(255, 172, 172);
+}
+
+#error-message-container p{
+    font-weight: bold;
+    color: #2f2d2d;
 }
 /* ! FIN MAIN */

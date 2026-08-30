@@ -1,16 +1,18 @@
 import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
-import { apiFetch } from '../api-calls/api-fetch.js'
+import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js'
+
+const errorMessageContainer = document.querySelector("#error-message-container");
+const errorMessage = document.querySelector(".error-message-text");
 
 const allCoursesContainer = document.querySelector("#all-courses");
-// console.log(allCoursesContainer);
 const allCoursesCardsContainer = allCoursesContainer.querySelector(".cards");
-// console.log(allCoursesCardsContainer);
+
 const btnLogout = document.querySelector("#logout");
 btnLogout.addEventListener("click", () => {
     localStorage.clear();
 });
 
-const noCoursesContainers = document.querySelectorAll(".noCoursesContainer");
+const noCoursesContainers = document.querySelectorAll(".no-courses-container");
 
 await loadCourses();
 
@@ -44,16 +46,44 @@ await loadCourses();
 // }
 
 async function loadCourses() {
-    const courses = await getCourses();
-    console.log(courses);
-    if (courses.length < 1) {
-        for (const noCourseContainer of noCoursesContainers) {
-            console.log("No hay cursos importados");
-            noCourseContainer.classList.toggle("hide");
-        }
+    const courseReponse = await getCourses();
+    console.log(courseReponse);
 
+    if (Object.values(ApiErrors).includes(courseReponse)) {
+        if (courseReponse === ApiErrors.NETWORK_ERROR) {
+            console.log("Verifica tu conexión a internet");
+            errorMessage.textContent = "Verifica tu conexión a internet"
+        }
+        if (courseReponse === ApiErrors.SERVER_ERROR) {
+            console.log("Hubo un problema desde el servidor, intenta de nuevo más tarde")
+            errorMessage.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
+        }
+        errorMessageContainer.classList.remove("hide");
         return;
     }
+
+    if (courseReponse.length < 1) {
+        for (const noCourseContainer of noCoursesContainers) {
+            console.log("No hay cursos importados");
+            noCourseContainer.classList.remove("hide");
+        }
+        return;
+    }
+
+    for (const course of courseReponse) {
+
+        const date = new Date(course.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        const cardObjectInfo = {
+            creationDate: date,
+            title: course.title,
+            totalLessons: course.progress.totalLessons
+        }
+        const newCard = createCard(cardObjectInfo);
+        allCoursesCardsContainer.appendChild(newCard);
+    }
+
+    console.log("Cursos cargados");
 }
 
 // TODO > LLAMAR A ENDPOINT PARA AGREGAR CURSO
@@ -65,9 +95,9 @@ async function getCourses() {
         method: 'GET'
     };
 
-    const courses = await apiFetch(url, requestObject, true);
+    const coursesResponse = await apiFetch(url, requestObject, true);
 
-    return courses;
+    return coursesResponse;
 }
 
 // TODO > LLAMAR A ENDPOINT PARA ELIMINAR CURSO
