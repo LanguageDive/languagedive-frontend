@@ -27,6 +27,16 @@ epubFile.addEventListener("change", () => {
     epubPost(file);
 });
 
+/**
+ * Uploads an EPUB file to the server to import it as a course.
+ *
+ * This function creates a multipart form payload with the provided file,
+ * retries the request if the access token has expired by refreshing it,
+ * and returns once the API response is received.
+ *
+ * @param {File} file - The EPUB file selected by the user to be imported.
+ * @returns {Promise<void>} Resolves when the import request completes and the API response is logged.
+ */
 async function epubPost(file) {
     const formData = new FormData();
     formData.append('file', file);

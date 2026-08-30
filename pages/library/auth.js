@@ -1,6 +1,29 @@
+/**
+ * Gets the serialized user from localStorage.
+ * @type {string|null}
+ */
 export const serializedUser = localStorage.getItem("userData");
+
+/**
+ * User object parsed from JSON.
+ * @type {Object}
+ */
 export const retrievedUserObject = JSON.parse(serializedUser);
 
+/**
+ * Updates the access token by sending the refresh token to the server.
+ * 
+ * @async
+ * @function refreshAccessToken
+ * @param {string} refreshToken - The user's refresh token to obtain a new access token
+ * @returns {Promise<string|boolean>} The new access token if successful, false if an error occurs
+ * @throws {Error} If the server response is not ok, throws an error and redirects to login
+ * 
+ * @description
+ * This function sends a POST request to the server to obtain a new access token.
+ * If successful, it updates the user object in localStorage with the new tokens.
+ * If it fails, it redirects the user to the login page.
+ */
 export async function refreshAccessToken(refreshToken) {
     console.log("Solicitando refreshtoken al endpoint");
     try {
