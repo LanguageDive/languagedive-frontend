@@ -5,6 +5,10 @@ const allCoursesContainer = document.querySelector("#all-courses");
 // console.log(allCoursesContainer);
 const allCoursesCardsContainer = allCoursesContainer.querySelector(".cards");
 // console.log(allCoursesCardsContainer);
+const btnLogout = document.querySelector("#logout");
+btnLogout.addEventListener("click", () => {
+    localStorage.clear();
+});
 
 const noCoursesContainers = document.querySelectorAll(".noCoursesContainer");
 

@@ -37,7 +37,7 @@
     height: inherit;
 }
 
-#header-links a {
+#header-links * {
     color: var(--second-color);
     text-decoration: none;
     height: 100%;

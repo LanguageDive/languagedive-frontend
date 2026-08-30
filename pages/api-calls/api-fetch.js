@@ -1,5 +1,11 @@
 import { retrievedUserObject, refreshAccessToken } from './auth.js';
 
+export const ApiErrors = {
+    SERVER_ERROR: 'server_error',    // el servidor respondió con 4xx/5xx
+    EXPIRED_TOKEN: 'expired_token',   // los token expiraron
+    NETWORK_ERROR: 'network_error'   // no se pudo conectar en absoluto
+};
+
 /**
  * Makes a POST request with Bearer token authentication.
  * Automatically refreshes the access token if it has expired (401 response).
@@ -16,7 +22,7 @@ export async function apiFetch(url, requestObject, includeAuthToken = false) {
     let data = false;
 
     if (includeAuthToken) {
-        if(!requestObject.headers){
+        if (!requestObject.headers) {
             requestObject.headers = {};
         }
         requestObject.headers['Authorization'] = `Bearer ${retrievedUserObject.accessToken}`;
@@ -24,21 +30,26 @@ export async function apiFetch(url, requestObject, includeAuthToken = false) {
 
     while (true) {
         // Mandar solicitud al endpoint para importar un curso (EPUB)
-        response = await fetch(url, requestObject);
+        try {
+            response = await fetch(url, requestObject);
+        }
+        catch (error) {
+            return ApiErrors.NETWORK_ERROR;
+        }
         // Si es un error de expiracion de token, mandamos solicitud al endpoint REFRESH para que nos de un nuevo accessToken
         if (response.status === 401 && includeAuthToken) {
             const refreshToken = retrievedUserObject.userRefreshToken;
             const refreshedAccesToken = await refreshAccessToken(refreshToken);
 
             if (!refreshedAccesToken) {
-                break;
+                return ApiErrors.EXPIRED_TOKEN;
             }
             continue;
         }
-        if(response.status >= 400){
-            return false;
+        if (response.status >= 400) {
+            return ApiErrors.SERVER_ERROR;
         }
-        if(requestObject.method == "DELETE"){
+        if (requestObject.method == "DELETE") {
             console.log("Eliminado exitosamente");
             return;
         }

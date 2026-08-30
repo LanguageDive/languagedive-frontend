@@ -1,5 +1,5 @@
 import {retrievedUserObject, refreshAccessToken} from '../api-calls/auth.js';
-import { apiFetch } from '../api-calls/api-fetch.js';
+import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js';
 
 const userNameHeader = document.querySelector("#username");
 
@@ -55,6 +55,16 @@ async function epubPost(file) {
         }
    
     const response = await apiFetch(url, requestObject, true);
+
+    if(response === ApiErrors.SERVER_ERROR){
+        //Hacer algo con el DOM
+    }
+    else if(response === ApiErrors.NETWORK_ERROR){
+        //Hacer algo con el DOM
+    }
+    else if(response === ApiErrors.EXPIRED_TOKEN){
+        //Hacer algo con el DOM
+    }
 
     console.log(response);
     return response;
