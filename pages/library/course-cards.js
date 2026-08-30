@@ -6,38 +6,50 @@ const allCoursesContainer = document.querySelector("#all-courses");
 const allCoursesCardsContainer = allCoursesContainer.querySelector(".cards");
 // console.log(allCoursesCardsContainer);
 
-const btnAddCard = document.querySelector("#addCard");
-btnAddCard.addEventListener("click", () => {
-    const newCard = createCard();
-    allCoursesCardsContainer.append(newCard);
-})
+const noCoursesContainers = document.querySelectorAll(".noCoursesContainer");
+
+await loadCourses();
 
 // const newCard = createCard();
 // allCoursesCardsContainer.append(newCard)
 
-const courses = await getCourses();
-console.log(courses, courses.length);
+// const courses = await getCourses();
 
-for(const course of courses){
+// console.log(courses, courses.length);
 
-    const date = new Date(course.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+// for(const course of courses){
 
-    const cardObjectInfo = {
-        creationDate: date,
-        title: course.title,
-        totalLessons: course.progress.totalLessons
+//     const date = new Date(course.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+//     const cardObjectInfo = {
+//         creationDate: date,
+//         title: course.title,
+//         totalLessons: course.progress.totalLessons
+//     }
+
+//     console.log(cardObjectInfo);
+
+//     const newCard = createCard(cardObjectInfo);
+//     // console.log(newCard);
+//     allCoursesCardsContainer.append(newCard);
+
+// }
+
+// for(const course of courses){
+//     deleteCourse(course.id)
+// }
+
+async function loadCourses() {
+    const courses = await getCourses();
+    console.log(courses);
+    if (courses.length < 1) {
+        for (const noCourseContainer of noCoursesContainers) {
+            console.log("No hay cursos importados");
+            noCourseContainer.classList.toggle("hide");
+        }
+
+        return;
     }
-
-    console.log(cardObjectInfo);
-
-    const newCard = createCard(cardObjectInfo);
-    // console.log(newCard);
-    allCoursesCardsContainer.append(newCard);
-
-}
-
-for(const course of courses){
-    deleteCourse(course.id)
 }
 
 // TODO > LLAMAR A ENDPOINT PARA AGREGAR CURSO
@@ -52,7 +64,6 @@ async function getCourses() {
     const courses = await apiFetch(url, requestObject, true);
 
     return courses;
-
 }
 
 // TODO > LLAMAR A ENDPOINT PARA ELIMINAR CURSO
@@ -71,7 +82,7 @@ async function deleteCourse(id) {
 }
 
 // TODO > CREAR CARDS
-function createCard(cardObjectInfo){
+function createCard(cardObjectInfo) {
     const card = document.createElement("div");
     card.setAttribute("class", "card");
 
