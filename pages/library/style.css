@@ -106,7 +106,7 @@ font-size: 24px;
     margin-top: 10px;
     padding: 17px 0;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     gap: 70px;
     flex-wrap: wrap;
 }
