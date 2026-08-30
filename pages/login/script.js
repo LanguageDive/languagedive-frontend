@@ -1,6 +1,10 @@
+import { apiFetch } from '../api-calls/api-fetch.js';
+
 const loginFormElement = document.querySelector("#loginForm");
 // console.log(loginFormElement);
 
+const successMessage = document.querySelector("#successMessage");
+const errorMessage = document.querySelector("#errorMessage");
 let loginError = false;
 let loginSuccess = false;
 
@@ -32,25 +36,29 @@ function printFieldsContent(event) {
 
 async function loginGet(userLoginData) {
 
+    const url = "https://languagedive.bryanrodriguez.tech/api/auth/login";
+    const requestObject = {
+        method: "POST",
+        headers: {
+            "Content-Type": 'application/json'
+        },
+        body: JSON.stringify(userLoginData)
+    }
+
     try {
-        const response = await fetch('https://languagedive.bryanrodriguez.tech/api/auth/login', {
-            method: "POST",
-            headers: {
-                "Content-Type": 'application/json'
-            },
-            body: JSON.stringify(userLoginData)
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error("No se pudo iniciar sesion>", response);
-            }
-            return response.json();
-        }).then(data => data);
+        const response = await apiFetch(url, requestObject);
+
+        if (!response) {
+            throw new Error("No se pudo iniciar sesion>", response);
+        }
 
         console.log(response);
 
+        // Mostrar mensaje de éxito
         successMessage.classList.toggle("display");
         loginSuccess = true;
 
+        //Dejar de mostrar el mensaje de login error en pantalla si ya estaba previamente
         if (loginError) {
             errorMessage.classList.toggle("display");
             loginError = false;
@@ -58,9 +66,9 @@ async function loginGet(userLoginData) {
 
         //Guardamos credenciales del usuario en un objeto
         const loginCredentials = {
-            "username" : response.user.username,
-            "accessToken" : response.accessToken,
-            "refreshToken" : response.refreshToken
+            "username": response.user.username,
+            "accessToken": response.accessToken,
+            "refreshToken": response.refreshToken
         }
 
         //Convertimos a texto y guardamos en el localStorage para poder usarlas en library/index.html
@@ -74,11 +82,13 @@ async function loginGet(userLoginData) {
     catch (error) {
         console.log(error);
 
+        // Ocultar el mensaje de login si ya estaba en pantalla
         if (loginSuccess) {
             successMessage.classList.toggle("display");
             loginSuccess = false;
         }
 
+        // Si el mensaje no está en pantalla, lo activamos
         if (!loginError) {
             errorMessage.classList.toggle("display");
             loginError = true;
