@@ -1,7 +1,14 @@
-import {retrievedUserObject, refreshAccessToken} from './auth.js';
+import {retrievedUserObject, refreshAccessToken} from '../api-calls/auth.js';
+import { apiFetch } from '../api-calls/api-fetch.js';
 
 const userNameHeader = document.querySelector("#username");
-userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
+
+if(!retrievedUserObject){
+    location.assign("/login/index.html");
+}
+else{
+    userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
+}
 
 const maxFileSize = 10 * 1024 * 1024;
 
@@ -41,33 +48,15 @@ async function epubPost(file) {
     const formData = new FormData();
     formData.append('file', file);
 
-    let response, data;
-
-    while (true) {
-        // Mandar solicitud al endpoint para importar un curso (EPUB)
-        response = await fetch("https://languagedive.bryanrodriguez.tech/api/courses/import", {
+    const url = "https://languagedive.bryanrodriguez.tech/api/courses/import";
+    const requestObject = {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${retrievedUserObject.accessToken}`
-            },
             body: formData
-        });
-        // Si es un error de expiracion de token, mandamos solicitud al endpoint REFRESH para que nos de un nuevo accessToken
-        if (response.status === 401) {
-            const refreshToken = retrievedUserObject.userRefreshToken;
-            const refreshedAccesToken = await refreshAccessToken(refreshToken);
-
-            if(!refreshedAccesToken){
-                break;
-            }
-            continue;
         }
+   
+    const response = await apiFetch(url, requestObject, true);
 
-        data = await response.json();
-        // Si no hay ningun error, es porque ya esta en la API y nos salimos del bucle
-        break;
-    }
-    // Con fines de debug
     console.log(response);
-    console.log(data);
+    return response;
+
 };
