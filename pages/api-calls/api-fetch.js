@@ -7,15 +7,17 @@ export const ApiErrors = {
 };
 
 /**
- * Makes a POST request with Bearer token authentication.
- * Automatically refreshes the access token if it has expired (401 response).
- * 
+ * Performs an HTTP request and optionally injects the current access token.
+ * If the request receives a 401 and auth is enabled, it tries to refresh the
+ * token and retries the same request once.
+ *
  * @async
- * @param {string} url - The endpoint URL to make the request to
- * @param {Object} requestObject - The request configuration object
- * @param {Object} requestObject.headers - Request headers object
- * @returns {Promise<Object>} The parsed JSON response data from the server
- * @throws Will return null data if token refresh fails
+ * @param {string} url - Endpoint URL to call.
+ * @param {RequestInit & { headers?: Record<string, string> }} requestObject - Fetch options.
+ * @param {boolean} [includeAuthToken=false] - Whether to append the Bearer token from the stored user session.
+ * @returns {Promise<Object|undefined|string>} Parsed JSON response data, or undefined for successful DELETE requests.
+ * @returns {Promise<typeof ApiErrors[keyof typeof ApiErrors]>} If the request fails due to a network error, server error, or expired token.
+ * @throws {typeof ApiErrors[keyof typeof ApiErrors]} Returns a typed error code instead of throwing when the request fails.
  */
 export async function apiFetch(url, requestObject, includeAuthToken = false) {
     let response;

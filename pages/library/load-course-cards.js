@@ -1,10 +1,18 @@
 // TODO > IMPORTS ------------------------------------------------------------
-import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
+// import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
 import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js'
 
 // TODO > CONSTANTS
 
-const cardContainers = {
+/**
+ * Maps each course section name to its corresponding container index.
+ * Used to select the correct cards section in the DOM.
+ *
+ * @type {Object<string, number>}
+ * @property {number} allCourses - Index for the container with all the user's courses.
+ * @property {number} inProgressCourses - Index for the container with courses currently in progress.
+ */
+export const cardContainersId = {
     "allCourses": 0,
     "inProgressCourses": 1
 }
@@ -19,9 +27,9 @@ const userCourses = document.querySelector("#user-courses");
 // Obtener los distintos tipos de contenedores especificos del contenedor general
 const courseContainers = userCourses.children;
 // Container with all courses
-const allCoursesCardsContainer = courseContainers[cardContainers.allCourses].querySelector(".cards");
+export const allCoursesCardsContainer = courseContainers[cardContainersId.allCourses].querySelector(".cards");
 //Container with in-progress courses
-const inProgressCardsContainer = courseContainers[cardContainers.inProgressCourses].querySelector(".cards");
+const inProgressCardsContainer = courseContainers[cardContainersId.inProgressCourses].querySelector(".cards");
 
 // * DOM LOGOUT
 const btnLogout = document.querySelector("#logout");
@@ -41,6 +49,11 @@ await loadCourses();
 // ! FIN > PROGRAM RUN -----------------------------------------------------------
 
 // TODO > FUNCTIONS ------------------------------------------------------------
+/**
+ * Loads the current user's courses and renders them into the appropriate containers.
+ * Handles API errors and empty-state messaging for the course sections.
+ * @returns {Promise<void>} Resolves after the courses are loaded and rendered.
+ */
 async function loadCourses() {
     const courseResponse = await getCourses();
     // console.log(courseResponse);
@@ -51,7 +64,7 @@ async function loadCourses() {
             // console.log("Verifica tu conexión a internet");
             errorMessage.textContent = "Verifica tu conexión a internet"
         }
-        if (courseResponse === ApiErrors.SERVER_ERROR) {
+        else if (courseResponse === ApiErrors.SERVER_ERROR) {
             // console.log("Hubo un problema desde el servidor, intenta de nuevo más tarde");
             errorMessage.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
         }
@@ -75,14 +88,23 @@ async function loadCourses() {
     });
 
     // Agregar todos los cursos del usuario al contenedor de cards general
-    appendCardsToContainer(courseResponse, allCoursesCardsContainer, cardContainers.allCourses);
-    // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
-    appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainers.inProgressCourses);
+    appendCardsToContainer(courseResponse, allCoursesCardsContainer, cardContainersId.allCourses);
 
-    console.log("Todos los cursos cargados");
+    // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
+    appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainersId.inProgressCourses);
+
+    // for(const course of courseResponse){
+    //     deleteCourse(course.id);
+    // }
+
+    // console.log("Todos los cursos cargados");
 }
 
 // * LLAMAR A ENDPOINT PARA OBTENER CURSOS
+/**
+ * Fetches the authenticated user's course list from the courses API.
+ * @returns {Promise<any>} The API response containing the user courses, or an API error value.
+ */
 async function getCourses() {
 
     const url = 'https://languagedive.bryanrodriguez.tech/api/courses';
@@ -96,15 +118,26 @@ async function getCourses() {
     return coursesResponse;
 }
 
-function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
+/**
+ * Appends a list of course objects to a given cards container and shows the empty-state
+ * message when the selected section has no courses.
+ * @param {Array<Object>} courses - Course data to render as cards.
+ * @param {HTMLElement} cardsContainerType - Container element that will receive the generated cards.
+ * @param {number} containerTypeId - Identifier of the target course section (all courses or in-progress courses).
+ * @returns {void}
+ */
+export function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
 
     if (courses.length < 1) {
-        const key = Object.keys(cardContainers).find(
-            (key) => cardContainers[key] === containerTypeId
+        const key = Object.keys(cardContainersId).find(
+            (key) => cardContainersId[key] === containerTypeId
         );
-        console.log(`Aun no tienes cursos para esta seccion / contenedor. Tipo de contenedor: ${key}`);
+        // console.log(`Aun no tienes cursos para esta seccion / contenedor. Tipo de contenedor: ${key}`);
         noCoursesContainers[containerTypeId].classList.remove("hide");
+        return;
     }
+
+    noCoursesContainers[containerTypeId].classList.add("hide");
 
     for (const course of courses) {
 
@@ -120,7 +153,7 @@ function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
         const progress = course.progress.progressPercentage;
 
         // Anniadir cards en la seccion de en progreso
-        if (containerTypeId === cardContainers.inProgressCourses) {
+        if (containerTypeId === cardContainersId.inProgressCourses) {
             cardObjectInfo.progressPercentage = progress;
             // Creamos una carta para el tipo de contenedor de cursos en progreso
         }
@@ -137,7 +170,13 @@ function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
 }
 
 // TODO > CREAR CARDS
-function createCard(cardObjectInfo, containerTypeId = 0) {
+/**
+ * Creates a DOM card element for a single course using the provided metadata.
+ * @param {Object} cardObjectInfo - Course metadata used to build the card content.
+ * @param {number} [containerTypeId=0] - Section identifier that determines card labels and layout.
+ * @returns {HTMLDivElement} The generated course card element.
+ */
+export function createCard(cardObjectInfo, containerTypeId = 0) {
 
     // Contenedor para cards
     const card = document.createElement("div");
@@ -198,17 +237,17 @@ function createCard(cardObjectInfo, containerTypeId = 0) {
 }
 
 // TODO > LLAMAR A ENDPOINT PARA ELIMINAR CURSO
-// async function deleteCourse(id) {
+async function deleteCourse(id) {
 
-//     const url = `https://languagedive.bryanrodriguez.tech/api/courses/${id}`;
+    const url = `https://languagedive.bryanrodriguez.tech/api/courses/${id}`;
 
-//     const requestObject = {
-//         method: 'DELETE'
-//     };
+    const requestObject = {
+        method: 'DELETE'
+    };
 
-//     const courses = await apiFetch(url, requestObject, true);
+    const courses = await apiFetch(url, requestObject, true);
 
-//     return courses;
+    return courses;
 
-// }
+}
 
