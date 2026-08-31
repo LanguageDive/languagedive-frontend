@@ -4,7 +4,7 @@ import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js'
 
 // TODO > CONSTANTS
 
-const containers = {
+const cardContainers = {
     "allCourses": 0,
     "inProgressCourses": 1
 }
@@ -19,9 +19,9 @@ const userCourses = document.querySelector("#user-courses");
 // Obtener los distintos tipos de contenedores especificos del contenedor general
 const courseContainers = userCourses.children;
 // Container with all courses
-const allCoursesCardsContainer = courseContainers[containers.allCourses].querySelector(".cards");
+const allCoursesCardsContainer = courseContainers[cardContainers.allCourses].querySelector(".cards");
 //Container with in-progress courses
-const inProgressCardsContainer = courseContainers[containers.inProgressCourses].querySelector(".cards");
+const inProgressCardsContainer = courseContainers[cardContainers.inProgressCourses].querySelector(".cards");
 
 // * DOM LOGOUT
 const btnLogout = document.querySelector("#logout");
@@ -75,9 +75,9 @@ async function loadCourses() {
     });
 
     // Agregar todos los cursos del usuario al contenedor de cards general
-    appendCardsToContainer(courseResponse, allCoursesCardsContainer, containers.allCourses);
+    appendCardsToContainer(courseResponse, allCoursesCardsContainer, cardContainers.allCourses);
     // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
-    appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, containers.inProgressCourses);
+    appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainers.inProgressCourses);
 
     console.log("Todos los cursos cargados");
 }
@@ -99,8 +99,8 @@ async function getCourses() {
 function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
 
     if (courses.length < 1) {
-        const key = Object.keys(containers).find(
-            (key) => containers[key] === containerTypeId
+        const key = Object.keys(cardContainers).find(
+            (key) => cardContainers[key] === containerTypeId
         );
         console.log(`Aun no tienes cursos para esta seccion / contenedor. Tipo de contenedor: ${key}`);
         noCoursesContainers[containerTypeId].classList.remove("hide");
@@ -120,7 +120,7 @@ function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
         const progress = course.progress.progressPercentage;
 
         // Anniadir cards en la seccion de en progreso
-        if (containerTypeId === containers.inProgressCourses) {
+        if (containerTypeId === cardContainers.inProgressCourses) {
             cardObjectInfo.progressPercentage = progress;
             // Creamos una carta para el tipo de contenedor de cursos en progreso
         }
