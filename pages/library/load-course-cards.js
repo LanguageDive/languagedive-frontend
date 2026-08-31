@@ -128,10 +128,11 @@ async function getCourses() {
  */
 export function appendCardsToContainer(courses, cardsContainerType, containerTypeId) {
 
+    // console.log(courses);
     if (courses.length < 1) {
-        const key = Object.keys(cardContainersId).find(
-            (key) => cardContainersId[key] === containerTypeId
-        );
+        // const key = Object.keys(cardContainersId).find(
+        //     (key) => cardContainersId[key] === containerTypeId
+        // );
         // console.log(`Aun no tienes cursos para esta seccion / contenedor. Tipo de contenedor: ${key}`);
         noCoursesContainers[containerTypeId].classList.remove("hide");
         return;
@@ -145,6 +146,7 @@ export function appendCardsToContainer(courses, cardsContainerType, containerTyp
         //Creación de newCard con cardObjectInfo
         const date = new Date(course.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
         const cardObjectInfo = {
+            id: course.id,
             creationDate: date,
             title: course.title,
             totalLessons: course.progress.totalLessons
@@ -232,6 +234,9 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
     card.appendChild(courseImage);
     card.appendChild(courseInfo);
 
+    card.addEventListener('click', () => {
+        location.assign(`../course/index.html?id=${cardObjectInfo.id}`);
+    });
 
     return card;
 }

@@ -119,14 +119,23 @@ font-size: 24px;
     align-items: center;
     gap: 10px;
     width: min-content;
+
+    cursor: pointer;
 }
 
 .card .course-creation{
     font-size: 16px;
 }
 
+.card .course-image{
+    border: solid black 2px;
+    border-radius: 36px 80px 36px 80px;
+    overflow: hidden;
+}
+
 .card img{
-    height: 186px;
+    width: 280px;
+    height: 100%;
 }
 
 .card .course-info{
