@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- TODO > HEADER -->
+    <header>
+        <div id="header">
+            <div id="header-links">
+                <a class="header links main" href="#">LOGO</a>
+
+                <div class="userAccess">
+                    <a id="username" class="header links register" href="#">Usuario</a>
+                    <a href="/login/" id="logout" class="header links exit">Salir</a>
+                </div>
+            </div>
+
+            <div class="hr"></div>
+        </div>
+    </header>
+    <!-- ! FIN > HEADER -->
+
+    <main>
+        <!-- TODO > CONTENEDOR PADRE (GRID) -->
+        <div id="main--grid-container">
+
+            <!-- TODO > CONTENEDOR HIJO IZQUIERDA (GRID) -->
+            <div id="grid-left">
+                <!-- TODO > CONTENEDOR REGRESAR -->
+                <div class="return">
+                    <a href="/library/">
+                        <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://w3.org" height="34">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        <p class="text">Regresar</p>
+                    </a>
+                </div>
+                <!-- ! FIN > CONTENEDOR REGRESAR -->
+
+                <!-- TODO > NUMERO DE LECCIONES DEL CURSO-->
+                <div class="lessonsNumber">
+                    <p class="text">Lecciones (N)</p>
+                </div>
+                <!-- ! FIN > NUMERO DE LECCIONES DEL CURSO-->
+
+                <!-- TODO > TODAS LAS LECCIONES CONTENEDOR-->
+                <div class="cards">
+
+                    <!-- TODO > CARD-->
+                    <div class="card">
+                        <div class="card-left">
+                            <div class="left-upper">
+                                <p class="lesson-number">Leccion 1</p>
+                                <hr>
+                                <p class="lesson-chapter-name">Nombre del capitulo</p>
+                            </div>
+                            <div class="left-lower">
+                                <div class="lesson-progress">
+                                    <div class="progress-bar">15%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-right">
+                            <a href="#" class="continue-lesson">
+                                <p class="text">
+                                    Continuar
+                                </p>
+                                <svg class="forward-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                    height="34">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ! FIN > CARD-->
+
+                    <!-- TODO > CARD-->
+                    <div class="card">
+                        <div class="card-left">
+                            <div class="left-upper">
+                                <p class="lesson-number">Leccion 1</p>
+                                <hr>
+                                <p class="lesson-chapter-name">Nombre del capitulo</p>
+                            </div>
+                            <div class="left-lower">
+                                <div class="lesson-progress">
+                                    <div class="progress-bar">15%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-right">
+                            <a href="#" class="continue-lesson">
+                                <p class="text">
+                                    Continuar
+                                </p>
+                                <svg class="forward-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                    height="34">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ! FIN > CARD-->
+                </div>
+                <!-- ! FIN > TODAS LAS LECCIONES CONTENEDOR-->
+
+            </div>
+            <!-- ! FIN > CONTENEDOR HIJO IZQUIERDA (GRID) -->
+
+            <!-- TODO > CONTENEDOR HIJO DERECHA (GRID) -->
+            <div class="grid-right">
+                <!-- TODO > PREVIEW DEL CURSO -->
+                <div class="course-preview">
+                    <div class="course-creation-date">
+                        Creado el [dd] del [mes] del [aaaa]
+                    </div>
+
+                    <div class="course-image">
+                        <img src="../assets/nickype-snow-7646952.jpg" alt="snow image">
+                        <a href="#" class="continue">Continuar</a>
+                    </div>
+                </div>
+                <!-- ! FIN > PREVIEW DEL CURSO -->
+
+                <!-- TODO > DETALLES DEL CURSO -->
+                <div class="course-details">
+                    <p class="course-name">Titulo</p>
+                    <p class="course-description">
+                        <strong>Descripción:</strong> mucho texto
+                    </p>
+                    <div class="course-progress">
+                        <p class="text">Progreso</p>
+                        <div class="progress-bar">
+                            <p class="percentaje">15%</p>
+                        </div>
+                        <p class="lessons-status">Leccion n/m</p>
+                    </div>
+                </div>
+                <!-- ! FIN > DETALLES DEL CURSO -->
+            </div>
+            <!-- ! FIN > CONTENEDOR HIJO DERECHA (GRID) -->
+        </div>
+        <!-- ! FIN > CONTENEDOR PADRE (GRID) -->
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

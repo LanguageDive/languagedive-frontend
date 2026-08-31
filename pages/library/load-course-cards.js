@@ -195,7 +195,7 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
 
     // Imagen y anniadir al contenedor de imagen
     const image = document.createElement("img");
-    image.setAttribute("src", "assets/nickype-snow-7646952.jpg");
+    image.setAttribute("src", "../assets/nickype-snow-7646952.jpg");
     courseImage.appendChild(image);
 
     // Contenedor para informacion del curso

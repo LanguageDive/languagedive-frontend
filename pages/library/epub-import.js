@@ -11,7 +11,7 @@ else {
     userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
 }
 
-// * DOM ERROR MESSAGE
+// * CONTAINER FOR MANAGE ERROR MESSAGE
 const errorMessageContainer = document.querySelector("#error-message-container");
 const errorMessage = document.querySelector(".error-message-text");
 
