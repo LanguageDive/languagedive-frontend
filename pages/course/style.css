@@ -58,18 +58,27 @@
 /* ! FIN HEADER */
 
 /* TODO > MAIN */
-#main--grid-container {
-    margin: 49px 100px 0;
+#main-grid-container {
+
+    height: calc(100vh - 98px);
+    overflow: hidden;
+
+    padding: 49px 100px 0;
 
     display: grid;
     grid-template-columns: 1.8fr 1fr;
+    grid-template-rows: 100%;
+
     gap: 65px;
 }
+
 
 #grid-left {
     display: flex;
     flex-direction: column;
     gap: 32px;
+
+    /* align-self: stretch; */
 }
 
 .return {
@@ -93,22 +102,24 @@
     font-size: 30px;
 }
 
+
 /* TODO > CARDS */
 
 .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 24px
+    overflow-y: scroll;
+
+    justify-self: center;
 }
 
 .card {
-    /* height: 55px; */
     border: solid 3px;
     border-radius: 10px;
 
     display: grid;
     grid-template-columns: 2.5fr 1fr;
 
+    height: 80px;
+    margin-bottom: 24px;
     
     overflow: hidden;
 }
