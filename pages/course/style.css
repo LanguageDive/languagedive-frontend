@@ -59,7 +59,7 @@
 
 /* TODO > MAIN */
 #main--grid-container {
-    margin: 49px 44px 0;
+    margin: 49px 100px 0;
 
     display: grid;
     grid-template-columns: 1.8fr 1fr;
@@ -88,49 +88,174 @@
     text-decoration: none;
 }
 
-.lessonsNumber .text{
+.lessonsNumber .text {
     font-weight: bold;
     font-size: 30px;
 }
 
-.cards{
+/* TODO > CARDS */
+
+.cards {
     display: flex;
     flex-direction: column;
     gap: 24px
 }
 
-.card{
-    height: fit-content;
+.card {
+    /* height: 55px; */
     border: solid 3px;
     border-radius: 10px;
-    
+
     display: grid;
     grid-template-columns: 2.5fr 1fr;
+
+    
+    overflow: hidden;
 }
 
-.card-left{
+.card-left {
     display: grid;
     grid-template-rows: repeat(2, 1fr);
+    border-right: solid 3px;
 }
 
-.left-upper{
+.left-upper {
     padding-left: 5px;
     display: flex;
     gap: 10px;
     font-size: 20px;
+    margin-top: auto;
+
+    border-bottom: solid 3px;
 }
 
 .left-lower{
-    text-align: center;
+    justify-self: stretch;
+    align-self: stretch;
+}
+
+.lesson-progress{
+    padding: 0px 10px;
+    width: 50%;
+    height: 100%;
+    font-weight: bold;
+    background-color: var(--third-color);
+    color: var(--second-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.card-right {
+    justify-self: stretch;
+    align-self: stretch;
+}
+
+.card-right a {
+    /* ! width > Resolver a futuro */
+    width: 101%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-right a{
+    text-decoration: none;
+    background-color: var(--third-color);
+    color: var(--second-color);
+}
+
+.card-right a:hover {
+    background-color: var(--first-color);
+    color: var(--fourth-color);
+}
+
+.card-right svg{
+    fill: var(--second-color);
+}
+
+.card-right a:hover svg{
+    fill: var(--fourth-color);
+}
+
+/* ! FIN > CARDS */
+div.grid-right{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.course-preview{
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+.course-creation-date{
+    font-size: 20px;
+    font-style: italic;
+}
+
+.course-image-container{
+    overflow: hidden;
+    height: fit-content;
+    position: relative;
+    border: 4px solid;
+    border-radius: 15px;
+}
+
+.course-image-container a{    
+    padding: 36px;
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+
+    background-color: var(--third-color);
+
+    font-size: 24px;
+    text-decoration: none;
+
+    border-top: 4px solid;
+    border-left: 4px solid;
+    border-radius: 15px 0 0;
+
     display: flex;
     align-items: center;
+    justify-content: center;
+    
 }
+
+.course-image-container a p{
+    color: var(--second-color);
+}
+.course-image-container a svg{
+    fill: var(--second-color);
+}
+
+.course-details{
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.course-name{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.course-details > div+div{
+    font-size: 22px;
+}
+
 
 /* ! FIN > MAIN */
 
+/* TODO > ESTILOS GLOBALES TEMPORALES */
 img {
-    width: 480px;
+    width: 100%;
+    display: block;
 }
+
+
+/* ! FIN > ESTILOS GLOBALES TEMPORALES */
