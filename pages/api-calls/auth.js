@@ -58,7 +58,7 @@ export async function refreshAccessToken(refreshToken) {
     catch (error) {
         // Si nos da un error debido a que el usuario no ha entrado en mucho tiempo, devolvemos al usuario al login
         console.error(error);
-        location.assign("/login/index.html");
+        window.location.assign("/login/index.html");
         return false;
     }
 }

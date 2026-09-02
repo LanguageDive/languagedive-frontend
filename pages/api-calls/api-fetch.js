@@ -1,9 +1,11 @@
 import { retrievedUserObject, refreshAccessToken } from './auth.js';
 
 export const ApiErrors = {
-    SERVER_ERROR: 'server_error',    // el servidor respondió con 4xx/5xx
-    EXPIRED_TOKEN: 'expired_token',   // los token expiraron
-    NETWORK_ERROR: 'network_error'   // no se pudo conectar en absoluto
+    SERVER_ERROR_5XX: 'server_error',    // el servidor respondió con 4xx/5xx
+    EXPIRED_TOKEN_401: 'expired_token',   // los token expiraron
+    NETWORK_ERROR: 'network_error',   // no se pudo conectar en absoluto
+    NOT_FOUND_404: "not_found",  // el recurso no existe
+    CLIENT_ERROR_4XX: "client_error"     // error desde cliente
 };
 
 /**
@@ -31,7 +33,6 @@ export async function apiFetch(url, requestObject, includeAuthToken = false) {
     }
 
     while (true) {
-        // Mandar solicitud al endpoint para importar un curso (EPUB)
         try {
             response = await fetch(url, requestObject);
         }
@@ -44,12 +45,20 @@ export async function apiFetch(url, requestObject, includeAuthToken = false) {
             const refreshedAccesToken = await refreshAccessToken(refreshToken);
 
             if (!refreshedAccesToken) {
-                return ApiErrors.EXPIRED_TOKEN;
+                return ApiErrors.EXPIRED_TOKEN_401;
             }
+
+            requestObject.headers['Authorization'] = `Bearer ${refreshedAccesToken}`;
             continue;
         }
+        if (response.status >= 500) {
+            return ApiErrors.SERVER_ERROR_5XX;
+        }
+        if (response.status === 404) {
+            return ApiErrors.NOT_FOUND_404;
+        }
         if (response.status >= 400) {
-            return ApiErrors.SERVER_ERROR;
+            return ApiErrors.CLIENT_ERROR_4XX;
         }
         if (requestObject.method == "DELETE") {
             console.log("Eliminado exitosamente");

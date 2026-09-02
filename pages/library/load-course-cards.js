@@ -64,7 +64,7 @@ async function loadCourses() {
             // console.log("Verifica tu conexión a internet");
             errorMessage.textContent = "Verifica tu conexión a internet"
         }
-        else if (coursesResponse === ApiErrors.SERVER_ERROR) {
+        else if (coursesResponse === ApiErrors.SERVER_ERROR_5XX) {
             // console.log("Hubo un problema desde el servidor, intenta de nuevo más tarde");
             errorMessage.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
         }
