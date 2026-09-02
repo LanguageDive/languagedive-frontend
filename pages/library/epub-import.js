@@ -1,6 +1,7 @@
-import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
-import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js';
+import { retrievedUserObject } from '../api-calls/auth.js';
+import { ApiErrors } from '../api-calls/api-fetch.js';
 import { appendCardsToContainer, cardContainersId, allCoursesCardsContainer } from './load-course-cards.js'
+import { postEpub, getCourseById } from '../api-calls/course.js'
 
 const userNameHeader = document.querySelector("#username");
 
@@ -20,26 +21,36 @@ const maxFileSize = 10 * 1024 * 1024;
 const epubFile = document.querySelector("#epubFile");
 epubFile.addEventListener("change", async () => {
     const file = epubFile.files[0];
-    //El archivo no existe
+
+    if(!successFileImport(file)){
+        return
+    }
+   
+    // console.log("Vas por buen camino papu");
+    // console.log(file);
+    const courseId = await postAndGetCourseId(file);
+    const courseReponse = await getCourse(courseId);
+    if (courseReponse) { appendCardsToContainer([courseReponse], allCoursesCardsContainer, cardContainersId.allCourses); }
+});
+
+function successFileImport(file) {
     if (!file) {
-        return;
+        alert("Debes importar un archivo EPUB");
+        return false;
     }
     const filenameLower = file.name.toLowerCase();
     //El archivo supera el limite de tamannio o no es EPUB
     if ((file.size > maxFileSize)) {
         alert("El archivo supera el limite de tamaño (10MB). Intenta con otro archivo");
-        return;
+        return false;
     }
     if ((!filenameLower.endsWith('.epub'))) {
-        alert("El archivo no es un EPUB, prueba con otro");
-        return;
+        alert("El tipo de archivo no es válido, prueba con otro");
+        return false;
     }
-    // console.log("Vas por buen camino papu");
-    // console.log(file);
-    const courseId = await epubPost(file);
-    const courseReponse = await getCourse(courseId);
-    if(courseReponse){ appendCardsToContainer([courseReponse], allCoursesCardsContainer, cardContainersId.allCourses); }
-});
+
+    return true;
+}
 
 /**
  * Uploads an EPUB file to the server to import it as a course.
@@ -51,25 +62,19 @@ epubFile.addEventListener("change", async () => {
  * @param {File} file - The EPUB file selected by the user to be imported.
  * @returns {Promise<void>} Resolves when the import request completes and the API response is logged.
  */
-async function epubPost(file) {
+async function postAndGetCourseId(file) {
     const formData = new FormData();
     formData.append('file', file);
 
-    const url = "https://languagedive.bryanrodriguez.tech/api/courses/import";
-    const requestObject = {
-        method: 'POST',
-        body: formData
-    }
+    const postEpubResponse = await postEpub(formData);
 
-    const response = await apiFetch(url, requestObject, true);
-
-    if (Object.values(ApiErrors).includes(response)) {
-        errorMessageDisplay(response, errorMessage);
+    if (Object.values(ApiErrors).includes(postEpubResponse)) {
+        errorMessageDisplay(postEpubResponse, errorMessage);
         errorMessageContainer.classList.remove("hide");
         return false;
     }
 
-    const courseId = response.id;
+    const courseId = postEpubResponse.id;
     // console.log(courseId);
     // console.log(response);
     // return response;
@@ -78,23 +83,17 @@ async function epubPost(file) {
 
 async function getCourse(courseId) {
 
-    const url = `https://languagedive.bryanrodriguez.tech/api/courses/${courseId}`;
+    const courseResponse = getCourseById(courseId)
 
-    const requestObject = {
-        method: 'GET'
-    };
-
-    const coursesResponse = await apiFetch(url, requestObject, true);
-
-    if (Object.values(ApiErrors).includes(coursesResponse)) {
-        errorMessageDisplay(coursesResponse, errorMessage);
+    if (Object.values(ApiErrors).includes(courseResponse)) {
+        errorMessageDisplay(courseResponse, errorMessage);
         errorMessageContainer.classList.remove("hide");
         return false;
     }
 
     errorMessageContainer.classList.add("hide");
-    
-    return coursesResponse;
+
+    return courseResponse;
 }
 
 function errorMessageDisplay(response, errorMessageElement) {

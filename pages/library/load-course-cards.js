@@ -1,6 +1,6 @@
 // TODO > IMPORTS ------------------------------------------------------------
-// import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
-import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js'
+import { ApiErrors } from '../api-calls/api-fetch.js'
+import { getCourses } from '../api-calls/course.js'
 
 // TODO > CONSTANTS
 
@@ -55,16 +55,16 @@ await loadCourses();
  * @returns {Promise<void>} Resolves after the courses are loaded and rendered.
  */
 async function loadCourses() {
-    const courseResponse = await getCourses();
+    const coursesResponse = await getCourses();
     // console.log(courseResponse);
 
     // Revisar si hubo un error de API
-    if (Object.values(ApiErrors).includes(courseResponse)) {
-        if (courseResponse === ApiErrors.NETWORK_ERROR) {
+    if (Object.values(ApiErrors).includes(coursesResponse)) {
+        if (coursesResponse === ApiErrors.NETWORK_ERROR) {
             // console.log("Verifica tu conexión a internet");
             errorMessage.textContent = "Verifica tu conexión a internet"
         }
-        else if (courseResponse === ApiErrors.SERVER_ERROR) {
+        else if (coursesResponse === ApiErrors.SERVER_ERROR) {
             // console.log("Hubo un problema desde el servidor, intenta de nuevo más tarde");
             errorMessage.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
         }
@@ -73,7 +73,7 @@ async function loadCourses() {
     }
 
     // Revisar si el usuario no ha importado cursos
-    if (courseResponse.length < 1) {
+    if (coursesResponse.length < 1) {
         for (const noCourseContainer of noCoursesContainers) {
             // console.log("No hay cursos importados");
             noCourseContainer.classList.remove("hide");
@@ -82,13 +82,13 @@ async function loadCourses() {
     }
 
     // Filtrar solo los cursos que esten en progreso
-    const inProgressCoursesResponse = courseResponse.filter(course => {
+    const inProgressCoursesResponse = coursesResponse.filter(course => {
         const progress = course.progress.progressPercentage;
         return progress > 0 && progress < 100;
     });
 
     // Agregar todos los cursos del usuario al contenedor de cards general
-    appendCardsToContainer(courseResponse, allCoursesCardsContainer, cardContainersId.allCourses);
+    appendCardsToContainer(coursesResponse, allCoursesCardsContainer, cardContainersId.allCourses);
 
     // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
     appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainersId.inProgressCourses);
@@ -98,24 +98,6 @@ async function loadCourses() {
     // }
 
     // console.log("Todos los cursos cargados");
-}
-
-// * LLAMAR A ENDPOINT PARA OBTENER CURSOS
-/**
- * Fetches the authenticated user's course list from the courses API.
- * @returns {Promise<any>} The API response containing the user courses, or an API error value.
- */
-async function getCourses() {
-
-    const url = 'https://languagedive.bryanrodriguez.tech/api/courses';
-
-    const requestObject = {
-        method: 'GET'
-    };
-
-    const coursesResponse = await apiFetch(url, requestObject, true);
-
-    return coursesResponse;
 }
 
 /**
@@ -240,19 +222,3 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
 
     return card;
 }
-
-// TODO > LLAMAR A ENDPOINT PARA ELIMINAR CURSO
-async function deleteCourse(id) {
-
-    const url = `https://languagedive.bryanrodriguez.tech/api/courses/${id}`;
-
-    const requestObject = {
-        method: 'DELETE'
-    };
-
-    const courses = await apiFetch(url, requestObject, true);
-
-    return courses;
-
-}
-

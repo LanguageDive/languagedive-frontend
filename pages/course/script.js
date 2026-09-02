@@ -1,5 +1,4 @@
 import { retrievedUserObject, refreshAccessToken } from '../api-calls/auth.js';
-import { apiFetch, ApiErrors } from '../api-calls/api-fetch.js';
 
 const userNameHeader = document.querySelector("#username");
 
@@ -9,3 +8,8 @@ if (!retrievedUserObject) {
 else {
     userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
 }
+
+const siteURL = window.location.href;
+console.log(siteURL);
+const siteParams = new URLSearchParams(siteURL);
+console.log(siteParams);
