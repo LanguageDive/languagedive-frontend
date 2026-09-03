@@ -21,8 +21,7 @@ const courseId = urlParams.get("id");
 // * API RELATED VARIABLES
 
 const courseResponse = await getCourseById(courseId);
-console.log(courseResponse);
-
+// console.log(courseResponse);
 
 if(Object.values(ApiErrors).includes(courseResponse)){
     console.log("HUBO UN ERROR");
@@ -78,8 +77,11 @@ function loadLessons() {
     for (let i = 0; i < lessonsNumber; i++) {
         const lessonObject = courseLessons[i];
 
+        console.log(lessonObject);
+
         const cardObjectInfo = {
-            "id": i + 1,
+            "id": lessonObject.id,
+            "lessonNumber": i + 1,
             "title": lessonObject.title,
             "progress": (lessonObject.progress === null ? Math.floor(Math.random() * 101) : lessonObject.progress)
         }
@@ -92,7 +94,7 @@ function loadLessons() {
 /**
  * Creates a lesson card DOM element with lesson information and progress bar.
  * @param {Object} cardObjectInfo - The lesson card information object
- * @param {number} cardObjectInfo.id - The lesson number/ID
+ * @param {number} cardObjectInfo.lessonNumber - The lesson number
  * @param {string} cardObjectInfo.title - The lesson title/chapter name
  * @param {number} cardObjectInfo.progress - The lesson progress percentage (0-100)
  * @returns {HTMLElement} A div element representing the lesson card
@@ -114,7 +116,7 @@ export function createCard(cardObjectInfo) {
     // * CONTENIDO DEL CONTENEDOR DE LA PARTE IZQUIERDA SUPERIOR
     const lessonNumber = document.createElement("p");
     lessonNumber.className = "lesson-number";
-    lessonNumber.textContent = `Lección ${cardObjectInfo.id}`;
+    lessonNumber.textContent = `Lección ${cardObjectInfo.lessonNumber}`;
     const horizontalRule = document.createElement("hr");
     const lessonChapterName = document.createElement("p");
     lessonChapterName.className = "lesson-chapter-name";
@@ -148,9 +150,10 @@ export function createCard(cardObjectInfo) {
 
     // ? ENLACE DE LA PARTE DERECHA
     const anchor = document.createElement("a");
-    anchor.href = "#";
+    anchor.href = `../lesson/index.html?id=${courseId}&lessonId=${cardObjectInfo.id}`;
     anchor.className = "continue-lesson";
     anchor.textContent = "Continuar ";
+    
 
     // ? SVG DE LA PARTE DERECHA
     const svgNamespace = "http://www.w3.org/2000/svg";
@@ -181,3 +184,5 @@ export function createCard(cardObjectInfo) {
     card.appendChild(cardRight);
     return card;
 }
+
+

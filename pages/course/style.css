@@ -118,7 +118,8 @@
     display: grid;
     grid-template-columns: 2.5fr 1fr;
 
-    height: 80px;
+    /* height: 80px; */
+    height: fit-content;
     margin-bottom: 24px;
     
     overflow: hidden;
