@@ -1,6 +1,6 @@
 // TODO > IMPORTS ------------------------------------------------------------
 import { ApiErrors } from '../api-calls/api-fetch.js'
-import { getCourses } from '../api-calls/course.js'
+import { getCourses, deleteCourse } from '../api-calls/course.js'
 
 // TODO > CONSTANTS
 
@@ -45,7 +45,6 @@ const noCoursesContainers = document.querySelectorAll(".no-courses-container");
 
 // * Cargar cursos
 await loadCourses();
-
 // ! FIN > PROGRAM RUN -----------------------------------------------------------
 
 // TODO > FUNCTIONS ------------------------------------------------------------
@@ -93,7 +92,8 @@ async function loadCourses() {
     // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
     appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainersId.inProgressCourses);
 
-    // for(const course of courseResponse){
+    // for(const course of coursesResponse){
+    //     // console.log(course);
     //     deleteCourse(course.id);
     // }
 
@@ -217,7 +217,7 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
     card.appendChild(courseInfo);
 
     card.addEventListener('click', () => {
-        location.assign(`../course/index.html?id=${cardObjectInfo.id}`);
+        window.location.assign(`../course/index.html?id=${cardObjectInfo.id}`);
     });
 
     return card;

@@ -6,7 +6,7 @@ import { postEpub, getCourseById } from '../api-calls/course.js'
 const userNameHeader = document.querySelector("#username");
 
 if (!retrievedUserObject) {
-    location.assign("/login/index.html");
+    window.location.assign("/login/index.html");
 }
 else {
     userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
