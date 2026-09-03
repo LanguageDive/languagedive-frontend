@@ -1,8 +1,12 @@
 import { apiFetch } from "./api-fetch.js";
 /**
- * Fetches the authenticated user's course list from the courses API.
+ * Fetches a single lesson for a given course from the language dive API.
  *
- * @returns {Promise<any>} A promise that resolves to the API response containing the user's courses,
+ * @param {string|number} courseId - The unique identifier of the course.
+ * @param {string|number} lessonId - The unique identifier of the lesson to fetch.
+ * @param {number} [page=0] - The page index for paginated lesson content.
+ * @param {number} [pageSize=100] - The number of items to include per page.
+ * @returns {Promise<any>} A promise that resolves to the lesson API response,
  * or an error value returned by the API client.
  */
 export async function getLesson(courseId, lessonId, page = 0, pageSize = 100) {
@@ -13,7 +17,7 @@ export async function getLesson(courseId, lessonId, page = 0, pageSize = 100) {
         method: 'GET'
     };
     
-    const coursesResponse = await apiFetch(url, requestObject, true);
+    const lessonResponse = await apiFetch(url, requestObject, true);
 
-    return coursesResponse;
+    return lessonResponse;
 }
