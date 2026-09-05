@@ -56,3 +56,193 @@
 }
 
 /* ! FIN HEADER */
+
+/* TODO > MAIN */
+
+#main-grid{
+    height: calc(100vh - 98px);
+
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: 100%;
+}
+
+#grid-left{
+    height: 100%;
+    padding: 37px 28px 30px 40px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+
+    border-right: dashed black 2px;
+}
+
+#reader-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-exit{
+
+    align-self: flex-start;
+
+    padding: 10px 58px;
+    font-size: 24px;
+
+    border: solid black 1px;
+    border-radius: 10px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+}
+
+#reader-header .text{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+
+    gap: 5px;
+}
+
+.reading-lesson-name{
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.page-progress{
+    font-weight: bold;
+    font-size: 28px;
+}
+
+#reader-main{
+    display: flex;
+    flex-direction: column;
+    gap: 50px
+}
+
+.reader-text{
+    font-size: 24px;
+}
+
+.reader-nav{
+    display: flex;
+    justify-content: end;
+    gap: 30px
+}
+
+.reader-nav > a{
+    padding: 10px;
+    font-size: 24px;
+
+    border: solid black 1px;
+    border-radius: 10px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+}
+
+#reader-footer{
+    margin-top: auto;
+
+    display: flex;
+    justify-content: center;
+    gap: 135px;
+}
+
+#reader-footer > button{
+    font-size: 24px;
+    border: none;
+    background-color: white;
+}
+
+#grid-right{
+    height: 100%;
+    padding: 37px 17px 30px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.word{
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.meaning{
+    font-size: 24px;
+}
+
+#grid-right .title{
+    font-weight: bold;
+}
+
+#traduction-container{
+    font-size: 24px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+#traduction-container input{
+    width: fit-content;
+    padding: 5px 0;
+
+    font-size: 24px;
+}
+
+#traduction-container button{
+    font-size: 24px;
+    padding: 10px;
+    border-radius: 16px;
+    width: fit-content;
+}
+
+.traduction-list{
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+#word-progress-buttons{
+    margin-top: auto;
+
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+#word-progress-buttons > button{
+    padding: 5px 15px;
+    font-size: 32px;
+    border-radius: 100px;
+
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+button.kwnown svg{
+    width: 29px;
+    height: auto;
+}
+
+
+/* ! FIN> MAIN */
+
+/* TODO > PSEUDELEMENTOS / ACCIONES DEL USUARIO */
+
+button:hover{
+    cursor: pointer;
+}
+
+/* ! FIN > PSEUDELEMENTOS / ACCIONES DEL USUARIO */

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
 
-        <!-- TODO > HEADER -->
+    <!-- TODO > HEADER -->
     <header>
         <div id="header">
             <div id="header-links">
@@ -28,10 +30,115 @@
     <!-- TODO > MAIN-->
     <main>
 
+        <!-- TODO > CONTENDOR GRID PRINCIPAL -->
+        <div id="main-grid">
+
+            <!-- TODO > GRID IZQUIERDA -->
+            <div id="grid-left">
+                <div id="reader-header">
+                    <a href="/course/" class="btn-exit">
+                        <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://w3.org" height="34">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        <p class="text">Salir</p>
+                    </a>
+
+                    <div class="text">
+                        <p class="reading-lesson-name">Leyendo: Titulo de la leccion</p>
+                        <p class="page-progress">Pagina n / m</p>
+                    </div>
+                </div>
+
+                <div id="reader-main">
+                    <div class="reader-text">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin porttitor risus, et
+                        pretium orci finibus ut. Vivamus nec enim ac justo volutpat euismod eget pretium risus.
+
+                        Donec ac mauris in quam luctus tempor. Donec ac ipsum eu augue facilisis suscipit. Aenean et
+                        ipsum sit amet dui blandit porta. Vivamus interdum erat quis magna finibus, at lacinia lacus
+                        ultrices. Integer vel mauris convallis, volutpat sapien quis, auctor diam. Curabitur non neque
+                        ultricies, gravida lorem gravida, rutrum tellus.
+                    </div>
+
+                    <div class="reader-nav">
+                        <a href="#" id="prev-page">
+                            <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://w3.org" height="34">
+                                <line x1="19" y1="12" x2="5" y2="12" />
+                                <polyline points="12 19 5 12 12 5" />
+                            </svg>
+                            <p class="text">Página anterior</p>
+                        </a>
+                        <a href="#" id="next-page">
+                            <svg class="forward-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                height="34">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                            <p class="text">Página siguiente</p>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div id="reader-footer">
+                    <button id="page-view">Vista de Página</button>
+                    <button id="sentence-view">Vista de oración</button>
+                </div>
+            </div>
+            <!-- ! FIN > GRID IZQUIERDA -->
+
+            <!-- TODO > GRID DERECHA -->
+            <div id="grid-right">
+                <p class="word">tellus</p>
+                <div class="meaning">
+                    <p class="title">Definición:</p>
+                    <p class="definition">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin
+                        porttitor risus, et pretium orci finibus ut. Vivamus nec enim ac justo volutpat euismod eget
+                        pretium
+                        risus. </p>
+                </div>
+
+                <div id="traduction-container">
+                    <p class="title">Traducciones</p>
+
+                    <ul class="traduction-list">
+                        <li class="traduction">Traducción 1</li>
+                        <li class="traduction">Traducción 2</li>
+                        <li class="traduction">Traducción 3</li>
+                    </ul>
+
+                    <input type="text" name="customize-traduction" id="customize-traduction"
+                        placeholder="Traducción personalizada">
+
+                    <button>Agregar</button>
+                </div>
+
+                <div id="word-progress-buttons">
+                    <button class="unknown">X</button>
+                    <button class="level-one">1</button>
+                    <button class="level-two">2</button>
+                    <button class="level-three">3</button>
+                    <button class="level-four">4</button>
+                    <button class="level-five">5</button>
+                    <button class="kwnown">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-check" viewBox="0 0 16 16">
+                            <path
+                                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- ! FIN > GRID DERECHA -->
+        </div>
+        <!-- ! FIN > CONTENDOR GRID PRINCIPAL -->
+
     </main>
     <!-- ! FIN > MAIN-->
 
     <script type="module" src="script.js"></script>
-    
+
 </body>
+
 </html>

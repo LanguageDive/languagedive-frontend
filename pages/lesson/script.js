@@ -17,7 +17,6 @@ const lessonId = params.get('lessonId'); // Extracts lessonId
 // console.log(courseId);
 // console.log(lessonId);
 
-
 const lessonResponse = await getLesson(courseId, lessonId);
 
 console.log(lessonResponse);
