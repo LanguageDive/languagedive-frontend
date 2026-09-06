@@ -96,16 +96,16 @@ async function getCourse(courseId) {
     return courseResponse;
 }
 
-function errorMessageDisplay(response, errorMessageElement) {
+function errorMessageDisplay(response, HTMLElement) {
     if (response === ApiErrors.NETWORK_ERROR) {
         // console.log("Verifica tu conexión a internet");
-        errorMessageElement.textContent = "Verifica tu conexión a internet"
+        HTMLElement.textContent = "Verifica tu conexión a internet"
     }
-    else if (response === ApiErrors.SERVER_ERROR) {
+    else if (response === ApiErrors.SERVER_ERROR_5XX) {
         // console.log("Hubo un problema desde el servidor, intenta de nuevo más tarde");
-        errorMessageElement.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
+        HTMLElement.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
     }
-    else if (response === ApiErrors.EXPIRED_TOKEN) {
-        errorMessageElement.textContent = "Tu token expiró";
+    else if (response === ApiErrors.EXPIRED_TOKEN_401) {
+        HTMLElement.textContent = "Tu token expiró";
     }
 }

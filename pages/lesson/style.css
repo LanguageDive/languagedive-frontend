@@ -120,7 +120,9 @@
 #reader-main{
     display: flex;
     flex-direction: column;
-    gap: 50px
+    gap: 50px;
+
+    overflow-y: auto;
 }
 
 .reader-text{
@@ -146,11 +148,15 @@
 }
 
 #reader-footer{
+    background-color: white;
     margin-top: auto;
 
     display: flex;
     justify-content: center;
     gap: 135px;
+
+    /* position: sticky;
+    bottom: 0; */
 }
 
 #reader-footer > button{
@@ -246,3 +252,7 @@ button:hover{
 }
 
 /* ! FIN > PSEUDELEMENTOS / ACCIONES DEL USUARIO */
+
+.hide{
+    display: none !important;
+}

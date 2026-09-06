@@ -1,6 +1,6 @@
 // TODO > IMPORTS ------------------------------------------------------------
 import { ApiErrors } from '../api-calls/api-fetch.js'
-import { getCourses, deleteCourse } from '../api-calls/course.js'
+import { getCourses} from '../api-calls/course.js'
 
 // TODO > CONSTANTS
 

@@ -9,7 +9,7 @@ import { apiFetch } from "./api-fetch.js";
  * @returns {Promise<any>} A promise that resolves to the lesson API response,
  * or an error value returned by the API client.
  */
-export async function getLesson(courseId, lessonId, page = 0, pageSize = 100) {
+export async function getLesson(courseId, lessonId, page = 0, pageSize = 6) {
 
     const url = `https://languagedive.bryanrodriguez.tech/api/courses/${courseId}/lessons/${lessonId}?page=${page}&pageSize=${pageSize}`;
 
