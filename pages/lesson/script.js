@@ -11,19 +11,22 @@ else {
     userNameHeader.textContent = (retrievedUserObject.username).toUpperCase();
 }
 
+// * URL RELATED PARAMS
 const urlQuery = window.location.search;
 const urlParams = new URLSearchParams(urlQuery);
 const courseId = urlParams.get('id');
 const lessonId = urlParams.get('lessonId');
-let page = 0;
-const pageSize = 5;
+
+// * RELATED INIT VARIABLES TO CALL API
+let currentPage = 0;
+let currentPageSize = 4;
 // console.log("courseID>", courseId);
 // console.log("lessonID>", lessonId);
 
 let lessonResponse;
 
 try {
-    lessonResponse = await getLesson(courseId, lessonId, page, pageSize);
+    lessonResponse = await getLesson(courseId, lessonId, currentPage, currentPageSize);
     if (Object.values(ApiErrors).includes(lessonResponse)) {
         console.log("HUBO UN ERROR");
         throw new Error(lessonResponse);
@@ -34,11 +37,12 @@ catch (error) {
     console.error(error);
     throw error;
 }
+console.log(lessonResponse);
 
 // * API RELATED VARIABLES
 const lessonTitle = lessonResponse.lessonTitle;
-const lessonTotalPages = lessonResponse.totalPages;
-let sentences = lessonResponse.sentences
+let lessonTotalPages = lessonResponse.totalPages;
+const sentences = lessonResponse.sentences
 
 // * DOM RELATED VARIABLES
 const lessonNameHTML = document.querySelector(".reading-lesson-name");
@@ -47,6 +51,7 @@ const readerText = document.querySelector(".reader-text");
 const btnPrevPage = document.querySelector("#prev-page");
 const btnNextPage = document.querySelector("#next-page");
 const btnExit = document.querySelector(".btn-exit");
+const pageViewBtns = document.querySelectorAll("#page-view, #sentence-view");
 
 const pageHandlingBtns = document.querySelectorAll("#prev-page, #next-page");
 // console.log(pageHandlingBtns);
@@ -58,15 +63,16 @@ btnExit.href = `/course/index.html?id=${courseId}`;
 
 lessonNameHTML.textContent = `Leyendo: ${lessonTitle}`;
 
-updatePage(page, sentences);
+updatePage(currentPage, lessonTotalPages, sentences);
 bindPageNavigationEvents();
-toggleHideBtns(page);
+toggleHideBtns(currentPage, lessonTotalPages);
+bindPageViewEvents();
 
 // ! FIN > PROGRAM RUN
 
 // TODO > FUNCTIONS
 
-function updatePage(page, sentences) {
+function updatePage(page, lessonTotalPages, sentences) {
     readerText.textContent = "";
 
     pageProgress.textContent = `Página ${page + 1} / ${lessonTotalPages} `
@@ -81,47 +87,62 @@ function updatePage(page, sentences) {
 }
 
 function bindPageNavigationEvents() {
-    console.log("Entrando a funcion")
     pageHandlingBtns.forEach((button) => {
         button.addEventListener("click", async () => {
             const buttonId = button.id;
 
-            if (page === 0 && buttonId == "prev-page") {
-                console.log("NAVEGACION ANTERIOR BLOQUEADA")
-                return;
-            }
-            if (page === lessonTotalPages - 1 && buttonId == "next-page") {
-                console.log("NAVEGACION SIGUIENTE BLOQUEADA")
-                return;
-            }
+            if (currentPage === 0 && buttonId === "prev-page") return;
+            if (currentPage === lessonTotalPages - 1 && buttonId === "next-page") return;
 
-            (buttonId == "prev-page") ? page-- : page++;
+            (buttonId === "prev-page") ? currentPage-- : currentPage++;
 
             try {
-                lessonResponse = await getLesson(courseId, lessonId, page, pageSize);
+                lessonResponse = await getLesson(courseId, lessonId, currentPage, currentPageSize);
                 if (Object.values(ApiErrors).includes(lessonResponse)) {
-                    console.log("HUBO UN ERROR");
                     throw new Error(lessonResponse);
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 window.location.assign("/course/index.html");
                 console.error(error);
                 return;
             }
-            // console.log(lessonResponse);
-            pageProgress.textContent = `Página ${page + 1} / ${lessonTotalPages} `
-            toggleHideBtns(page);
-            sentences = lessonResponse.sentences;
-            updatePage(page, sentences);
+
+            pageProgress.textContent = `Página ${currentPage + 1} / ${lessonTotalPages} `;
+            toggleHideBtns(currentPage, lessonTotalPages);
+            updatePage(currentPage, lessonTotalPages, lessonResponse.sentences);
         });
     });
-
 }
 
-function toggleHideBtns(page) {
+function toggleHideBtns(page, lessonTotalPages) {
     btnPrevPage.classList.toggle('hide', page === 0);
     btnNextPage.classList.toggle('hide', page === lessonTotalPages - 1);
+}
+
+function bindPageViewEvents() {
+    pageViewBtns.forEach((button) => {
+        button.addEventListener("click", async () => {
+            const buttonId = button.id;
+            currentPageSize = (buttonId === "page-view") ? 4 : 1;
+
+            try {
+                lessonResponse = await getLesson(courseId, lessonId, currentPage, currentPageSize);
+                if (Object.values(ApiErrors).includes(lessonResponse)) {
+                    throw new Error(lessonResponse);
+                }
+            } catch (error) {
+                window.location.assign("/course/index.html");
+                console.error(error);
+                return;
+            }
+
+            currentPage = lessonResponse.page;
+            lessonTotalPages = lessonResponse.totalPages;
+
+            toggleHideBtns(currentPage, lessonTotalPages);
+            updatePage(currentPage, lessonTotalPages, lessonResponse.sentences);
+        });
+    });
 }
 
 // ! FIN > FUNCTIONS
