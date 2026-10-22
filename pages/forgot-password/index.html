@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña · Próximamente · LanguageDive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/common.css">
+    <link rel="stylesheet" href="/status-page.css">
+</head>
+
+<body>
+
+    <!-- TODO > HEADER -->
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/">LanguageDive</a>
+
+            <div class="user-access">
+                <a href="/login/" class="guest-only">Iniciar sesión</a>
+                <a href="/register/" class="guest-only">Registrarse</a>
+                <a href="/library/" class="member-only hide">Mi biblioteca</a>
+            </div>
+        </nav>
+    </header>
+    <!-- ! FIN > HEADER -->
+
+    <main class="status-page">
+
+        <!-- Dive con casco de obra junto a un letrero de "en obras" (decorativo) -->
+        <div class="status-illustration" aria-hidden="true">
+            <svg viewBox="0 0 420 250">
+                <defs>
+                    <pattern id="work-stripes" width="20" height="20" patternUnits="userSpaceOnUse"
+                        patternTransform="rotate(45)">
+                        <rect width="10" height="20" fill="#1F2A4D" />
+                    </pattern>
+                </defs>
+
+                <!-- Arena -->
+                <ellipse cx="210" cy="238" rx="200" ry="14" fill="#F4E1BC" />
+
+                <!-- Letrero de obras -->
+                <g class="anim-sign">
+                    <rect x="301" y="118" width="10" height="120" rx="3" fill="#B5763A" stroke="#1F2A4D"
+                        stroke-width="3" />
+                    <rect x="250" y="70" width="112" height="70" rx="10" fill="#FFD23F" stroke="#1F2A4D"
+                        stroke-width="3" />
+                    <rect x="256" y="120" width="100" height="14" rx="4" fill="url(#work-stripes)" />
+                    <text x="306" y="106" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="19"
+                        font-weight="700" fill="#1F2A4D">EN OBRAS</text>
+                </g>
+
+                <!-- Cono -->
+                <path d="M372 236 L384 186 L396 236 Z" fill="#FFAA5C" stroke="#1F2A4D" stroke-width="3"
+                    stroke-linejoin="round" />
+                <path d="M378 212 L390 212" stroke="#ffffff" stroke-width="5" />
+                <rect x="364" y="232" width="40" height="7" rx="3" fill="#FFAA5C" stroke="#1F2A4D"
+                    stroke-width="3" />
+
+                <!-- Dive con casco y llave inglesa -->
+                <g class="anim-float">
+                    <g transform="translate(40 52) scale(1.55)">
+                        <path d="M94 54 L118 34 Q112 54 118 74 Z" fill="#12519C" stroke="#1F2A4D" stroke-width="3"
+                            stroke-linejoin="round" />
+                        <ellipse cx="56" cy="56" rx="42" ry="36" fill="#1B6FD1" stroke="#1F2A4D" stroke-width="3" />
+                        <ellipse cx="52" cy="72" rx="24" ry="12" fill="#8EC5FF" />
+                        <circle cx="28" cy="64" r="5" fill="#FF7A7A" opacity="0.6" />
+                        <circle cx="82" cy="64" r="5" fill="#FF7A7A" opacity="0.6" />
+                        <circle cx="42" cy="48" r="11" fill="#fff" stroke="#1F2A4D" stroke-width="2.5" />
+                        <circle cx="44" cy="50" r="5" fill="#1F2A4D" />
+                        <circle cx="45.8" cy="48" r="1.6" fill="#fff" />
+                        <circle cx="68" cy="48" r="11" fill="#fff" stroke="#1F2A4D" stroke-width="2.5" />
+                        <circle cx="70" cy="50" r="5" fill="#1F2A4D" />
+                        <circle cx="71.8" cy="48" r="1.6" fill="#fff" />
+                        <path d="M48 66 Q55 72 62 66" fill="none" stroke="#1F2A4D" stroke-width="3"
+                            stroke-linecap="round" />
+                        <!-- Casco de obra -->
+                        <path d="M27 29 Q56 -2 85 29 Z" fill="#FFD23F" stroke="#1F2A4D" stroke-width="3"
+                            stroke-linejoin="round" />
+                        <rect x="20" y="26" width="72" height="8" rx="4" fill="#FFD23F" stroke="#1F2A4D"
+                            stroke-width="3" />
+                        <rect x="51" y="8" width="10" height="20" rx="3" fill="#D9A800" />
+                        <!-- Aleta con la llave -->
+                        <ellipse cx="38" cy="80" rx="10" ry="6.5" fill="#12519C" stroke="#1F2A4D" stroke-width="2.5" />
+                        <g class="anim-wrench">
+                            <path d="M84 86 L104 58" stroke="#9AA5B8" stroke-width="7" stroke-linecap="round" />
+                            <circle cx="106" cy="54" r="8" fill="#9AA5B8" stroke="#1F2A4D" stroke-width="2.5" />
+                            <rect x="103" y="44" width="6" height="8" fill="#FFF9F0" />
+                            <ellipse cx="80" cy="84" rx="10" ry="6.5" fill="#12519C" stroke="#1F2A4D"
+                                stroke-width="2.5" />
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <section class="status-card" aria-labelledby="status-title">
+            <span class="status-tag">Próximamente</span>
+            <h1 id="status-title" class="status-title">Recuperar tu contraseña llegará pronto</h1>
+            <p class="status-text">
+                Todavía estamos construyendo esta parte del arrecife. Por ahora no se puede recuperar la
+                contraseña desde la app, y aún no tiene fecha de llegada.
+            </p>
+
+            <ul class="status-tips">
+                <li class="status-tips-title">Mientras tanto, puedes probar:</li>
+                <li>Iniciar sesión con tu nombre de usuario en lugar del correo, o al revés.</li>
+                <li>Revisar si tu navegador guardó la contraseña.</li>
+                <li>Crear una cuenta nueva con otro correo.</li>
+            </ul>
+
+            <div class="status-actions">
+                <a href="/login/" class="btn btn-primary">Volver a iniciar sesión</a>
+                <a href="/" class="btn">Ir al inicio</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Arena y algas al fondo (decorativo) -->
+    <div class="status-seabed" aria-hidden="true">
+        <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice">
+            <path d="M0 110 Q150 80 300 104 T600 98 T900 108 T1200 92 V200 H0 Z" fill="#FBEFD6" />
+            <path d="M0 140 Q200 118 400 136 T800 132 T1200 138 V200 H0 Z" fill="#F4E1BC" />
+            <path class="seaweed" d="M60 200 C48 168 72 150 60 122 C50 100 68 82 60 58" fill="none" stroke="#2FBF71"
+                stroke-width="10" stroke-linecap="round" />
+            <path class="seaweed" d="M92 200 C84 176 102 160 93 138 C87 122 98 108 94 92" fill="none" stroke="#1E8C51"
+                stroke-width="9" stroke-linecap="round" />
+            <path class="seaweed" d="M1120 200 C1108 168 1132 150 1120 122 C1110 100 1128 82 1120 58" fill="none"
+                stroke="#2FBF71" stroke-width="10" stroke-linecap="round" />
+            <path d="M1060 200 V160 M1060 174 L1046 154 M1060 168 L1074 148" fill="none" stroke="#FF7A7A"
+                stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </div>
+
+    <script type="module" src="/status-page.js"></script>
+</body>
+
+</html>

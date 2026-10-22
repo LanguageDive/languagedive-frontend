@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Biblioteca · LanguageDive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <!-- TODO > HEADER -->
-    <header>
-        <div id="header">
-            <div id="header-links">
-                <a class="header links main" href="#">LOGO</a>
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/library/">LanguageDive</a>
 
-                <div class="userAccess">
-                    <a id="username" class="header links register" href="#">Usuario</a>
-                    <a href="/login/" id="logout" class="header links exit">Salir</a>
-                </div>
+            <div class="user-access">
+                <a href="/vocabulary/" class="header-nav-link">
+                    <span class="icon icon-cards" aria-hidden="true"></span>
+                    <span class="nav-text">Grimorio</span>
+                </a>
+                <span id="username" class="header-user">Usuario</span>
+                <a href="/login/" id="logout">Salir</a>
             </div>
-
-            <div class="hr"></div>
-        </div>
+        </nav>
     </header>
     <!-- ! FIN > HEADER -->
 
@@ -32,39 +38,44 @@
         <div id="main-container">
 
             <!-- TODO > CONTENEDOR PARA MENSAJES DE ERROR CON API-->
-            <div id="error-message-container" class="hide">
+            <div id="error-message-container" class="alert-error hide" role="alert">
                 <p class="error-message-text"></p>
             </div>
             <!-- ! FIN > CONTENEDOR PARA MENSAJES DE ERROR CON API -->
 
             <!-- TODO > IMPORTAR -->
-            <div id="import-courses">
+            <div id="import-courses" class="fade-up">
                 <label class="import-label" for="epubFile">Importar:</label>
 
                 <input type="file" id="epubFile" name="epubFile" accept=".epub" />
+
+                <span class="import-status" aria-live="polite"></span>
             </div>
             <!-- ! FIN > IMPORTAR -->
 
             <div id="user-courses">
                 <!-- TODO > TODOS LOS CURSOS -->
-                <div id="all-courses">
+                <section id="all-courses" class="fade-up" style="--i: 1" aria-labelledby="all-courses-title">
 
                     <!-- TODO > TODOS LOS CURSOS HEADER-->
                     <div class="header">
-                        <div class="title">Todos mis cursos</div>
+                        <h2 id="all-courses-title" class="title">Todos mis cursos</h2>
                         <div class="actions">
-                            <a href="#">Ver más</a>
+                            <!-- Alterna entre la fila con flechas y la cuadrícula con todos los cursos (cards-pager.js).
+                                 Oculto hasta saber si hay más cursos de los que caben en la fila -->
+                            <button type="button" class="see-more hide" aria-expanded="false"
+                                aria-controls="all-courses-cards">Ver más</button>
                             <div class="btns-page-shift">
-                                <button class="previous-page">
+                                <button class="previous-page btn btn-round" type="button" aria-label="Cursos anteriores">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                        class="bi bi-arrow-left" viewBox="0 0 16 16" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
                                     </svg>
                                 </button>
-                                <button class="next-page">
+                                <button class="next-page btn btn-round" type="button" aria-label="Cursos siguientes">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        class="bi bi-arrow-right" viewBox="0 0 16 16" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                                     </svg>
@@ -75,49 +86,51 @@
                     <!-- ! FIN > TODOS LOS CURSOS HEADER-->
 
                     <!-- TODO > TODOS LOS CURSOS CARD CONTAINER-->
-                    <div class="cards">
+                    <div class="cards" id="all-courses-cards">
                         <!-- TODO > CONTENEDOR DE MENSAJE SIN CURSOS -->
                         <div class="no-courses-container hide">
-                            <h2>No tienes cursos importados aún</h2>
+                            <p>No tienes cursos importados aún</p>
                         </div>
                         <!-- ! FIN > CONTENEDOR DE MENSAJE SIN CURSOS -->
 
-                        <!-- TODO > CARD ESPECIFICA -->
-                        <!-- <div class="card">
+                        <!-- TODO > CARD ESPECIFICA (la crea load-course-cards.js) -->
+                        <!-- <a class="card" href="../course/index.html?id=1">
                         <div class="course-creation">Creado el [dd] del [mm] de [aaaa]</div>
                         <div class="course-image">
-                            <img src="assets/nickype-snow-7646952.jpg" alt="snow image">
+                            <img src="../assets/nickype-snow-7646952.jpg" alt="">
                         </div>
                         <div class="course-info">
-                            <div class="course-name">Titulo</div>
+                            <h3 class="course-name">Titulo</h3>
                             <hr>
                             <div class="course-lessons-number">N lecciones</div>
                         </div>
-                    </div> -->
+                    </a> -->
                         <!-- ! FIN > CARD ESPECIFICA -->
                     </div>
                     <!-- ! FIN > TODOS LOS CURSOS CARD CONTAINER-->
-                </div>
+                </section>
                 <!-- ! FIN > TODOS LOS CURSOS -->
 
                 <!-- TODO > CURSOS EN PROGRESO -->
-                <div id="in-progress-courses">
-                    <!-- TODO > TODOS LOS CURSOS HEADER-->
+                <section id="in-progress-courses" class="fade-up" style="--i: 2"
+                    aria-labelledby="in-progress-courses-title">
+                    <!-- TODO > CURSOS EN PROGRESO HEADER-->
                     <div class="header">
-                        <div class="title">En progreso</div>
+                        <h2 id="in-progress-courses-title" class="title">En progreso</h2>
                         <div class="actions">
-                            <a href="#">Ver más</a>
+                            <button type="button" class="see-more hide" aria-expanded="false"
+                                aria-controls="in-progress-courses-cards">Ver más</button>
                             <div class="btns-page-shift">
-                                <button class="previous-page">
+                                <button class="previous-page btn btn-round" type="button" aria-label="Cursos anteriores">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                        class="bi bi-arrow-left" viewBox="0 0 16 16" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
                                     </svg>
                                 </button>
-                                <button class="next-page">
+                                <button class="next-page btn btn-round" type="button" aria-label="Cursos siguientes">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        class="bi bi-arrow-right" viewBox="0 0 16 16" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                                     </svg>
@@ -125,31 +138,18 @@
                             </div>
                         </div>
                     </div>
-                    <!-- ! FIN > TODOS LOS CURSOS HEADER-->
+                    <!-- ! FIN > CURSOS EN PROGRESO HEADER-->
 
-                    <!-- TODO > TODOS LOS CURSOS CARD CONTAINER-->
-                    <div class="cards">
+                    <!-- TODO > CURSOS EN PROGRESO CARD CONTAINER-->
+                    <div class="cards" id="in-progress-courses-cards">
                         <!-- TODO > CONTENEDOR DE MENSAJE SIN CURSOS -->
                         <div class="no-courses-container hide">
-                            <h2>No tienes cursos en progreso aún</h2>
+                            <p>No tienes cursos en progreso aún</p>
                         </div>
                         <!-- ! FIN > CONTENEDOR DE MENSAJE SIN CURSOS -->
-
-                        <!-- TODO > CARD ESPECIFICA -->
-                        <!-- <div class="card">
-                        <div class="course-image">
-                            <img src="assets/nickype-snow-7646952.jpg" alt="snow image">
-                        </div>
-                        <div class="course-info">
-                            <div class="course-name">Titulo</div>
-                            <hr>
-                            <div class="course-progress">Progress</div>
-                        </div>
-                    </div> -->
-                        <!-- ! FIN > CARD ESPECIFICA -->
                     </div>
-                    <!-- ! FIN > TODOS LOS CURSOS CARD CONTAINER-->
-                </div>
+                    <!-- ! FIN > CURSOS EN PROGRESO CARD CONTAINER-->
+                </section>
                 <!-- ! FIN > CURSOS EN PROGRESO -->
             </div>
         </div>

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión · LanguageDive</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
         rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="../auth-scene.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -18,66 +20,65 @@
     <div id="root">
 
         <!-- HEADER: INCLUDES
-                                - BUTTON FOR LOGO TO MAIN PAGE 
+                                - BUTTON FOR LOGO TO MAIN PAGE
                                 - REGISTER BUTTON
         -->
-        <div id="header">
-            <div class="links">
+        <header id="header">
+            <nav id="header-links" aria-label="Principal">
+                <a class="logo" href="/">LanguageDive</a>
 
-                <a class="header links main" href="#">LOGO</a>
-
-                <a class="header links register" href="/register">Registrarse</a>
-
-            </div>
-
-            <div class="hr"></div>
-        </div>
+                <a class="register" href="/register/">Registrarse</a>
+            </nav>
+        </header>
 
 
         <!-- LOGIN: INCLUDES
                                 - ANYTHING RELATED TO LOGIN
          -->
-        <div id="login">
+        <main id="login" class="fade-up">
 
-            <p class="login label-login">Iniciar Sesión</p>
+            <h1 class="login label-login">Iniciar Sesión</h1>
 
-            <form id="loginForm" class="login login-form">
+            <!-- novalidate: la validación la hace form-validation.js con mensajes propios -->
+            <form id="loginForm" novalidate class="login login-form">
 
                 <label for="username">Correo / Nombre de usuario</label>
-                <input type="text" name="identifier" id="username" placeholder="Usuario" required autocomplete="username">
+                <input type="text" name="identifier" id="username" placeholder="Usuario" autocomplete="username">
 
                 <label for="password" class="pwd">Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Contraseña" required autocomplete="current-password">
+                <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="current-password">
 
-                <div id="errorMessage" class="register-form display">
+                <div id="errorMessage" class="register-form display alert-error" role="alert">
                     <p>Usuario y / o contraseña incorrectos</p>
                 </div>
 
-                <div id="successMessage" class="register-form display">
+                <div id="successMessage" class="register-form display alert-success" role="status">
                     <p>¡Inicio de sesión exitoso!</p>
                 </div>
 
             </form>
 
-            <button type="submit" form="loginForm">Iniciar Sesión</button>
+            <button type="submit" form="loginForm" class="btn btn-primary">Iniciar Sesión</button>
 
             <div id="no-acc">
 
-                <a class="no-acc forgot-pwd" href="./forgot-password.html">¿Olvidaste tu contraseña?</a>
+                <a class="no-acc forgot-pwd" href="/forgot-password/">¿Olvidaste tu contraseña?</a>
 
-                <div class="hr"></div>
+                <hr class="hr">
 
                 <p class="no-acc label">¿No tienes cuenta?</p>
 
-                <a class="no-acc register" href="/register">Regístrate aquí</a>
+                <a class="no-acc register" href="/register/">Regístrate aquí</a>
 
             </div>
 
-        </div>
+        </main>
 
     </div>
 
     <script type="module" src="script.js"></script>
+    <!-- Mascota, botón "Mostrar" de la contraseña y fondo marino -->
+    <script type="module" src="../auth-scene.js"></script>
 
 </body>
 

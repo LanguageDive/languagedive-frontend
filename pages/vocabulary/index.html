@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimorio · LanguageDive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- TODO > HEADER -->
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/library/">LanguageDive</a>
+
+            <div class="user-access">
+                <a href="/vocabulary/" class="header-nav-link" aria-current="page">
+                    <span class="icon icon-cards" aria-hidden="true"></span>
+                    <span class="nav-text">Grimorio</span>
+                </a>
+                <span id="username" class="header-user">Usuario</span>
+                <a href="/login/" id="logout">Salir</a>
+            </div>
+        </nav>
+    </header>
+    <!-- ! FIN > HEADER -->
+
+    <main id="vocabulary-page">
+
+        <!-- TODO > CABECERA DE LA PÁGINA -->
+        <div class="page-top fade-up">
+            <a href="/library/" class="btn btn-exit">
+                <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="34"
+                    aria-hidden="true">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                <span class="text">Salir</span>
+            </a>
+        </div>
+
+        <div class="page-heading fade-up" style="--i: 1">
+            <h1 class="page-title">Vocabulario</h1>
+
+            <!-- Resumen del grimorio (lo llena script.js) -->
+            <ul class="summary" aria-label="Resumen del grimorio">
+                <li class="summary-chip summary-total">
+                    <span class="summary-number" data-summary="total">0</span> palabras
+                </li>
+                <li class="summary-chip summary-learning">
+                    <span class="summary-number" data-summary="learning">0</span> en aprendizaje
+                </li>
+                <li class="summary-chip summary-learned">
+                    <span class="summary-number" data-summary="learned">0</span> aprendidas
+                </li>
+            </ul>
+        </div>
+        <!-- ! FIN > CABECERA DE LA PÁGINA -->
+
+        <!-- TODO > MENSAJE DE ERROR DE LA API -->
+        <div id="error-message-container" class="alert-error hide" role="alert">
+            <p class="error-message-text"></p>
+        </div>
+        <!-- ! FIN > MENSAJE DE ERROR DE LA API -->
+
+        <!-- TODO > HERRAMIENTAS: BUSCAR, FILTRAR, ORDENAR Y PAGINAR -->
+        <div class="toolbar fade-up" style="--i: 2">
+            <div class="search-field">
+                <span class="icon icon-search" aria-hidden="true"></span>
+                <label class="visually-hidden" for="search">Buscar palabra o traducción</label>
+                <input type="search" id="search" placeholder="Buscar palabra o traducción" autocomplete="off">
+            </div>
+
+            <div class="filters" role="group" aria-label="Filtrar por estado">
+                <button type="button" class="filter-chip" data-filter="all" aria-pressed="true">Todas</button>
+                <button type="button" class="filter-chip" data-filter="learning" aria-pressed="false">En aprendizaje</button>
+                <button type="button" class="filter-chip" data-filter="learned" aria-pressed="false">Aprendidas</button>
+                <button type="button" class="filter-chip" data-filter="ignored" aria-pressed="false">Ignoradas</button>
+            </div>
+
+            <div class="sort-field">
+                <label for="sort">Ordenar</label>
+                <select id="sort">
+                    <option value="recent">Recientes</option>
+                    <option value="alphabetical">A–Z</option>
+                    <option value="level">Nivel</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="pager fade-up" style="--i: 3">
+            <p class="pager-status" aria-live="polite"></p>
+            <div class="pager-buttons">
+                <button type="button" id="prev-page" class="btn">
+                    <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="34"
+                        aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    <span class="text">Página anterior</span>
+                </button>
+                <button type="button" id="next-page" class="btn">
+                    <span class="text">Siguiente página</span>
+                    <svg class="forward-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="34"
+                        aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- ! FIN > HERRAMIENTAS -->
+
+        <!-- TODO > TABLA DEL GRIMORIO -->
+        <!-- is-loading tapa las filas de ejemplo con esqueletos hasta que llegan las palabras -->
+        <div class="table-card fade-up" style="--i: 4">
+            <table class="vocabulary-table">
+                <caption class="visually-hidden">Palabras de tu grimorio con su traducción y su nivel</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Palabra</th>
+                        <th scope="col">Traducción</th>
+                        <th scope="col">Nivel</th>
+                        <th scope="col">Actualizada</th>
+                    </tr>
+                </thead>
+                <tbody id="vocabulary-rows">
+                    <!-- Filas (las crea script.js); mientras cargan, filas de esqueleto -->
+                </tbody>
+            </table>
+
+            <!-- Sin palabras (grimorio vacío o búsqueda sin resultados) -->
+            <div class="empty-state hide">
+                <span class="empty-icon" aria-hidden="true"><span class="icon icon-books"></span></span>
+                <p class="empty-title"></p>
+                <p class="empty-text"></p>
+                <a href="/library/" class="btn btn-primary empty-action">Ir a mi biblioteca</a>
+            </div>
+        </div>
+        <!-- ! FIN > TABLA DEL GRIMORIO -->
+
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

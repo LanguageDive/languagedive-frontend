@@ -1,6 +1,8 @@
 import { retrievedUserObject } from '../api-calls/auth.js';
 import { ApiErrors } from '../api-calls/api-fetch.js';
-import { appendCardsToContainer, cardContainersId, allCoursesCardsContainer } from './load-course-cards.js'
+import { appendCardsToContainer, cardContainersId, allCoursesCardsContainer, courseSkeletonCardHTML } from './load-course-cards.js'
+import { createSkeletonCards, removeSkeletonCards } from '../loading.js'
+import { showAlert } from '../alerts.js'
 import { postEpub, getCourseById } from '../api-calls/course.js'
 
 const userNameHeader = document.querySelector("#username");
@@ -28,24 +30,59 @@ epubFile.addEventListener("change", async () => {
    
     // console.log("Vas por buen camino papu");
     // console.log(file);
+    setImportLoading(true);
     const courseId = await postAndGetCourseId(file);
     const courseReponse = await getCourse(courseId);
+    setImportLoading(false);
     if (courseReponse) { appendCardsToContainer([courseReponse], allCoursesCardsContainer, cardContainersId.allCourses); }
 });
 
+/**
+ * Shows or hides the "Importando…" indicator next to the file picker, and a placeholder
+ * card where the new course will appear.
+ * @param {boolean} isLoading - Whether the EPUB is being uploaded.
+ */
+function setImportLoading(isLoading) {
+    const importContainer = document.querySelector("#import-courses");
+    importContainer.classList.toggle("is-loading", isLoading);
+    importContainer.querySelector(".import-status").textContent = isLoading ? "Importando…" : "";
+
+    if (isLoading) {
+        allCoursesCardsContainer.append(...createSkeletonCards(1, "card", courseSkeletonCardHTML));
+    }
+    else {
+        removeSkeletonCards(allCoursesCardsContainer);
+    }
+}
+
 function successFileImport(file) {
     if (!file) {
-        alert("Debes importar un archivo EPUB");
+        showAlert({
+            type: "info",
+            title: "Elige un libro",
+            message: "Selecciona un archivo EPUB para importarlo como curso."
+        });
         return false;
     }
     const filenameLower = file.name.toLowerCase();
     //El archivo supera el limite de tamannio o no es EPUB
     if ((file.size > maxFileSize)) {
-        alert("El archivo supera el limite de tamaño (10MB). Intenta con otro archivo");
+        showAlert({
+            type: "error",
+            title: "El archivo es muy grande",
+            message: "El límite es de 10 MB. Prueba con otro archivo."
+        });
+        // Se vacía el selector para poder elegir otro archivo (o el mismo, ya corregido)
+        epubFile.value = "";
         return false;
     }
     if ((!filenameLower.endsWith('.epub'))) {
-        alert("El tipo de archivo no es válido, prueba con otro");
+        showAlert({
+            type: "error",
+            title: "Ese archivo no es un EPUB",
+            message: "Solo se pueden importar libros en formato .epub."
+        });
+        epubFile.value = "";
         return false;
     }
 

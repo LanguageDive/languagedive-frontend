@@ -1,162 +1,251 @@
+/*
+ * Mobile-first: los estilos base son para móvil (una columna y la página
+ * hace scroll normal). A partir de 900px se pasa al diseño de dos
+ * columnas con la lista de lecciones haciendo scroll propio.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
 :root {
-    --first-color: #F9F7F7;
-    --second-color: #DBE2EF;
-    --third-color: #3F72AF;
-    --fourth-color: #112D4E;
+    /* Tamaños fluidos: mínimo en móvil, máximo en escritorio */
+    --page-gutter: clamp(16px, 5vw, 100px);
+    --gap-columns: clamp(32px, 4vw, 65px);
+    --gap-blocks: clamp(16px, 3vw, 32px);
+    --arrow-size: clamp(24px, 3vw + 12px, 34px);
+
+    --fs-title: clamp(1.375rem, 1.5vw + 1rem, 1.875rem);
+    --fs-text: clamp(1rem, 0.75vw + 0.8rem, 1.375rem);
+    --fs-button: clamp(1.125rem, 1vw + 0.8rem, 1.5rem);
+    --fs-lesson: clamp(1rem, 0.5vw + 0.875rem, 1.25rem);
 }
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    color: black;
+img {
+    width: 100%;
 }
-
-/* TODO> HEADER */
-#header {
-    height: 98px;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--third-color);
-}
-
-#header .hr {
-    margin-top: auto;
-}
-
-#header-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: inherit;
-}
-
-#header-links * {
-    color: var(--second-color);
-    text-decoration: none;
-    height: 100%;
-    padding: 0 20px;
-
-    display: flex;
-    align-items: center;
-}
-
-#header-links .main {
-    font-size: 24px;
-}
-
-#header-links .register {
-    font-size: 20px;
-}
-
-#header-links a:hover {
-    background-color: var(--first-color);
-    color: var(--fourth-color);
-}
-
-/* ! FIN HEADER */
 
 /* TODO > MAIN */
+
+/* Móvil: una sola columna en este orden:
+   regresar → portada y detalles del curso → título "Lecciones" → lista.
+   #grid-left usa display: contents para que sus hijos se coloquen
+   directamente en la cuadrícula y la portada quede entre ellos */
 #main-grid-container {
-
-    height: calc(100vh - 98px);
-    overflow: hidden;
-
-    padding: 49px 100px 0;
+    padding: clamp(16px, 4vw, 49px) var(--page-gutter) 40px;
 
     display: grid;
-    grid-template-columns: 1.8fr 1fr;
-    grid-template-rows: 100%;
-
-    gap: 65px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+        "return"
+        "course"
+        "count"
+        "lessons";
+    gap: var(--gap-blocks);
 }
 
-
 #grid-left {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-
-    /* align-self: stretch; */
+    display: contents;
 }
 
 .return {
-    font-size: 24px;
+    grid-area: return;
+}
 
+.grid-right {
+    grid-area: course;
+}
+
+.lessonsNumber {
+    grid-area: count;
+}
+
+.cards {
+    grid-area: lessons;
+}
+
+.return {
+    font-size: var(--fs-button);
     width: fit-content;
-    border: solid 1px;
-    border-radius: 20px;
 }
 
 .return a {
-    padding: 10px 10px;
-
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+    padding: 6px 18px 6px 10px;
+    font-size: inherit;
 }
 
+.back-arrow,
+.forward-arrow {
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+}
+
+/* "Lecciones (N)" con subrayado ondulado, como los títulos de la biblioteca */
 .lessonsNumber .text {
-    font-weight: bold;
-    font-size: 30px;
+    font-weight: 700;
+    font-size: var(--fs-title);
+    text-decoration: underline wavy var(--sunny) 3px;
+    text-underline-offset: 10px;
+    text-decoration-skip-ink: none;
 }
 
 
 /* TODO > CARDS */
 
-.cards {
-    overflow-y: scroll;
-
-    justify-self: center;
-}
-
+/* Card tipo "pegatina": borde grueso y sombra sólida; al pasar el ratón se levanta */
 .card {
-    border: solid 4px;
-    border-radius: 10px;
+    background-color: var(--surface);
+    border: solid 3px var(--fourth-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 5px 0 var(--fourth-color);
 
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
+    /* El botón de la derecha toma solo el ancho que necesita */
+    grid-template-columns: minmax(0, 1fr) auto;
 
-    /* height: 80px; */
-    height: fit-content;
-    margin-bottom: 24px;
-    
+    margin-bottom: clamp(18px, 2.5vw, 26px);
+
     overflow: hidden;
+    transition: transform var(--duration-base) var(--ease-spring), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.card:hover,
+.card:focus-within {
+    transform: translateY(-4px) rotate(-0.4deg);
+    box-shadow: 0 9px 0 var(--fourth-color);
 }
 
 .card-left {
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
-    border-right: solid 3px;
+    grid-template-rows: auto minmax(36px, auto);
+    border-right: solid 3px var(--fourth-color);
+    min-width: 0;
 }
 
+/* Número de lección y nombre del capítulo; si el nombre es largo pasa
+   a la línea siguiente en vez de desbordar la card */
 .left-upper {
-    padding-left: 5px;
+    padding: 10px 12px;
     display: flex;
-    gap: 10px;
-    font-size: 20px;
-    margin-top: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    font-size: var(--fs-lesson);
 
-    border-bottom: solid 3px;
+    border-bottom: solid 3px var(--fourth-color);
 }
 
-.left-lower{
+/* El número de lección es una etiqueta de color */
+.left-upper .lesson-number {
+    padding: 2px 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--third-dark);
+    background-color: var(--second-color);
+    border-radius: 999px;
+}
+
+/* Lección completada: la etiqueta se vuelve verde con una estrella que da un salto */
+.card.is-complete .lesson-number {
+    color: var(--success-color);
+    background-color: var(--success-bg);
+}
+
+.card.is-complete .lesson-number::after {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.3em;
+    vertical-align: -0.125em;
+    background-color: var(--sunny-dark);
+    -webkit-mask: url("/assets/icons/star.svg") center / contain no-repeat;
+    mask: url("/assets/icons/star.svg") center / contain no-repeat;
+}
+
+.card.is-complete:hover .lesson-number::after {
+    animation: bounce 600ms var(--ease-spring);
+}
+
+.left-upper hr {
+    align-self: stretch;
+    border: none;
+    border-left: solid 2px var(--border-soft);
+}
+
+.left-upper .lesson-chapter-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.left-lower {
     justify-self: stretch;
     align-self: stretch;
+    background-color: var(--second-color);
 }
 
-.lesson-progress{
-    padding: 0px 10px;
-    width: 50%;
+/* Barra con rayas. El ancho lo fija el JS con el porcentaje; min-width evita
+   que el texto se salga cuando el progreso es muy bajo */
+.lesson-progress {
+    position: relative;
+    /* Las rayas (::before) quedan entre el fondo y el texto */
+    isolation: isolate;
+    overflow: hidden;
+
+    padding: 0 12px;
+    min-width: fit-content;
     height: 100%;
-    font-weight: bold;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: #ffffff;
     background-color: var(--third-color);
-    color: var(--second-color);
 
     display: flex;
     align-items: center;
     justify-content: end;
+
+    /* La barra se llena de izquierda a derecha. Se recorta con clip-path en vez de animar
+       el ancho, que obligaría a recalcular la posición de todo en cada fotograma */
+    animation: progress-fill 900ms var(--ease-out) backwards;
+    animation-delay: calc(200ms + min(var(--i, 0), 12) * 50ms);
+}
+
+/* Las rayas son una capa más ancha que la barra y se desplazan con transform.
+   Un ciclo de rayas a -45° mide 20px / cos(45°) ≈ 28.28px en horizontal */
+.lesson-progress::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -29px;
+    right: 0;
+    z-index: -1;
+    background: repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.18) 0 10px, transparent 10px 20px);
+}
+
+/* Solo avanzan al pasar el ratón por la card: muchas animaciones infinitas a la vez
+   gastan recursos aunque nadie las mire */
+.card:hover .lesson-progress::before,
+.card:focus-within .lesson-progress::before {
+    animation: stripes 1s linear infinite;
+}
+
+.card.is-complete .lesson-progress {
+    background-color: var(--mint-dark);
+}
+
+@keyframes progress-fill {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes stripes {
+    to {
+        transform: translateX(28.28px);
+    }
 }
 
 .card-right {
@@ -165,109 +254,171 @@
 }
 
 .card-right a {
-    /* ! width > Resolver a futuro */
-    width: 101%;
     height: 100%;
+    min-height: 44px;
+    padding: 0 clamp(12px, 2vw, 24px);
+    font-family: var(--font-display);
+    font-size: var(--fs-lesson);
+    font-weight: 600;
+
     display: flex;
     align-items: center;
     justify-content: center;
-}
+    gap: 6px;
 
-.card-right a{
-    text-decoration: none;
-    background-color: var(--third-color);
-    color: var(--second-color);
-}
-
-.card-right a:hover {
-    background-color: var(--first-color);
+    background-color: var(--sunny);
     color: var(--fourth-color);
+    transition: background-color var(--duration-fast);
 }
 
-.card-right svg{
-    fill: var(--second-color);
-}
-
-.card-right a:hover svg{
-    fill: var(--fourth-color);
+.card-right a:hover,
+.card-right a:focus-visible {
+    background-color: #FFDB66;
 }
 
 /* ! FIN > CARDS */
-div.grid-right{
+
+.grid-right {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: 0;
 }
 
-.course-preview{
+.course-preview {
     display: flex;
     flex-direction: column;
     gap: 13px;
 }
-.course-creation-date{
-    font-size: 20px;
-    font-style: italic;
+
+.course-creation-date {
+    font-size: var(--fs-text);
+    color: var(--text-muted);
 }
 
-.course-image-container{
+.course-image-container {
     overflow: hidden;
-    height: fit-content;
     position: relative;
-    border: 4px solid;
-    border-radius: 15px;
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sticker);
+    background-color: var(--second-color);
 }
 
-.course-image-container a{    
-    padding: 36px;
+.course-image-container img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.course-image-container:hover img {
+    transform: scale(1.06) rotate(1deg);
+}
+
+/* "Continuar" flota sobre la portada como un botón amarillo "3D" */
+.course-image-container a {
     position: absolute;
-    bottom: 0px;
-    right: 0;
-
-    background-color: var(--third-color);
-
-    font-size: 24px;
-    text-decoration: none;
-
-    border-top: 4px solid;
-    border-left: 4px solid;
-    border-radius: 15px 0 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
+    bottom: 14px;
+    right: 14px;
+    padding: clamp(8px, 1.5vw, 14px) clamp(14px, 2.5vw, 26px);
+    font-size: var(--fs-button);
 }
 
-.course-image-container a p{
-    color: var(--second-color);
-}
-.course-image-container a svg{
-    fill: var(--second-color);
-}
-
-.course-details{
+.course-details {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: clamp(10px, 2vw, 22px);
 }
 
-.course-name{
-    font-size: 30px;
-    font-weight: bold;
+.course-name {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    overflow-wrap: anywhere;
 }
 
-.course-details > div+div{
-    font-size: 22px;
+.course-details > div + div {
+    font-size: var(--fs-text);
 }
 
+/* El progreso del curso como una etiqueta destacada */
+.course-progress-percentage {
+    width: fit-content;
+    padding: 4px 14px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    background-color: var(--sunny);
+    border: 2px solid var(--sunny-dark);
+    border-radius: 999px;
+}
+
+/* Escritorio: dos columnas que ocupan el alto de la ventana; la lista de
+   lecciones hace scroll por dentro y la columna derecha también si no cabe */
+@media (min-width: 900px) {
+    #main-grid-container {
+        height: calc(100dvh - var(--header-height));
+        overflow: hidden;
+        padding-bottom: 0;
+
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+        grid-template-rows: 100%;
+        grid-template-areas: "left course";
+        gap: var(--gap-columns);
+    }
+
+    #grid-left {
+        grid-area: left;
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-blocks);
+        min-height: 0;
+    }
+
+    /* Espacio arriba y a los lados para que la card al levantarse no se recorte */
+    .cards {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 8px 10px 0 4px;
+    }
+
+    .grid-right {
+        overflow-y: auto;
+        padding-bottom: 24px;
+    }
+}
 
 /* ! FIN > MAIN */
 
-/* TODO > ESTILOS GLOBALES TEMPORALES */
-img {
-    width: 100%;
-    display: block;
+/* TODO > CARGA */
+/* Lección de carga: misma forma que .card pero sin interacción */
+.card.skeleton-card {
+    pointer-events: none;
+    border-color: var(--border-soft);
+    box-shadow: 0 5px 0 var(--border-soft);
 }
 
+.lesson-skeleton {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-/* ! FIN > ESTILOS GLOBALES TEMPORALES */
+.lesson-skeleton .skeleton {
+    height: 1em;
+}
+
+.lesson-skeleton-button {
+    width: clamp(90px, 14vw, 150px);
+    height: 100%;
+    border-radius: 0;
+}
+/* ! FIN > CARGA */
+
+/* Mientras carga, la portada conserva su tamaño completo (no se encoge al ancho
+   del contenido como los textos) y queda tapada por el esqueleto */
+.is-loading .course-image-container[data-skeleton] {
+    width: auto;
+    border-color: var(--border-soft);
+    box-shadow: 0 6px 0 var(--border-soft);
+}

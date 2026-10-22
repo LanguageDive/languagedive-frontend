@@ -1,258 +1,676 @@
+/*
+ * Mobile-first: en móvil el texto y el panel de la palabra van uno debajo
+ * del otro y la página hace scroll normal. A partir de 900px se pasa a las
+ * dos columnas del wireframe, cada una con su propio scroll.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
 :root {
-    --first-color: #F9F7F7;
-    --second-color: #DBE2EF;
-    --third-color: #3F72AF;
-    --fourth-color: #112D4E;
+    --page-gutter: clamp(16px, 4vw, 40px);
+    --arrow-size: clamp(22px, 2vw + 12px, 30px);
+
+    --fs-title: clamp(1.375rem, 1.5vw + 1rem, 2rem);
+    --fs-progress: clamp(0.9375rem, 0.75vw + 0.75rem, 1.25rem);
+    --fs-reader: clamp(1.125rem, 0.75vw + 1rem, 1.5rem);
+    --fs-text: clamp(1rem, 0.75vw + 0.8rem, 1.375rem);
+    --fs-word: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+    --fs-status: clamp(1.125rem, 1vw + 0.8rem, 1.625rem);
+
+    /* Colores por nivel de la palabra, del coral (nueva) al verde (aprendida).
+       Los mismos tonos, más suaves, resaltan la palabra en el texto */
+    --level-ignored: #C9D1DE;
+    --level-ignored-base: #9AA5B8;
+    --level-1: #FF7A7A;
+    --level-1-base: #D9534F;
+    --level-2: #FFAA5C;
+    --level-2-base: #D9822B;
+    --level-3: #FFD23F;
+    --level-3-base: #D9A800;
+    --level-4: #A8DB5E;
+    --level-4-base: #7DB32F;
+    --level-5: #5FD39A;
+    --level-5-base: #2F9E66;
+    --level-learned: #2FBF71;
+    --level-learned-base: #1E8C51;
+
+    --word-new: #FFD6D6;
+    --word-level-2: #FFE2C2;
+    --word-level-3: #FFF0B3;
+    --word-level-4: #E4F5C4;
+    --word-level-5: #CDEFDB;
 }
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    color: black;
+/* En la lección no hay burbujas de fondo: el texto necesita calma para leer */
+body::before,
+body::after {
+    display: none;
 }
-
-/* TODO> HEADER */
-#header {
-    height: 98px;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--third-color);
-}
-
-#header .hr {
-    margin-top: auto;
-}
-
-#header-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: inherit;
-}
-
-#header-links * {
-    color: var(--second-color);
-    text-decoration: none;
-    height: 100%;
-    padding: 0 20px;
-
-    display: flex;
-    align-items: center;
-}
-
-#header-links .main {
-    font-size: 24px;
-}
-
-#header-links .register {
-    font-size: 20px;
-}
-
-#header-links a:hover {
-    background-color: var(--first-color);
-    color: var(--fourth-color);
-}
-
-/* ! FIN HEADER */
 
 /* TODO > MAIN */
 
-#main-grid{
-    height: calc(100vh - 98px);
-
+#main-grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    grid-template-rows: 100%;
+    grid-template-columns: minmax(0, 1fr);
 }
 
-#grid-left{
-    height: 100%;
-    padding: 37px 28px 30px 40px;
+#grid-left {
+    padding: clamp(16px, 3vw, 37px) var(--page-gutter) clamp(16px, 3vw, 30px);
 
     display: flex;
     flex-direction: column;
-    gap: 48px;
-
-    border-right: dashed black 2px;
+    gap: clamp(24px, 4vw, 48px);
+    min-width: 0;
 }
 
-#reader-header{
+#reader-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
 }
 
-.btn-exit{
+/* Salir, páginas y Agregar usan .btn de common.css; aquí solo el tamaño */
+.btn-exit,
+.reader-nav > button,
+#traduction-container button {
+    font-size: var(--fs-text);
+}
 
+.btn-exit {
     align-self: flex-start;
-
-    padding: 10px 58px;
-    font-size: 24px;
-
-    border: solid black 1px;
-    border-radius: 10px;
-    text-decoration: none;
-
-    display: flex;
-    align-items: center;
 }
 
-#reader-header .text{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: end;
-
-    gap: 5px;
+.back-arrow,
+.forward-arrow {
+    width: var(--arrow-size);
+    height: var(--arrow-size);
 }
 
-.reading-lesson-name{
-    font-weight: bold;
-    font-size: 32px;
-}
+#reader-header > .text {
+    flex: 1 1 260px;
+    min-width: 0;
 
-.page-progress{
-    font-weight: bold;
-    font-size: 28px;
-}
-
-#reader-main{
     display: flex;
     flex-direction: column;
-    gap: 50px;
-
-    overflow-y: auto;
+    align-items: flex-end;
+    gap: 10px;
+    text-align: right;
 }
 
-.reader-text{
-    font-size: 24px;
+.reading-lesson-name {
+    font-weight: 700;
+    font-size: var(--fs-title);
+    overflow-wrap: anywhere;
 }
 
-.reader-nav{
+/* Barra de progreso del wireframe: relleno amarillo con rayas que avanzan.
+   El ancho del relleno se mueve con --progress, que actualiza script.js */
+@property --progress {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+
+.page-progress {
+    width: min(100%, 470px);
+    padding: 6px 16px;
+
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-progress);
+    text-align: center;
+    color: var(--fourth-color);
+
+    border: 3px solid var(--fourth-color);
+    border-radius: 999px;
+    /* Capas: rayas encima del relleno amarillo; ambas miden lo mismo que el progreso */
+    background:
+        repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.35) 0 10px, transparent 10px 20px) no-repeat,
+        linear-gradient(var(--sunny), var(--sunny)) no-repeat,
+        var(--surface);
+    background-size: var(--progress) 100%, var(--progress) 100%;
+    transition: --progress var(--duration-slow) var(--ease-spring);
+}
+
+/* El texto ocupa el espacio libre; un poco de relleno para que el anillo y el salto
+   de la palabra elegida no se recorten en los bordes del scroll */
+#reader-main {
+    flex: 1 1 auto;
+    padding: 4px;
+
     display: flex;
-    justify-content: end;
-    gap: 30px
+    flex-direction: column;
+    gap: clamp(24px, 4vw, 50px);
 }
 
-.reader-nav > a{
-    padding: 10px;
-    font-size: 24px;
+.reader-text {
+    max-width: 70ch;
+    font-size: var(--fs-reader);
+    line-height: 1.7;
+}
 
-    border: solid black 1px;
-    border-radius: 10px;
-    text-decoration: none;
+/* Las oraciones aparecen suavemente cada vez que cambia la página */
+.reader-text .sentence {
+    animation: fade-in var(--duration-slow) var(--ease-out);
+}
+
+/* Entrada a la lección: el bloque de texto sube un poco y las oraciones aparecen una tras otra.
+   Solo se animan transform (en el bloque) y opacidad (en las oraciones), que el navegador
+   mueve sin volver a dibujar; un desenfoque (filter: blur) en cada oración daba tirones.
+   El retraso se limita a 20 oraciones para que el resto de un texto largo no tarde en aparecer */
+.reader-text.is-entering {
+    animation: text-rise 700ms var(--ease-out) 150ms backwards;
+}
+
+.reader-text.is-entering .sentence {
+    animation: fade-in 600ms var(--ease-out) backwards;
+    animation-delay: calc(250ms + min(var(--i, 0), 20) * 90ms);
+}
+
+@keyframes text-rise {
+    from {
+        transform: translateY(18px);
+    }
+}
+
+/* Cada palabra es una "pastilla": se levanta al pasar el ratón y da un salto al elegirla.
+   inline-block permite animar transform sin cambiar dónde se corta la línea */
+.reader-word {
+    display: inline-block;
+    padding: 0 3px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color var(--duration-base), box-shadow var(--duration-base),
+        transform var(--duration-fast) var(--ease-spring);
+}
+
+.reader-word:hover {
+    background-color: var(--second-color);
+    transform: translateY(-2px);
+}
+
+/* La palabra seleccionada va por encima de las demás: la que está en hover sube con
+   transform (lo que la pone en su propia capa) y si no taparía el anillo con su fondo o subrayado */
+.reader-word.selected {
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 0 3px var(--third-color);
+    animation: word-pop 350ms var(--ease-spring);
+}
+
+@keyframes word-pop {
+    40% {
+        transform: scale(1.18) rotate(-3deg);
+    }
+}
+
+.reader-word.status-NEW { background-color: var(--word-new); }
+.reader-word.status-LEVEL_2 { background-color: var(--word-level-2); }
+.reader-word.status-LEVEL_3 { background-color: var(--word-level-3); }
+.reader-word.status-LEVEL_4 { background-color: var(--word-level-4); }
+.reader-word.status-LEVEL_5 { background-color: var(--word-level-5); }
+.reader-word.status-IGNORED { background-color: transparent; }
+
+/* Palabra aprendida (✓): en verde y subrayada.
+   Se distingue de una palabra que nunca se ha tocado, que va sin nada */
+.reader-word.status-LEARNED {
+    color: var(--success-color);
+    background-color: transparent;
+    text-decoration: underline 3px var(--level-learned);
+    text-underline-offset: 5px;
+    text-decoration-skip-ink: none;
+}
+
+
+/* Navegación entre páginas en un lugar fijo, fuera del scroll del texto.
+   En móvil se queda pegada abajo mientras se lee. El relleno inferior deja sitio
+   a la base "3D" de los botones para que no se vea cortada */
+.reader-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    padding: 12px 0 10px;
 
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px clamp(12px, 3vw, 30px);
+
+    background: linear-gradient(transparent, var(--first-color) 30%);
 }
 
-#reader-footer{
-    background-color: white;
+/* El botón que no aplica (anterior en la primera página, siguiente en la última)
+   se esconde sin dejar de ocupar su sitio, así el otro no se mueve */
+.reader-nav > .is-hidden {
+    visibility: hidden;
+}
+
+/* "Terminar": aparece con un rebote al llegar a la última página y su estrella da saltitos */
+#finish-lesson {
+    animation: pop-in var(--duration-slow) var(--ease-spring);
+}
+
+#finish-lesson .icon {
+    animation: bounce 1.8s var(--ease-spring) infinite;
+}
+
+#finish-lesson[aria-busy="true"] .icon {
+    display: none;
+}
+
+#reader-footer {
     margin-top: auto;
+    padding: 6px;
 
     display: flex;
     justify-content: center;
-    gap: 135px;
+    gap: clamp(6px, 2vw, 16px);
+    align-self: center;
 
-    /* position: sticky;
-    bottom: 0; */
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: 999px;
+    box-shadow: 0 4px 0 var(--fourth-color);
 }
 
-#reader-footer > button{
-    font-size: 24px;
+/* Interruptor entre las dos vistas: la activa se marca con aria-pressed */
+#reader-footer > button {
+    min-height: 44px;
+    padding: 8px clamp(14px, 3vw, 28px);
+
+    font-size: var(--fs-text);
+    font-weight: 600;
+    background-color: transparent;
     border: none;
-    background-color: white;
+    border-radius: 999px;
+
+    transition: background-color var(--duration-base) var(--ease-out), color var(--duration-base),
+        transform var(--duration-fast) var(--ease-spring);
 }
 
-#grid-right{
-    height: 100%;
-    padding: 37px 17px 30px 20px;
+#reader-footer > button:hover:not(:disabled) {
+    background-color: var(--second-color);
+}
+
+#reader-footer > button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+#reader-footer > button[aria-pressed="true"] {
+    color: #ffffff;
+    background-color: var(--third-color);
+}
+
+/* TODO > PANEL DE LA PALABRA */
+#grid-right {
+    padding: clamp(20px, 3vw, 37px) var(--page-gutter) clamp(20px, 3vw, 30px);
 
     display: flex;
     flex-direction: column;
     gap: 32px;
+
+    background-color: var(--surface);
+    border-top: dashed var(--border-soft) 3px;
 }
 
-.word{
-    font-weight: bold;
-    font-size: 32px;
-}
-
-.meaning{
-    font-size: 24px;
-}
-
-#grid-right .title{
-    font-weight: bold;
-}
-
-#traduction-container{
-    font-size: 24px;
-
+.word-details {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 }
 
-#traduction-container input{
+/* El contenido del panel se renueva con una animación cada vez que se elige una palabra */
+.word-details.is-changing {
+    animation: fade-up var(--duration-base) var(--ease-spring);
+}
+
+/* La palabra elegida, grande y subrayada con un trazo amarillo de rotulador */
+.word {
     width: fit-content;
-    padding: 5px 0;
-
-    font-size: 24px;
+    max-width: 100%;
+    padding: 0 4px;
+    font-weight: 700;
+    font-size: var(--fs-word);
+    overflow-wrap: anywhere;
+    background: linear-gradient(transparent 60%, var(--sunny) 60% 90%, transparent 90%);
 }
 
-#traduction-container button{
-    font-size: 24px;
-    padding: 10px;
-    border-radius: 16px;
-    width: fit-content;
+/* Palabra y botón para escucharla, en la misma fila */
+.word-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.traduction-list{
-    list-style: none;
+.speak-word {
+    width: 44px;
+    height: 44px;
+    font-size: 1.375rem;
+}
 
+/* Mientras suena, el ícono late */
+.speak-word.is-speaking .icon {
+    animation: speak-pulse 600ms ease-in-out infinite;
+}
+
+@keyframes speak-pulse {
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Sugerencias: etiquetas punteadas que se vuelven sólidas al guardarse */
+.suggestions {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 10px;
 }
 
-#word-progress-buttons{
-    margin-top: auto;
+.suggestions-label {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
 
+.suggestion-list {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestion {
+    min-height: 40px;
+    padding: 4px 14px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--third-dark);
+    background-color: var(--surface);
+    border: 2px dashed var(--third-color);
+    border-radius: 999px;
+
+    animation: pop-in var(--duration-base) var(--ease-spring) backwards;
+    transition: background-color var(--duration-fast), transform var(--duration-fast) var(--ease-spring);
+}
+
+/* Un "+" delante indica que al tocarla se agrega */
+.suggestion::before {
+    content: "+";
+    font-weight: 700;
+}
+
+.suggestion:hover:not(.is-saved) {
+    background-color: var(--second-color);
+    transform: translateY(-2px);
+}
+
+.suggestion:active:not(.is-saved) {
+    transform: scale(0.95);
+}
+
+/* Ya guardada: sólida y con palomita, sin efecto al pasar el ratón */
+.suggestion.is-saved {
+    color: var(--success-color);
+    background-color: var(--success-bg);
+    border-style: solid;
+    border-color: var(--success-color);
+    cursor: default;
+}
+
+.suggestion.is-saved::before {
+    content: "✓";
+}
+
+.suggestion-skeleton {
+    width: 84px;
+    height: 40px;
+    border-radius: 999px;
+}
+
+.suggestion-skeleton:nth-child(2) {
+    width: 64px;
+}
+
+.suggestions-message {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+}
+
+.suggestions-credit {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.suggestions-credit a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.meaning,
+#traduction-container {
+    font-size: var(--fs-text);
+}
+
+.meaning {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#grid-right .title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--third-dark);
+}
+
+#traduction-container {
+    display: flex;
+    flex-direction: column;
     gap: 18px;
 }
 
-#word-progress-buttons > button{
-    padding: 5px 15px;
-    font-size: 32px;
-    border-radius: 100px;
+#traduction-container input {
+    width: 100%;
+    max-width: 320px;
+    min-height: 48px;
+    padding: 8px 14px;
 
-    
+    /* 16px como mínimo para que iOS no haga zoom al enfocar */
+    font-size: max(16px, 1rem);
+    background-color: var(--first-color);
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast), background-color var(--duration-fast);
+}
+
+#traduction-container input:hover:not(:disabled) {
+    border-color: var(--third-color);
+}
+
+#traduction-container input:focus {
+    border-color: var(--third-color);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+    outline: none;
+}
+
+#traduction-container button {
+    width: fit-content;
+}
+
+#traduction-container input:disabled {
+    opacity: 0.5;
+}
+
+/* Las traducciones guardadas son etiquetas que aparecen una tras otra */
+.traduction-list {
+    list-style: none;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.traduction {
+    padding: 6px 14px;
+    background-color: var(--second-color);
+    border: 2px solid var(--third-color);
+    border-radius: 999px;
+    animation: pop-in var(--duration-base) var(--ease-spring) backwards;
+}
+
+/* Botones de nivel: círculos "3D" de colores, del coral al verde */
+#word-progress-buttons {
+    margin-top: auto;
+    /* Sitio para que el nivel elegido, que va levantado, no se corte */
+    padding: 8px 0 12px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(8px, 1.5vw, 14px);
+}
+
+#word-progress-buttons > button {
+    --lvl: var(--surface);
+    --lvl-base: var(--border-soft);
+
+    width: clamp(44px, 3vw + 30px, 54px);
+    aspect-ratio: 1;
+
     display: flex;
     justify-content: center;
     align-items: center;
 
+    font-size: var(--fs-status);
+    font-weight: 700;
+    color: var(--fourth-color);
+    background-color: var(--lvl);
+    border: 2px solid var(--lvl-base);
+    border-radius: 50%;
+    box-shadow: 0 4px 0 var(--lvl-base);
+
+    transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-press) ease-out;
 }
 
-button.kwnown svg{
-    width: 29px;
+#word-progress-buttons > .unknown { --lvl: var(--level-ignored); --lvl-base: var(--level-ignored-base); }
+#word-progress-buttons > .level-one { --lvl: var(--level-1); --lvl-base: var(--level-1-base); }
+#word-progress-buttons > .level-two { --lvl: var(--level-2); --lvl-base: var(--level-2-base); }
+#word-progress-buttons > .level-three { --lvl: var(--level-3); --lvl-base: var(--level-3-base); }
+#word-progress-buttons > .level-four { --lvl: var(--level-4); --lvl-base: var(--level-4-base); }
+#word-progress-buttons > .level-five { --lvl: var(--level-5); --lvl-base: var(--level-5-base); }
+#word-progress-buttons > .kwnown { --lvl: var(--level-learned); --lvl-base: var(--level-learned-base); }
+
+#word-progress-buttons > button:hover:not(:disabled) {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 7px 0 var(--lvl-base);
+}
+
+#word-progress-buttons > button:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--lvl-base);
+}
+
+#word-progress-buttons > button:disabled {
+    opacity: 0.4;
+}
+
+/* El nivel elegido no lleva anillo: sobresale en 3D, levantado sobre los demás,
+   con la base más alta y una sombra en el suelo. Sube con el rebote de la transición */
+#word-progress-buttons > button.active {
+    transform: translateY(-6px) scale(1.12);
+    box-shadow:
+        0 8px 0 var(--lvl-base),
+        0 14px 12px rgb(31 42 77 / 0.25);
+}
+
+/* Al pasar el ratón por el elegido sigue levantado (no baja al estilo normal de hover) */
+#word-progress-buttons > button.active:hover:not(:disabled) {
+    transform: translateY(-6px) scale(1.12);
+    box-shadow:
+        0 8px 0 var(--lvl-base),
+        0 14px 12px rgb(31 42 77 / 0.25);
+}
+
+button.kwnown svg {
+    width: 60%;
     height: auto;
 }
+/* ! FIN > PANEL DE LA PALABRA */
 
+/* Escritorio: las dos columnas del wireframe ocupan el alto de la ventana */
+@media (min-width: 900px) {
+    #main-grid {
+        height: calc(100dvh - var(--header-height));
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+        grid-template-rows: 100%;
+    }
 
-/* ! FIN> MAIN */
+    #grid-left,
+    #grid-right {
+        min-height: 0;
+    }
 
-/* TODO > PSEUDELEMENTOS / ACCIONES DEL USUARIO */
+    #reader-main {
+        min-height: 0;
+        overflow-y: auto;
+    }
 
-button:hover{
-    cursor: pointer;
+    /* En escritorio la columna no hace scroll, así que no hace falta pegarla ni darle fondo */
+    .reader-nav {
+        position: static;
+        padding-top: 0;
+        background: none;
+    }
+
+    #grid-right {
+        overflow-y: auto;
+        border-top: none;
+        border-left: dashed var(--border-soft) 3px;
+    }
 }
 
-/* ! FIN > PSEUDELEMENTOS / ACCIONES DEL USUARIO */
+/* ! FIN > MAIN */
 
-.hide{
-    display: none !important;
+/* TODO > CARGA */
+.reader-skeleton-line {
+    height: 1.1em;
+    margin-bottom: 0.6em;
 }
+
+/* Aviso discreto del guardado automático del progreso */
+.save-status {
+    min-height: 1.4em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: clamp(0.8rem, 0.5vw + 0.7rem, 1rem);
+    color: var(--third-color);
+    transition: opacity var(--duration-slow);
+}
+
+.save-status:empty {
+    opacity: 0;
+}
+
+.save-status.is-saving::before {
+    content: "";
+    width: 0.9em;
+    height: 0.9em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.save-status.is-error {
+    color: var(--error-color);
+}
+/* ! FIN > CARGA */

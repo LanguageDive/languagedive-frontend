@@ -1,0 +1,560 @@
+/*
+ * Escena de las páginas de acceso (login y registro): la mascota "Dive" sobre la
+ * tarjeta, el fondo marino, los peces y las palabras que flotan a los lados.
+ * La crea auth-scene.js. Todo lo decorativo está oculto a los lectores de pantalla
+ * y no recibe clics (pointer-events: none), así nunca estorba al formulario.
+ * Solo se animan transform y opacity, que el navegador mueve sin volver a dibujar.
+ */
+
+/* TODO > MASCOTA */
+/* La tarjeta deja sitio arriba para que el pez se asome por encima de su borde */
+.has-mascot {
+    position: relative;
+    margin-top: 56px !important;
+}
+
+.mascot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 120px;
+    translate: -50% -72%;
+    pointer-events: none;
+    animation: mascot-float 3.5s ease-in-out infinite;
+}
+
+.mascot svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+@keyframes mascot-float {
+    50% {
+        transform: translateY(-6px) rotate(-2deg);
+    }
+}
+
+/* Pupilas: el JS las mueve con transform para que sigan al cursor */
+.mascot .pupil {
+    transition: transform 120ms ease-out;
+}
+
+/* Párpados: cerrados = escala 1. Bajan desde arriba */
+.mascot .eyelid {
+    transform: scaleY(0);
+    transform-origin: center top;
+    transform-box: fill-box;
+    transition: transform 160ms ease-out;
+}
+
+/* Parpadeo de vez en cuando para que se vea vivo */
+.mascot .eyelid {
+    animation: blink 5s infinite;
+}
+
+@keyframes blink {
+    0%, 94%, 100% { transform: scaleY(0); }
+    97% { transform: scaleY(1); }
+}
+
+/* Escribiendo la contraseña: ojos cerrados (por privacidad, claro) */
+.mascot.is-shy .eyelid {
+    animation: none;
+    transform: scaleY(1);
+}
+
+/* Contraseña visible: espía con un ojo medio abierto */
+.mascot.is-peeking .eyelid {
+    animation: none;
+    transform: scaleY(1);
+}
+
+.mascot.is-peeking .eyelid-right {
+    transform: scaleY(0.45);
+}
+
+/* Las aletas suben a taparse los ojos */
+.mascot .fin-hand {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    transition: transform 260ms var(--ease-spring);
+}
+
+/* Las aletas están 32 unidades por debajo de los ojos: suben casi todo eso */
+.mascot.is-shy .fin-hand,
+.mascot.is-peeking .fin-hand {
+    transform: translateY(-30px) rotate(var(--fin-rotate, 0deg));
+}
+
+.mascot .fin-hand-left { --fin-rotate: 18deg; }
+.mascot .fin-hand-right { --fin-rotate: -18deg; }
+
+.mascot.is-peeking .fin-hand-right {
+    transform: translateY(-14px) rotate(-30deg);
+}
+
+/* Boca: sonrisa normal; triste o muy contenta según el resultado */
+.mascot .mouth-sad,
+.mascot .mouth-happy {
+    opacity: 0;
+}
+
+.mascot.is-sad .mouth-smile,
+.mascot.is-happy .mouth-smile {
+    opacity: 0;
+}
+
+.mascot.is-sad .mouth-sad,
+.mascot.is-happy .mouth-happy {
+    opacity: 1;
+}
+
+.mascot.is-sad svg {
+    animation: shake 450ms ease-in-out;
+}
+
+.mascot.is-happy svg {
+    animation: mascot-jump 700ms var(--ease-spring);
+}
+
+@keyframes mascot-jump {
+    40% {
+        transform: translateY(-22px) rotate(8deg);
+    }
+}
+/* ! FIN > MASCOTA */
+
+/* TODO > BOTÓN MOSTRAR CONTRASEÑA */
+/* El contenedor hace de campo: lleva el borde, el fondo y el anillo de foco, y dentro
+   están el input (sin borde propio) y el botón, que se ve como una parte del campo.
+   Se usan los id de los formularios para ganar a las reglas de cada página (#loginForm input) */
+.password-field {
+    display: flex;
+    align-items: stretch;
+
+    background-color: var(--first-color);
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast), background-color var(--duration-fast);
+}
+
+.password-field:hover {
+    border-color: var(--third-color);
+}
+
+/* Foco en el input o en el botón: el campo entero se marca */
+.password-field:focus-within {
+    border-color: var(--third-color);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+}
+
+/* Igual que "label + input" en los formularios: la etiqueta queda pegada a su campo */
+form label + .password-field {
+    margin-top: -8px;
+}
+
+#loginForm .password-field input,
+#registerForm .password-field input {
+    flex: 1;
+    min-width: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 12px 0 0 12px;
+    box-shadow: none;
+    outline: none;
+}
+
+/* El contenedor ya suma 4px de borde: el input mide 4px menos para que el campo
+   quede de la misma altura que los demás (48px, y 50px en el login desde 600px) */
+#loginForm .password-field input,
+#registerForm .password-field input {
+    min-height: 44px;
+}
+
+@media (min-width: 600px) {
+    #loginForm .password-field input {
+        min-height: 46px;
+    }
+}
+
+#loginForm .password-field input:focus-visible,
+#registerForm .password-field input:focus-visible {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Parte derecha del campo, separada por una línea. Con texto ("Mostrar"/"Ocultar")
+   en lugar de solo un ojo, que se presta a confusión */
+.password-toggle {
+    flex-shrink: 0;
+    padding: 0 16px;
+
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--third-dark);
+    background-color: transparent;
+    border: none;
+    border-left: 2px solid var(--border-soft);
+    border-radius: 0 12px 12px 0;
+
+    transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.password-toggle:hover {
+    background-color: var(--second-color);
+}
+
+.password-field:focus-within .password-toggle {
+    border-left-color: var(--second-color);
+}
+
+/* El anillo del campo ya marca el foco; el botón solo cambia de fondo */
+.password-toggle:focus-visible {
+    outline: none;
+    background-color: var(--second-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.password-toggle[aria-pressed="true"] {
+    color: var(--third-color);
+}
+/* ! FIN > BOTÓN MOSTRAR CONTRASEÑA */
+
+/* TODO > FONDO MARINO */
+.auth-scene {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Arena, algas y coral pegados abajo */
+.seabed {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: clamp(110px, 22vh, 200px);
+}
+
+.seabed > svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Algas, coral y roca en las dos esquinas; el grupo de la derecha va reflejado */
+.plants {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    aspect-ratio: 160 / 140;
+}
+
+.plants svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.plants-left {
+    left: 2%;
+}
+
+.plants-right {
+    right: 2%;
+    scale: -1 1;
+}
+
+/* Las algas se mecen desde su base */
+.seaweed {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: sway 4s ease-in-out infinite;
+}
+
+.seaweed:nth-of-type(2n) {
+    animation-duration: 5.2s;
+    animation-direction: reverse;
+}
+
+@keyframes sway {
+    50% {
+        transform: rotate(6deg);
+    }
+}
+
+/* Peces que cruzan la pantalla de vez en cuando */
+.swimmer {
+    position: absolute;
+    left: 0;
+    width: 46px;
+    top: var(--top);
+    animation: swim var(--duration) linear var(--delay) infinite backwards;
+}
+
+.swimmer-reverse {
+    animation-name: swim-back;
+}
+
+.swimmer svg {
+    display: block;
+    width: 100%;
+    animation: wiggle-fish 0.8s ease-in-out infinite;
+}
+
+/* El pez está dibujado mirando a la izquierda: los que van hacia la derecha se reflejan
+   para que naden de frente y no en reversa */
+.swimmer:not(.swimmer-reverse) svg {
+    scale: -1 1;
+}
+
+/* Banco de tres peces pequeños que nadan juntos, cada uno a su altura */
+.swimmer-small {
+    width: auto;
+}
+
+.school {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.school svg {
+    width: 28px;
+}
+
+.school svg:nth-child(2) {
+    margin-top: 16px;
+    animation-delay: -0.3s;
+}
+
+.school svg:nth-child(3) {
+    margin-top: 4px;
+    animation-delay: -0.5s;
+}
+
+@keyframes swim {
+    from { transform: translateX(-80px); }
+    to { transform: translateX(calc(100vw + 80px)); }
+}
+
+@keyframes swim-back {
+    from { transform: translateX(calc(100vw + 80px)); }
+    to { transform: translateX(-80px); }
+}
+
+@keyframes wiggle-fish {
+    50% {
+        transform: translateY(-4px) rotate(-4deg);
+    }
+}
+
+/* Rayos de luz que entran desde la superficie y laten despacio */
+.light-rays {
+    position: absolute;
+    top: 0;
+    left: -10%;
+    right: -10%;
+    height: 75%;
+    background: repeating-linear-gradient(105deg,
+            transparent 0 80px,
+            rgb(27 111 209 / 0.06) 80px 130px,
+            transparent 130px 230px);
+    -webkit-mask-image: linear-gradient(#000, transparent);
+    mask-image: linear-gradient(#000, transparent);
+    will-change: opacity;
+    animation: rays-pulse 7s ease-in-out infinite;
+}
+
+@keyframes rays-pulse {
+    50% {
+        opacity: 0.35;
+    }
+}
+
+/* Medusa que sube y baja mientras mueve los tentáculos */
+.jellyfish {
+    position: absolute;
+    top: 30%;
+    left: 18%;
+    width: clamp(48px, 4.5vw, 66px);
+    animation: jelly-bob 6s ease-in-out infinite;
+}
+
+.jellyfish svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+.jellyfish .tentacle {
+    transform-box: fill-box;
+    transform-origin: center top;
+    animation: tentacle-wave 2.4s ease-in-out infinite;
+}
+
+.jellyfish .tentacle:nth-child(even) {
+    animation-delay: -1.2s;
+}
+
+@keyframes jelly-bob {
+    50% {
+        transform: translateY(-32px);
+    }
+}
+
+@keyframes tentacle-wave {
+    50% {
+        transform: rotate(8deg);
+    }
+}
+
+/* Estrella de mar y cofre sobre la arena */
+.starfish {
+    position: absolute;
+    bottom: 10%;
+    left: 22%;
+    width: clamp(30px, 3.2vw, 46px);
+    animation: starfish-wiggle 5s ease-in-out infinite;
+}
+
+.starfish svg,
+.chest svg {
+    display: block;
+    width: 100%;
+}
+
+@keyframes starfish-wiggle {
+    50% {
+        transform: rotate(10deg) scale(1.05);
+    }
+}
+
+.chest {
+    position: absolute;
+    bottom: 12%;
+    right: 20%;
+    width: clamp(56px, 6vw, 80px);
+}
+
+/* Destello que aparece y desaparece sobre la tapa */
+.chest-sparkle {
+    position: absolute;
+    top: 6%;
+    left: 66%;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    -webkit-mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+    mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+    animation: twinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.4) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(25deg);
+    }
+}
+
+/* Burbujas que suben desde el cofre y las algas */
+.bubble-stream {
+    position: absolute;
+    left: 50%;
+    bottom: 80%;
+}
+
+.plants-left .bubble-stream {
+    left: 22%;
+    bottom: 90%;
+}
+
+.rising-bubble {
+    position: absolute;
+    left: var(--x);
+    bottom: 0;
+    width: var(--size);
+    height: var(--size);
+    background: radial-gradient(circle at 30% 30%, #ffffff 0 18%, rgb(255 255 255 / 0.4) 20%);
+    border: 2px solid rgb(27 111 209 / 0.35);
+    border-radius: 50%;
+    animation: bubble-rise 4.4s ease-in var(--delay) infinite backwards;
+}
+
+@keyframes bubble-rise {
+    from {
+        opacity: 0;
+        transform: translate(0, 0);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(8px, -36vh);
+    }
+}
+
+/* Palabras en varios idiomas flotando a los lados, con los colores de los niveles */
+.floating-word {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    padding: 6px 16px;
+
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 0.6vw + 0.8rem, 1.375rem);
+    font-weight: 600;
+    color: var(--fourth-color);
+    background-color: var(--chip);
+    border: 3px solid var(--fourth-color);
+    border-radius: 999px;
+    box-shadow: 0 4px 0 var(--fourth-color);
+
+    rotate: var(--tilt);
+    opacity: 0.9;
+    animation: word-float var(--duration) ease-in-out var(--delay) infinite;
+}
+
+@keyframes word-float {
+    50% {
+        transform: translateY(-14px);
+    }
+}
+
+/* En pantallas angostas no hay espacio libre a los lados: sin palabras flotantes */
+@media (max-width: 999px) {
+    .floating-word {
+        display: none;
+    }
+}
+/* ! FIN > FONDO MARINO */
+
+/* Pantallas bajas: la mascota más pequeña deja más sitio a la tarjeta */
+@media (max-height: 760px) {
+    .has-mascot {
+        margin-top: 44px !important;
+    }
+
+    .mascot {
+        width: 96px;
+    }
+
+    /* El login baja sus campos a 44px en pantallas bajas (ver login/style.css):
+       la contraseña, 4px menos por el borde del contenedor */
+    #loginForm .password-field input {
+        min-height: 40px;
+    }
+}

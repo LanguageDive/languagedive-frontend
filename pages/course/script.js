@@ -1,8 +1,11 @@
-import { retrievedUserObject } from '../api-calls/auth.js';
+import { retrievedUserObject, bindLogoutButton } from '../api-calls/auth.js';
 import { getCourseById } from '../api-calls/course.js'
+import { getCourseProgress } from '../api-calls/progress.js'
+import { createSkeletonCards, removeSkeletonCards } from '../loading.js'
 import { ApiErrors } from '../api-calls/api-fetch.js';
 
 const userNameHeader = document.querySelector("#username");
+bindLogoutButton();
 
 if (!retrievedUserObject) {
     location.assign("/login/index.html");
@@ -18,6 +21,17 @@ const urlParams = new URLSearchParams(urlQuery);
 const courseId = urlParams.get("id");
 // console.log(courseId);
 
+// * LOADING
+// Lecciones de carga mientras llegan el curso y los porcentajes de cada lección
+const mainGridContainer = document.querySelector("#main-grid-container");
+const lessonsCardsContainer = document.querySelector(".cards");
+lessonsCardsContainer.append(...createSkeletonCards(5, "card", `
+    <div class="lesson-skeleton">
+        <span class="skeleton" style="width: 45%"></span>
+        <span class="skeleton" style="width: 75%"></span>
+    </div>
+    <span class="skeleton lesson-skeleton-button"></span>`));
+
 // * API RELATED VARIABLES
 
 const courseResponse = await getCourseById(courseId);
@@ -29,7 +43,7 @@ if(Object.values(ApiErrors).includes(courseResponse)){
 }
 
 // * DOM RELATED VARIABLES
-const numberOfLessonsText = document.querySelector(".lessonsNumber").querySelector("p");
+const numberOfLessonsText = document.querySelector(".lessonsNumber .text");
 const courseLessons = courseResponse.lessons;
 const lessonsNumber = courseLessons.length;
 
@@ -40,30 +54,89 @@ numberOfLessonsText.textContent = `Lecciones (${lessonsNumber})`;
 
 //
 // TODO > PROGRAM RUN ===================================
-loadLessons();
-loadCourseInfo();
+const courseProgress = await getCourseProgress(courseResponse);
+loadLessons(courseProgress.lessonPercentages);
+loadCourseInfo(courseProgress.percentage);
+removeSkeletonCards(lessonsCardsContainer);
+mainGridContainer.classList.remove("is-loading");
+
+// Al volver con el botón "atrás" el navegador puede mostrar la página guardada en caché
+// con el progreso viejo: en ese caso se recarga para pedir el progreso actualizado
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) location.reload();
+});
 // ! END > PROGRAM RUN ===================================
 
-function loadCourseInfo(){
-    courseResponse;
+/**
+ * Fills the course details panel: date, title, description, progress, cover and "Continuar".
+ * @param {number} generalProgress - Real progress of the course (0-100), see getCourseProgress.
+ */
+function loadCourseInfo(generalProgress){
     const date = new Date(courseResponse.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
     const title = courseResponse.title;
     const description = courseResponse.description;
-    const generalProgress = courseResponse.progress.progressPercentage;
-    const completedLessons = courseResponse.progress.completedLessons;
-    const totalLessons = courseResponse.progress.totalLessons;
+    // "Lección x / n" indica en qué lección va el usuario (la misma a la que lleva "Continuar")
+    const currentLessonNumber = lessonsNumber ? getNextLessonIndex() + 1 : 0;
+    const totalLessons = lessonsNumber;
 
     const dateCreationText = document.querySelector(".course-creation-date");
     const courseTitle = document.querySelector(".course-name");
-    const courseDesc = document.querySelector(".course-description");
+    const courseDesc = document.querySelector(".course-description-text");
     const courseProgressPercentage = document.querySelector(".course-progress-percentage");
     const courseProgressFraction = document.querySelector(".course-progress-fraction");
 
     dateCreationText.textContent = `Creado el ${date}`;
     courseTitle.textContent = title;
-    courseDesc.textContent += `Descripción`;
+    // El <strong>Descripción:</strong> del HTML se queda; aquí solo se pone el texto
+    courseDesc.textContent = description?.trim() || "Sin descripción";
     courseProgressPercentage.textContent = `Progreso: ${generalProgress}%`;
-    courseProgressFraction.textContent = `Lección ${completedLessons} / ${totalLessons}`;
+    courseProgressFraction.textContent = `Lección ${currentLessonNumber} / ${totalLessons}`;
+
+    loadCourseCover(title);
+    loadContinueButton();
+}
+
+/**
+ * Shows the course cover from the API. If the course has none, or it fails to load,
+ * the default image of the HTML stays.
+ * @param {string} title - Course title, used for the image description.
+ */
+function loadCourseCover(title) {
+    const courseImage = document.querySelector(".course-image-container img");
+    courseImage.alt = `Portada de ${title}`;
+
+    if (!courseResponse.coverUrl) return;
+
+    const defaultSrc = courseImage.src;
+    courseImage.addEventListener("error", () => { courseImage.src = defaultSrc; }, { once: true });
+    courseImage.src = courseResponse.coverUrl;
+}
+
+/**
+ * Position of the lesson the user is on: the first one not completed,
+ * or the first lesson if all of them are completed.
+ * @returns {number} Index in courseLessons (call only when there is at least one lesson).
+ */
+function getNextLessonIndex() {
+    const index = courseLessons.findIndex(lesson => !lesson.progress?.completed);
+    return index === -1 ? 0 : index;
+}
+
+/**
+ * Points "Continuar" to the first lesson that is not completed (the lesson page then
+ * resumes at the saved sentence). If every lesson is completed it goes to the first one;
+ * without lessons the button is hidden.
+ */
+function loadContinueButton() {
+    const btnContinue = document.querySelector(".btn-continue");
+
+    if (lessonsNumber === 0) {
+        btnContinue.classList.add("hide");
+        return;
+    }
+
+    const nextLesson = courseLessons[getNextLessonIndex()];
+    btnContinue.href = `../lesson/index.html?id=${courseId}&lessonId=${nextLesson.id}`;
 }
 
 
@@ -71,8 +144,9 @@ function loadCourseInfo(){
  * 
  * Loads and renders all lessons as cards in the container.
  * Iterates through courseLessons array and creates a card for each lesson.
+ * @param {number[]} progressPercentages - Progress of each lesson (0-100), in the same order as the lessons.
  */
-function loadLessons() {
+function loadLessons(progressPercentages) {
 
     for (let i = 0; i < lessonsNumber; i++) {
         const lessonObject = courseLessons[i];
@@ -83,12 +157,13 @@ function loadLessons() {
             "id": lessonObject.id,
             "lessonNumber": i + 1,
             "title": lessonObject.title,
-            "progress": (lessonObject.progress === null ? Math.floor(Math.random() * 101) : lessonObject.progress)
+            "progress": progressPercentages[i]
         }
         const card = createCard(cardObjectInfo);
+        // Índice para que las lecciones entren una tras otra (ver .fade-up en common.css)
+        card.style.setProperty("--i", i);
         cardsContainer.appendChild(card);
     }
-
 }
 
 /**
@@ -103,7 +178,9 @@ export function createCard(cardObjectInfo) {
 
     // CONTENEDOR PRINCIPAL
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card fade-up";
+    // Lección terminada: etiqueta verde con estrella (ver .card.is-complete en style.css)
+    card.classList.toggle("is-complete", cardObjectInfo.progress === 100);
 
     // * PARTE IZQUIERDA DEL CONTENEDOR
     const cardLeft = document.createElement("div");
@@ -161,6 +238,7 @@ export function createCard(cardObjectInfo) {
     svg.setAttribute("class", "forward-arrow");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("height", "34");
+    svg.setAttribute("aria-hidden", "true");
 
     // ? LINEA DEL SVG DE LA PARTE DERECHA
     const line = document.createElementNS(svgNamespace, "line");

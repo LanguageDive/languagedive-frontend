@@ -1,43 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Curso · LanguageDive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <!-- TODO > HEADER -->
-    <header>
-        <div id="header">
-            <div id="header-links">
-                <a class="header links main" href="#">LOGO</a>
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/library/">LanguageDive</a>
 
-                <div class="userAccess">
-                    <a id="username" class="header links register" href="#">Usuario</a>
-                    <a href="/login/" id="logout" class="header links exit">Salir</a>
-                </div>
+            <div class="user-access">
+                <a href="/vocabulary/" class="header-nav-link">
+                    <span class="icon icon-cards" aria-hidden="true"></span>
+                    <span class="nav-text">Grimorio</span>
+                </a>
+                <span id="username" class="header-user">Usuario</span>
+                <a href="/login/" id="logout">Salir</a>
             </div>
-
-            <div class="hr"></div>
-        </div>
+        </nav>
     </header>
     <!-- ! FIN > HEADER -->
 
     <main>
         <!-- TODO > CONTENEDOR PADRE (GRID) -->
-        <div id="main-grid-container">
+        <!-- is-loading tapa con esqueletos los textos con data-skeleton hasta que script.js carga el curso -->
+        <div id="main-grid-container" class="is-loading">
 
             <!-- TODO > CONTENEDOR HIJO IZQUIERDA (GRID) -->
             <div id="grid-left">
 
                 <!-- TODO > CONTENEDOR REGRESAR -->
-                <div class="return">
-                    <a href="/library/">
-                        <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://w3.org" height="34">
+                <div class="return fade-up">
+                    <a href="/library/" class="btn">
+                        <svg class="back-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="34" aria-hidden="true">
                             <line x1="19" y1="12" x2="5" y2="12" />
                             <polyline points="12 19 5 12 12 5" />
                         </svg>
@@ -49,8 +56,8 @@
                 <!-- ! FIN > CONTENEDOR REGRESAR -->
 
                 <!-- TODO > NUMERO DE LECCIONES DEL CURSO-->
-                <div class="lessonsNumber">
-                    <p class="text">Lecciones (N)</p>
+                <div class="lessonsNumber fade-up" style="--i: 1">
+                    <h2 class="text" data-skeleton>Lecciones (N)</h2>
                 </div>
                 <!-- ! FIN > NUMERO DE LECCIONES DEL CURSO-->
 
@@ -88,19 +95,20 @@
             <!-- ! FIN > CONTENEDOR HIJO IZQUIERDA (GRID) -->
 
             <!-- TODO > CONTENEDOR HIJO DERECHA (GRID) -->
-            <div class="grid-right">
+            <aside class="grid-right fade-up" style="--i: 2" aria-label="Detalles del curso">
                 <!-- TODO > PREVIEW DEL CURSO -->
                 <div class="course-preview">
-                    <div class="course-creation-date">
+                    <div class="course-creation-date" data-skeleton>
                         Creado el [dd] del [mes] del [aaaa]
                     </div>
 
-                    <div class="course-image-container">
-                        <img src="../assets/nickype-snow-7646952.jpg" alt="snow image">
-                        <a href="#" class="btn-continue">
+                    <!-- Portada y "Continuar" se tapan con un esqueleto hasta que llega el curso -->
+                    <div class="course-image-container" data-skeleton>
+                        <img src="../assets/nickype-snow-7646952.jpg" alt="Portada del curso" decoding="async">
+                        <a href="#" class="btn-continue btn btn-sunny">
                             <p class="text">Continuar</p>
                             <svg class="forward-arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                height="34">
+                                height="34" aria-hidden="true">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
@@ -111,16 +119,17 @@
 
                 <!-- TODO > DETALLES DEL CURSO -->
                 <div class="course-details">
-                    <div class="course-name">Titulo</div>
+                    <h1 class="course-name" data-skeleton>Titulo</h1>
                     <div class="course-description">
                         <strong>Descripción:</strong>
+                        <span class="course-description-text" data-skeleton>Descripción del curso</span>
                     </div>
-                    <div class="course-progress-percentage">Progreso: 15%</div>
+                    <div class="course-progress-percentage" data-skeleton>Progreso: 15%</div>
 
-                    <div class="course-progress-fraction">Leccion n / m</div>
+                    <div class="course-progress-fraction" data-skeleton>Leccion n / m</div>
                 </div>
                 <!-- ! FIN > DETALLES DEL CURSO -->
-            </div>
+            </aside>
             <!-- ! FIN > CONTENEDOR HIJO DERECHA (GRID) -->
         </div>
         <!-- ! FIN > CONTENEDOR PADRE (GRID) -->

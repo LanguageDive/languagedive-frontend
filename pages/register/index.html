@@ -1,74 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrarse</title>
+    <title>Registrarse · LanguageDive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="../auth-scene.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div id="root">
 
         <!-- HEADER -->
-        <div id="header">
-            <div class="links">
+        <header id="header">
+            <nav id="header-links" aria-label="Principal">
+                <a class="logo" href="/">LanguageDive</a>
 
-                <a class="header links main" href="../index.html">LOGO</a>
-
-                <a class="header links login" href="../login" >Iniciar Sesión</a>
-                
-            </div>
-
-            <div class="hr"></div>
-        </div>
+                <a class="login" href="/login/">Iniciar Sesión</a>
+            </nav>
+        </header>
 
         <!-- REGISTER -->
 
-        <div id="register">
+        <main id="register" class="fade-up">
 
-            <p class="register label-register">Registro</p>
+            <h1 class="register label-register">Registro</h1>
 
-            <form id="registerForm" class="register register-form">
+            <!-- novalidate: la validación la hace form-validation.js con mensajes propios -->
+            <form id="registerForm" novalidate class="register register-form">
 
                 <label for="username">Nombre de usuario</label>
-                <input type="text" name="username" id="username" placeholder="Usuario" required>
+                <input type="text" name="username" id="username" placeholder="Usuario" autocomplete="username">
 
                 <label for="email">Correo electrónico</label>
-                <input type="email" name="email" id="email" placeholder="Correo electrónico" required>
+                <input type="email" name="email" id="email" placeholder="Correo electrónico" autocomplete="email">
 
 
                 <label for="password" class="pwd">Contraseña</label>
-                <input minlength="8" type="password" name="password" id="password" placeholder="Contraseña" required>
+                <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="new-password">
 
                 <label for="rptPassword" class="rptPwd">Repetir contraseña</label>
-                <input minlength="8" type="password" name="rptPassword" id="rptPassword" placeholder="Contraseña" required>
+                <input type="password" name="rptPassword" id="rptPassword" placeholder="Contraseña" autocomplete="new-password">
 
-                <div id="errorMessage" class="register-form display">
+                <div id="errorMessage" class="register-form display alert-error" role="alert">
                     <p>Error al crear el usuario: correo /contraseña ya están(n) en uso</p>
                 </div>
 
-                <div id="successMessage" class="register-form display">
+                <div id="successMessage" class="register-form display alert-success" role="status">
                     <p>¡Registro Exitoso!</p>
                 </div>
             </form>
 
             <div class="buttons">
-                <button id="registerButton" type="submit" form="registerForm">Registrarse</button>
+                <button id="registerButton" type="submit" form="registerForm" class="btn btn-primary">Registrarse</button>
 
-                <a href="/login">
-                    <button id="cancelButton" type="button">Cancelar</button>
-                </a>
-                
+                <!-- El botón ya no va dentro de un <a> (HTML inválido): script.js lo lleva al login -->
+                <button id="cancelButton" type="button" class="btn">Cancelar</button>
+
             </div>
-        </div>
+        </main>
 
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
+    <!-- Mascota, botón "Mostrar" de la contraseña y fondo marino -->
+    <script type="module" src="../auth-scene.js"></script>
     
 </body>
 </html>

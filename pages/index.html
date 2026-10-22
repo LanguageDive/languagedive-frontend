@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanguageDive · Aprende idiomas leyendo</title>
+    <meta name="description"
+        content="Importa tus libros EPUB y aprende un idioma leyendo: toca las palabras que no conoces, guárdalas en tu grimorio y sigue tu progreso.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="landing/style.css">
+</head>
+
+<body>
+
+    <!-- TODO > HEADER -->
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/">LanguageDive</a>
+
+            <!-- Sin sesión: entrar o registrarse. Con sesión, script.js las cambia por "Mi biblioteca" -->
+            <div class="user-access">
+                <a href="/login/" class="guest-only">Iniciar sesión</a>
+                <a href="/register/" class="guest-only">Registrarse</a>
+                <a href="/library/" class="member-only hide">Mi biblioteca</a>
+            </div>
+        </nav>
+    </header>
+    <!-- ! FIN > HEADER -->
+
+    <main>
+
+        <!-- TODO > HERO -->
+        <section id="hero" aria-labelledby="hero-title">
+            <div class="hero-text fade-up">
+                <h1 id="hero-title">Aprende idiomas <span class="highlight">leyendo</span> los libros que te gustan</h1>
+                <p class="hero-subtitle">
+                    Sube un libro EPUB, lee a tu ritmo y toca cada palabra que no conozcas.
+                    Se queda guardada en tu grimorio para que la repases hasta aprenderla.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="/register/" class="btn btn-primary guest-only">Crear mi cuenta</a>
+                    <a href="/login/" class="btn guest-only">Ya tengo cuenta</a>
+                    <a href="/library/" class="btn btn-primary member-only hide">Ir a mi biblioteca</a>
+                </div>
+            </div>
+
+            <!-- Mini demo: el mismo funcionamiento que la lección real, con un texto fijo -->
+            <div class="demo fade-up" style="--i: 2" aria-labelledby="demo-title">
+                <p id="demo-title" class="demo-label">Pruébalo: toca una palabra <span class="icon icon-arrow-down" aria-hidden="true"></span></p>
+
+                <div class="demo-book">
+                    <p class="demo-text" lang="en">
+                        Once upon a time, a little
+                        <button type="button" class="demo-word" data-word="fox">fox</button>
+                        <button type="button" class="demo-word" data-word="jumped">jumped</button>
+                        over a
+                        <button type="button" class="demo-word" data-word="quiet">quiet</button>
+                        <button type="button" class="demo-word" data-word="river">river</button>
+                        and
+                        <button type="button" class="demo-word" data-word="smiled">smiled</button>
+                        at the moon.
+                    </p>
+                </div>
+
+                <div class="demo-panel" aria-live="polite">
+                    <p class="demo-term">Elige una palabra</p>
+                    <p class="demo-translation">Verás su traducción y su nivel.</p>
+                    <div class="demo-levels" aria-hidden="true">
+                        <span class="level-dot level-1"></span>
+                        <span class="level-dot level-2"></span>
+                        <span class="level-dot level-3"></span>
+                        <span class="level-dot level-4"></span>
+                        <span class="level-dot level-5"></span>
+                        <span class="level-dot level-learned"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ! FIN > HERO -->
+
+        <!-- TODO > CÓMO FUNCIONA -->
+        <section id="how" class="landing-section" aria-labelledby="how-title">
+            <h2 id="how-title" class="section-title reveal">¿Cómo funciona?</h2>
+
+            <ol class="steps">
+                <li class="step reveal" style="--i: 0">
+                    <span class="step-icon" aria-hidden="true"><span class="icon icon-books"></span></span>
+                    <h3>Importa tu libro</h3>
+                    <p>Sube un archivo EPUB. Cada capítulo se convierte en una lección.</p>
+                </li>
+                <li class="step reveal" style="--i: 1">
+                    <span class="step-icon" aria-hidden="true"><span class="icon icon-tap"></span></span>
+                    <h3>Lee y toca palabras</h3>
+                    <p>Lee por página o de oración en oración. Toca una palabra para guardarla con su traducción.</p>
+                </li>
+                <li class="step reveal" style="--i: 2">
+                    <span class="step-icon" aria-hidden="true"><span class="icon icon-sprout"></span></span>
+                    <h3>Súbelas de nivel</h3>
+                    <p>Cada vez que la reconoces, súbela de nivel hasta marcarla como aprendida.</p>
+                </li>
+            </ol>
+        </section>
+        <!-- ! FIN > CÓMO FUNCIONA -->
+
+        <!-- TODO > FUNCIONES -->
+        <section id="features" class="landing-section" aria-labelledby="features-title">
+            <h2 id="features-title" class="section-title reveal">Todo lo que necesitas para leer en otro idioma</h2>
+
+            <div class="features">
+                <article class="feature reveal" style="--i: 0">
+                    <span class="feature-icon" aria-hidden="true"><span class="icon icon-book"></span></span>
+                    <h3>Lectura a tu ritmo</h3>
+                    <p>Cambia entre vista de página y vista de oración cuando quieras, sin perder por dónde ibas.</p>
+                </article>
+                <article class="feature reveal" style="--i: 1">
+                    <span class="feature-icon" aria-hidden="true"><span class="icon icon-cards"></span></span>
+                    <h3>Tu grimorio personal</h3>
+                    <p>Todas las palabras que guardas, con sus traducciones y un color según cuánto las conoces.</p>
+                </article>
+                <article class="feature reveal" style="--i: 2">
+                    <span class="feature-icon" aria-hidden="true"><span class="icon icon-pin"></span></span>
+                    <h3>Sigue donde te quedaste</h3>
+                    <p>Tu progreso se guarda solo. Al volver a una lección, retomas en la misma oración.</p>
+                </article>
+                <article class="feature reveal" style="--i: 3">
+                    <span class="feature-icon" aria-hidden="true"><span class="icon icon-party"></span></span>
+                    <h3>Celebra cada logro</h3>
+                    <p>Al terminar una lección ves cuántas oraciones leíste y cuántas palabras ya aprendiste.</p>
+                </article>
+            </div>
+        </section>
+        <!-- ! FIN > FUNCIONES -->
+
+        <!-- TODO > NIVELES -->
+        <section id="levels" class="landing-section" aria-labelledby="levels-title">
+            <h2 id="levels-title" class="section-title reveal">Cada palabra tiene su color</h2>
+            <p class="section-subtitle reveal">Del coral cuando es nueva al verde cuando ya es tuya.</p>
+
+            <ul class="level-list">
+                <li class="level-chip level-1 reveal" style="--i: 0">1 · Nueva</li>
+                <li class="level-chip level-2 reveal" style="--i: 1">2</li>
+                <li class="level-chip level-3 reveal" style="--i: 2">3</li>
+                <li class="level-chip level-4 reveal" style="--i: 3">4</li>
+                <li class="level-chip level-5 reveal" style="--i: 4">5</li>
+                <li class="level-chip level-learned reveal" style="--i: 5">✓ Aprendida</li>
+            </ul>
+        </section>
+        <!-- ! FIN > NIVELES -->
+
+        <!-- TODO > LLAMADA FINAL -->
+        <section id="cta" aria-labelledby="cta-title">
+            <div class="cta-content reveal">
+                <h2 id="cta-title">¿Listo para sumergirte?</h2>
+                <p>Tu próximo idioma empieza con el libro que ya tienes.</p>
+                <div class="hero-actions">
+                    <a href="/register/" class="btn btn-sunny guest-only">Crear mi cuenta</a>
+                    <a href="/library/" class="btn btn-sunny member-only hide">Ir a mi biblioteca</a>
+                </div>
+            </div>
+        </section>
+        <!-- ! FIN > LLAMADA FINAL -->
+
+    </main>
+
+    <!-- TODO > FOOTER -->
+    <footer id="footer">
+        <!-- Equipo: una tarjeta por persona con sus enlaces (portafolio personal) -->
+        <section class="team" aria-labelledby="team-title">
+            <h2 id="team-title" class="team-title">Hecho por</h2>
+
+            <ul class="team-list">
+                <li class="team-member">
+                    <span class="team-avatar" aria-hidden="true">BR</span>
+                    <p class="team-name">Bryan Guadalupe Rodríguez Sánchez</p>
+                    <p class="team-role">Backend</p>
+                    <div class="team-links">
+                        <a href="https://bryanrodriguez.tech" target="_blank" rel="noopener noreferrer"
+                            class="team-link" aria-label="Portafolio de Bryan Guadalupe Rodríguez Sánchez (se abre en una pestaña nueva)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M2 12h20" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            <span>Portafolio</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="team-member">
+                    <span class="team-avatar" aria-hidden="true">JC</span>
+                    <p class="team-name">Jairo Cortés Morales</p>
+                    <p class="team-role">Frontend</p>
+                    <div class="team-links">
+                        <a href="https://jairocortes.cloud" target="_blank" rel="noopener noreferrer"
+                            class="team-link" aria-label="Portafolio de Jairo Cortés Morales (se abre en una pestaña nueva)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M2 12h20" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            <span>Portafolio</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Enlace a la organización de GitHub con el front y el back -->
+        <a href="https://github.com/LanguageDive" target="_blank" rel="noopener noreferrer" class="org-link"
+            aria-label="Código abierto en GitHub (se abre en una pestaña nueva)">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3" />
+            </svg>
+            <span>Código abierto en GitHub</span>
+        </a>
+
+        <p class="copyright">© <span class="current-year">2026</span> LanguageDive</p>
+    </footer>
+    <!-- ! FIN > FOOTER -->
+
+    <script type="module" src="landing/script.js"></script>
+</body>
+
+</html>

@@ -1,10 +1,20 @@
 import { apiFetch } from '../api-calls/api-fetch.js';
+import { setBusy } from '../loading.js';
+import { setupValidation, rules } from '../form-validation.js';
 
 const loginFormElement = document.querySelector("#loginForm");
 // console.log(loginFormElement);
 
 const successMessage = document.querySelector("#successMessage");
 const errorMessage = document.querySelector("#errorMessage");
+// El botón está fuera del formulario y se une a él con el atributo form
+const loginButton = document.querySelector('button[form="loginForm"]');
+
+// Validación con mensajes propios (el formulario tiene novalidate)
+const loginValidation = setupValidation(loginFormElement, {
+    identifier: [rules.required("Escribe tu correo o tu nombre de usuario.")],
+    password: [rules.required("Escribe tu contraseña.")]
+});
 let loginError = false;
 let loginSuccess = false;
 
@@ -20,6 +30,8 @@ loginFormElement.addEventListener("submit",
 
 function printFieldsContent(event) {
     event.preventDefault();
+
+    if (!loginValidation.validate()) return;
 
     const loginFormFields = loginFormElement.querySelectorAll("input");
     // console.log(loginFormFields)
@@ -44,6 +56,8 @@ async function loginGet(userLoginData) {
         },
         body: JSON.stringify(userLoginData)
     }
+
+    setBusy(loginButton, true);
 
     try {
         const response = await apiFetch(url, requestObject);
@@ -81,6 +95,8 @@ async function loginGet(userLoginData) {
     }
     catch (error) {
         console.log(error);
+        // Solo se quita la carga si falla: si sale bien sigue girando hasta cambiar de página
+        setBusy(loginButton, false);
 
         // Ocultar el mensaje de login si ya estaba en pantalla
         if (loginSuccess) {

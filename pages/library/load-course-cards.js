@@ -1,6 +1,10 @@
 // TODO > IMPORTS ------------------------------------------------------------
 import { ApiErrors } from '../api-calls/api-fetch.js'
-import { getCourses} from '../api-calls/course.js'
+import { getCourses, getCourseById } from '../api-calls/course.js'
+import { getCourseProgress } from '../api-calls/progress.js'
+import { setupCardsPager } from './cards-pager.js'
+import { bindLogoutButton } from '../api-calls/auth.js'
+import { createSkeletonCards, removeSkeletonCards } from '../loading.js'
 
 // TODO > CONSTANTS
 
@@ -32,16 +36,26 @@ export const allCoursesCardsContainer = courseContainers[cardContainersId.allCou
 const inProgressCardsContainer = courseContainers[cardContainersId.inProgressCourses].querySelector(".cards");
 
 // * DOM LOGOUT
-const btnLogout = document.querySelector("#logout");
-btnLogout.addEventListener("click", () => {
-    localStorage.clear();
-});
+bindLogoutButton();
+
+/**
+ * Skeleton blocks of a course card while it loads: date, cover and title.
+ * @type {string}
+ */
+export const courseSkeletonCardHTML = `
+    <span class="skeleton" style="width: 60%; height: 0.9em"></span>
+    <span class="skeleton course-image-skeleton"></span>
+    <span class="skeleton" style="width: 80%; height: 1.1em"></span>`;
 
 // * DOM NO COURSES YET CONTAINER
 const noCoursesContainers = document.querySelectorAll(".no-courses-container");
 
 
 // TODO > PROGRAM RUN ------------------------------------------------------------
+
+// * Navegacion por paginas y "Ver más" en las dos secciones
+setupCardsPager(courseContainers[cardContainersId.allCourses]);
+setupCardsPager(courseContainers[cardContainersId.inProgressCourses]);
 
 // * Cargar cursos
 await loadCourses();
@@ -54,8 +68,14 @@ await loadCourses();
  * @returns {Promise<void>} Resolves after the courses are loaded and rendered.
  */
 async function loadCourses() {
+    // Tarjetas de carga con la misma forma que las reales mientras llegan los cursos
+    allCoursesCardsContainer.append(...createSkeletonCards(4, "card", courseSkeletonCardHTML));
+    inProgressCardsContainer.append(...createSkeletonCards(2, "card", courseSkeletonCardHTML));
+
     const coursesResponse = await getCourses();
     // console.log(courseResponse);
+
+    removeSkeletonCards(allCoursesCardsContainer);
 
     // Revisar si hubo un error de API
     if (Object.values(ApiErrors).includes(coursesResponse)) {
@@ -68,11 +88,13 @@ async function loadCourses() {
             errorMessage.textContent = "Hubo un problema desde el servidor, intenta de nuevo más tarde";
         }
         errorMessageContainer.classList.remove("hide");
+        removeSkeletonCards(inProgressCardsContainer);
         return;
     }
 
     // Revisar si el usuario no ha importado cursos
     if (coursesResponse.length < 1) {
+        removeSkeletonCards(inProgressCardsContainer);
         for (const noCourseContainer of noCoursesContainers) {
             // console.log("No hay cursos importados");
             noCourseContainer.classList.remove("hide");
@@ -80,17 +102,14 @@ async function loadCourses() {
         return;
     }
 
-    // Filtrar solo los cursos que esten en progreso
-    const inProgressCoursesResponse = coursesResponse.filter(course => {
-        const progress = course.progress.progressPercentage;
-        return progress > 0 && progress < 100;
-    });
-
     // Agregar todos los cursos del usuario al contenedor de cards general
+    // (se muestran ya, sin esperar a calcular cuáles están en progreso)
     appendCardsToContainer(coursesResponse, allCoursesCardsContainer, cardContainersId.allCourses);
 
-    // Agregar todos los cursos en progreso del usuario a su respectivo contenedor
-    appendCardsToContainer(inProgressCoursesResponse, inProgressCardsContainer, cardContainersId.inProgressCourses);
+    // Agregar los cursos en progreso a su contenedor; mientras se calculan siguen los esqueletos
+    const inProgressCourses = await getInProgressCourses(coursesResponse);
+    removeSkeletonCards(inProgressCardsContainer);
+    appendCardsToContainer(inProgressCourses, inProgressCardsContainer, cardContainersId.inProgressCourses);
 
     // for(const course of coursesResponse){
     //     // console.log(course);
@@ -98,6 +117,31 @@ async function loadCourses() {
     // }
 
     // console.log("Todos los cursos cargados");
+}
+
+/**
+ * Finds the courses the user started but did not finish, with their real progress.
+ * The list of courses only has the API's progressPercentage, which counts completed
+ * lessons only (a course with a lesson read halfway would be left out). So the detail
+ * of every course is requested at the same time and measured with getCourseProgress,
+ * the same calculation as the course page.
+ *
+ * @param {Array<Object>} courses - Courses from getCourses.
+ * @returns {Promise<Array<Object>>} Courses in progress, each with `realProgressPercentage`.
+ */
+async function getInProgressCourses(courses) {
+    const results = await Promise.all(courses.map(async (course) => {
+        const courseDetail = await getCourseById(course.id);
+        // Si un curso no se pudo cargar, se deja fuera de esta sección
+        if (Object.values(ApiErrors).includes(courseDetail)) {
+            console.error(courseDetail);
+            return null;
+        }
+        const { percentage, isInProgress } = await getCourseProgress(courseDetail);
+        return isInProgress ? { ...course, realProgressPercentage: percentage } : null;
+    }));
+
+    return results.filter(Boolean);
 }
 
 /**
@@ -136,14 +180,16 @@ export function appendCardsToContainer(courses, cardsContainerType, containerTyp
 
         const progress = course.progress.progressPercentage;
 
-        // Anniadir cards en la seccion de en progreso
+        // Anniadir cards en la seccion de en progreso (con el progreso real si se calculó)
         if (containerTypeId === cardContainersId.inProgressCourses) {
-            cardObjectInfo.progressPercentage = progress;
+            cardObjectInfo.progressPercentage = course.realProgressPercentage ?? progress;
             // Creamos una carta para el tipo de contenedor de cursos en progreso
         }
 
         // Anniadir cards para la seccion de todos los cursos
         card = createCard(cardObjectInfo, containerTypeId);
+        // Índice para que las cards entren una tras otra (ver .fade-up en common.css)
+        card.style.setProperty("--i", cardsContainerType.children.length);
 
         // Agregar card al contenedor de cards
         cardsContainerType.appendChild(card);
@@ -158,13 +204,14 @@ export function appendCardsToContainer(courses, cardsContainerType, containerTyp
  * Creates a DOM card element for a single course using the provided metadata.
  * @param {Object} cardObjectInfo - Course metadata used to build the card content.
  * @param {number} [containerTypeId=0] - Section identifier that determines card labels and layout.
- * @returns {HTMLDivElement} The generated course card element.
+ * @returns {HTMLAnchorElement} The generated course card element (a link to the course page).
  */
 export function createCard(cardObjectInfo, containerTypeId = 0) {
 
-    // Contenedor para cards
-    const card = document.createElement("div");
-    card.setAttribute("class", "card");
+    // Contenedor para cards: es un enlace para poder abrirlo también con el teclado
+    const card = document.createElement("a");
+    card.setAttribute("class", "card fade-up");
+    card.href = `../course/index.html?id=${cardObjectInfo.id}`;
 
     // Contenedor con la fecha de creacion del curso y anniadir al contenedor de card
     const courseCreation = document.createElement("div");
@@ -178,6 +225,11 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
     // Imagen y anniadir al contenedor de imagen
     const image = document.createElement("img");
     image.setAttribute("src", "../assets/nickype-snow-7646952.jpg");
+    // Decorativa: el título del curso ya está escrito debajo
+    image.setAttribute("alt", "");
+    // Se decodifica en segundo plano y solo se carga cuando se va a ver (cards fuera de pantalla)
+    image.decoding = "async";
+    image.loading = "lazy";
     courseImage.appendChild(image);
 
     // Contenedor para informacion del curso
@@ -185,14 +237,14 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
     courseInfo.setAttribute("class", "course-info");
 
     // Contenedor con el nombre del curso y anniadir al contenedor de informacion del curso
-    const courseName = document.createElement("div");
+    const courseName = document.createElement("h3");
     courseName.setAttribute("class", "course-name");
     courseName.textContent = cardObjectInfo.title;
     courseInfo.append(courseName);
 
     // Regla horizontal para separar contenido y anniador al contenedor de informacion del curso
-    const horizontalRule = document.createElement("hr");
-    courseInfo.appendChild(horizontalRule);
+    // const horizontalRule = document.createElement("hr");
+    // courseInfo.appendChild(horizontalRule);
 
     // Contenedor con el numero de lecciones del curso y anniadir al contenedor de informacion del curso
     const courseLessonsNumber = document.createElement("div");
@@ -215,10 +267,6 @@ export function createCard(cardObjectInfo, containerTypeId = 0) {
     card.appendChild(courseCreation);
     card.appendChild(courseImage);
     card.appendChild(courseInfo);
-
-    card.addEventListener('click', () => {
-        window.location.assign(`../course/index.html?id=${cardObjectInfo.id}`);
-    });
 
     return card;
 }

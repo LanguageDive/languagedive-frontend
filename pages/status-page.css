@@ -1,0 +1,257 @@
+/*
+ * Páginas de estado: "próximamente" (forgot-password/) y error 404 (404.html).
+ * Ilustración arriba, tarjeta con el mensaje y botones para seguir, sobre un fondo
+ * marino con arena y algas. Rutas absolutas: el 404 se puede abrir desde cualquier dirección.
+ * Colores, cabecera, botones y animaciones comunes están en /common.css.
+ */
+
+:root {
+    --header-height: clamp(56px, 8vw, 70px);
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+/* TODO > CONTENIDO */
+.status-page {
+    position: relative;
+    padding: clamp(24px, 5vh, 56px) 16px clamp(140px, 24vh, 220px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 3vh, 28px);
+    text-align: center;
+}
+
+.status-illustration {
+    width: min(100%, 420px);
+    animation: fade-up var(--duration-slow) var(--ease-spring) backwards;
+}
+
+.status-illustration svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+.status-card {
+    width: min(560px, 100%);
+    padding: clamp(24px, 4vw, 36px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sticker);
+    animation: fade-up var(--duration-slow) var(--ease-spring) 120ms backwards;
+}
+
+/* Etiqueta encima del título ("Próximamente", "Error 404") */
+.status-tag {
+    padding: 4px 14px;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--fourth-color);
+    background-color: var(--sunny);
+    border: 2px solid var(--fourth-color);
+    border-radius: 999px;
+}
+
+.status-title {
+    font-size: clamp(1.625rem, 3vw + 1rem, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.status-text {
+    max-width: 46ch;
+    font-size: clamp(1rem, 0.5vw + 0.9rem, 1.1875rem);
+    color: var(--text-muted);
+}
+
+/* Qué hacer mientras tanto */
+.status-tips {
+    width: 100%;
+    margin-top: 4px;
+    padding: 14px 18px;
+
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+
+    background-color: var(--second-color);
+    border-radius: var(--radius-md);
+}
+
+.status-tips-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--third-dark);
+}
+
+.status-tips li {
+    display: flex;
+    gap: 10px;
+}
+
+.status-tips li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.2em;
+    background-color: var(--third-color);
+    -webkit-mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+    mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+}
+
+.status-actions {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.status-actions .btn {
+    min-height: 52px;
+    padding: 10px 26px;
+    font-size: 1.125rem;
+}
+/* ! FIN > CONTENIDO */
+
+/* TODO > FONDO MARINO */
+.status-seabed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    height: clamp(120px, 22vh, 200px);
+    pointer-events: none;
+}
+
+.status-seabed svg {
+    width: 100%;
+    height: 100%;
+}
+
+.status-seabed .seaweed {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: sway 4s ease-in-out infinite;
+}
+
+.status-seabed .seaweed:nth-of-type(2n) {
+    animation-duration: 5.2s;
+    animation-direction: reverse;
+}
+
+@keyframes sway {
+    50% {
+        transform: rotate(6deg);
+    }
+}
+/* ! FIN > FONDO MARINO */
+
+/* TODO > ILUSTRACIONES */
+/* Partes animadas de los dibujos: cada una gira o se mueve desde su propio centro */
+.status-illustration [class^="anim-"],
+.status-illustration [class*=" anim-"] {
+    transform-box: fill-box;
+}
+
+/* El pez flota */
+.anim-float {
+    transform-origin: center;
+    animation: status-float 3.5s ease-in-out infinite;
+}
+
+@keyframes status-float {
+    50% {
+        transform: translateY(-8px) rotate(-2deg);
+    }
+}
+
+/* Próximamente: la llave da golpecitos y el letrero se mece */
+.anim-wrench {
+    transform-origin: 15% 85%;
+    animation: wrench-tap 1.4s ease-in-out infinite;
+}
+
+@keyframes wrench-tap {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(-22deg); }
+    45% { transform: rotate(6deg); }
+}
+
+.anim-sign {
+    transform-origin: center bottom;
+    animation: sign-sway 5s ease-in-out infinite;
+}
+
+@keyframes sign-sway {
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+/* 404: ondas de sonar que salen de la escotilla y pupilas que buscan a los lados */
+.anim-sonar {
+    transform-origin: center;
+    animation: sonar 2.4s ease-out infinite;
+}
+
+.anim-sonar:nth-of-type(2) {
+    animation-delay: 0.8s;
+}
+
+.anim-sonar:nth-of-type(3) {
+    animation-delay: 1.6s;
+}
+
+@keyframes sonar {
+    from {
+        opacity: 0.7;
+        transform: scale(0.6);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(1.6);
+    }
+}
+
+.anim-look {
+    animation: look-around 4s ease-in-out infinite;
+}
+
+@keyframes look-around {
+    0%, 100% { transform: translateX(0); }
+    20%, 35% { transform: translateX(-3.5px); }
+    55%, 75% { transform: translateX(3.5px); }
+}
+
+/* Los números del 404 flotan, cada uno a su ritmo */
+.anim-digit {
+    transform-origin: center;
+    animation: status-float 4s ease-in-out infinite;
+}
+
+.anim-digit:last-of-type {
+    animation-delay: -1.5s;
+}
+/* ! FIN > ILUSTRACIONES */

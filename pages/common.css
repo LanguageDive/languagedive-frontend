@@ -1,0 +1,1090 @@
+/*
+ * Estilos compartidos por todas las páginas: colores, tipografía, cabecera,
+ * botones, flechas SVG, foco, animaciones y estados de carga. Cada página
+ * carga este archivo antes de su propio style.css.
+ *
+ * Estilo: juguetón y cercano para niños y adultos. Esquinas grandes,
+ * botones "3D" que se hunden al pulsarlos, colores vivos sobre fondo crema
+ * y detalles del tema "Dive" (burbujas, olas).
+ */
+
+:root {
+    /* Los nombres se conservan para no tocar cada página: 1 fondo, 2 acento suave,
+       3 color principal, 4 texto */
+    --first-color: #FFF9F0;
+    --second-color: #E3F0FF;
+    --third-color: #1B6FD1;
+    --fourth-color: #1F2A4D;
+
+    --third-dark: #12519C;
+    --surface: #ffffff;
+    --border-soft: #D5DEEC;
+    --text-color: var(--fourth-color);
+    --text-muted: #5B6785;
+
+    /* Acentos */
+    --sunny: #FFD23F;
+    --sunny-dark: #D9A800;
+    --coral: #FF7A7A;
+    --mint: #2FBF71;
+    --mint-dark: #1E8C51;
+    --grape: #8B6CF6;
+
+    --error-color: #B4232C;
+    --error-bg: #FFE8E8;
+    --success-color: #17794A;
+    --success-bg: #E3F7EC;
+
+    --radius-sm: 10px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+    --shadow-sm: 0 1px 2px rgb(31 42 77 / 0.08), 0 2px 6px rgb(31 42 77 / 0.06);
+    --shadow-md: 0 4px 10px rgb(31 42 77 / 0.10), 0 12px 28px rgb(31 42 77 / 0.10);
+    --shadow-lg: 0 10px 20px rgb(31 42 77 / 0.12), 0 24px 48px rgb(31 42 77 / 0.12);
+    /* Sombra sólida de "pegatina" para cards con borde */
+    --shadow-sticker: 0 6px 0 var(--fourth-color);
+
+    --font-display: "Fredoka", "Lexend", sans-serif;
+    --font-body: "Lexend", sans-serif;
+
+    /* Duraciones cortas: las microinteracciones de más de ~300ms se sienten lentas */
+    --duration-press: 90ms;
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
+    --duration-slow: 450ms;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Cada página puede cambiar la altura de la cabecera */
+    --header-height: clamp(60px, 10vw, 98px);
+    --fs-logo: clamp(1.375rem, 2vw + 0.875rem, 1.75rem);
+    --fs-header-link: clamp(1rem, 1vw + 0.75rem, 1.25rem);
+}
+
+/* Transición suave entre páginas en navegadores que la soportan (Chrome, Edge, Safari);
+   en el resto la navegación es normal */
+@view-transition {
+    navigation: auto;
+}
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scrollbar-color: var(--third-color) var(--second-color);
+}
+
+/* El color se define en body y se hereda: así los hijos no tienen que repetirlo */
+body {
+    min-height: 100dvh;
+    font-family: var(--font-body);
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: var(--first-color);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+button,
+.btn {
+    font-family: var(--font-display);
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+::selection {
+    background-color: var(--sunny);
+    color: var(--fourth-color);
+}
+
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+    color: inherit;
+}
+
+/* Los botones conservan la tipografía redondeada aunque "font: inherit" la pise */
+button {
+    font-family: var(--font-display);
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
+}
+
+:focus-visible {
+    outline: 3px solid var(--third-color);
+    outline-offset: 3px;
+}
+
+.hide {
+    display: none !important;
+}
+
+/* Oculto a la vista pero disponible para lectores de pantalla */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* TODO > BURBUJAS DE FONDO */
+/* Burbujas que suben despacio detrás del contenido (tema "Dive").
+   Cada capa es un dibujo de 100vh de alto que se repite hacia abajo; la capa mide
+   200vh y sube la mitad, así al reiniciar el bucle las burbujas están en el mismo
+   sitio y no se nota el corte. Solo se anima transform, que no obliga a repintar */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: 200vh;
+    z-index: -1;
+    pointer-events: none;
+    background-size: 100% 100vh;
+    background-repeat: repeat-y;
+    /* Capa propia: el navegador solo la desplaza, sin volver a dibujar las burbujas */
+    will-change: transform;
+    contain: strict;
+}
+
+body::before {
+    background-image:
+        radial-gradient(circle at 8% 82%, rgb(27 111 209 / 0.08) 0 20px, rgb(27 111 209 / 0.2) 20px 23px, transparent 23.5px),
+        radial-gradient(circle at 86% 40%, rgb(255 210 63 / 0.16) 0 12px, rgb(217 168 0 / 0.28) 12px 14px, transparent 14.5px),
+        radial-gradient(circle at 70% 92%, rgb(139 108 246 / 0.08) 0 30px, rgb(139 108 246 / 0.2) 30px 33px, transparent 33.5px),
+        radial-gradient(circle at 40% 15%, rgb(27 111 209 / 0.06) 0 9px, rgb(27 111 209 / 0.18) 9px 11px, transparent 11.5px);
+    animation: bubbles-rise 60s linear infinite;
+}
+
+/* Segunda capa más lenta con otras burbujas, para que no se vea un patrón */
+body::after {
+    background-image:
+        radial-gradient(circle at 22% 30%, rgb(47 191 113 / 0.08) 0 15px, rgb(47 191 113 / 0.2) 15px 17px, transparent 17.5px),
+        radial-gradient(circle at 94% 75%, rgb(27 111 209 / 0.06) 0 38px, rgb(27 111 209 / 0.16) 38px 41px, transparent 41.5px),
+        radial-gradient(circle at 55% 60%, rgb(255 122 122 / 0.1) 0 10px, rgb(255 122 122 / 0.22) 10px 12px, transparent 12.5px);
+    animation: bubbles-rise 85s linear infinite;
+}
+
+@keyframes bubbles-rise {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-50%);
+    }
+}
+/* ! FIN > BURBUJAS DE FONDO */
+
+/* TODO > BOTONES */
+/* Botón "3D": una sombra sólida de su propio color más oscuro hace de base.
+   Al pasar el ratón sube un poco; al pulsarlo se hunde hasta tocar la base */
+.btn {
+    --btn-bg: var(--surface);
+    --btn-color: var(--fourth-color);
+    --btn-border: var(--border-soft);
+    --btn-base: var(--border-soft);
+    --btn-hover-bg: var(--second-color);
+
+    min-height: 44px;
+    padding: 8px 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--btn-color);
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 0 var(--btn-base);
+
+    transition: transform var(--duration-press) ease-out, box-shadow var(--duration-press) ease-out,
+        background-color var(--duration-fast);
+}
+
+.btn:hover:not(:disabled) {
+    background-color: var(--btn-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--btn-base);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--btn-base);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+}
+
+.btn-primary {
+    --btn-bg: var(--third-color);
+    --btn-color: #ffffff;
+    --btn-border: var(--third-dark);
+    --btn-base: var(--third-dark);
+    --btn-hover-bg: #2479DC;
+}
+
+.btn-sunny {
+    --btn-bg: var(--sunny);
+    --btn-color: var(--fourth-color);
+    --btn-border: var(--sunny-dark);
+    --btn-base: var(--sunny-dark);
+    --btn-hover-bg: #FFDB66;
+}
+
+/* Botón redondo solo con ícono (flechas del paginador) */
+.btn-round {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+}
+/* ! FIN > BOTONES */
+
+/* TODO > HEADER */
+#header {
+    position: relative;
+    z-index: 2;
+    height: var(--header-height);
+    background-color: var(--third-color);
+    view-transition-name: header;
+}
+
+/* Borde inferior en forma de olas */
+#header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 12px;
+    background: radial-gradient(circle at 12px 0, var(--third-color) 12px, transparent 12.5px) 0 0 / 24px 12px repeat-x;
+    pointer-events: none;
+}
+
+#header-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 100%;
+    padding: 0 clamp(4px, 1.5vw, 16px);
+}
+
+#header-links a,
+#header-links .header-user {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(10px, 2.5vw, 20px);
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--fs-header-link);
+}
+
+/* Logo con una burbuja delante; al pasar el ratón la burbuja se balancea */
+#header-links .logo {
+    gap: 10px;
+    font-size: var(--fs-logo);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+#header-links .logo::before {
+    content: "";
+    width: 0.95em;
+    height: 0.95em;
+    flex-shrink: 0;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #ffffff 0 18%, var(--sunny) 20%);
+    transition: transform var(--duration-base) var(--ease-spring);
+}
+
+#header-links .logo:hover::before {
+    animation: wiggle 600ms ease-in-out;
+}
+
+#header-links .user-access {
+    display: flex;
+    min-width: 0;
+}
+
+/* Nombres de usuario largos se cortan con "…" en vez de romper la cabecera */
+#header-links .header-user {
+    display: block;
+    max-width: 40vw;
+    line-height: var(--header-height);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+/* Al pasar el ratón aparece una "pastilla" clara detrás del enlace */
+#header-links a:not(.logo)::after {
+    content: "";
+    position: absolute;
+    inset: 22% 4px;
+    z-index: -1;
+    border-radius: 999px;
+    background-color: rgb(255 255 255 / 0.2);
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity var(--duration-fast), transform var(--duration-base) var(--ease-spring);
+}
+
+#header-links a:not(.logo):hover::after,
+#header-links a:not(.logo):focus-visible::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#header-links a {
+    isolation: isolate;
+}
+
+/* Enlace al grimorio: ícono y texto; en pantallas angostas solo el ícono
+   (el texto sigue ahí para lectores de pantalla) */
+#header-links .header-nav-link {
+    gap: 8px;
+}
+
+#header-links .header-nav-link .icon {
+    font-size: 1.25em;
+}
+
+#header-links .header-nav-link[aria-current="page"]::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (max-width: 599px) {
+    #header-links .header-nav-link .nav-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
+
+#header-links a:focus-visible {
+    outline-color: #ffffff;
+    outline-offset: -6px;
+}
+/* ! FIN > HEADER */
+
+/* TODO > ÍCONOS */
+/* Íconos propios en assets/icons/. Rutas absolutas porque una URL relativa en una variable
+   se puede resolver respecto a la hoja que la usa (cada página tiene la suya).
+   Se usan como máscara: la forma la da el SVG y el
+   color, currentColor (el color del texto). Uso: <span class="icon icon-book" aria-hidden="true"></span>
+   Miden 1em, así que crecen con el font-size del elemento */
+.icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    background-color: currentColor;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+}
+
+.icon-arrow-down { --icon: url("/assets/icons/arrow-down.svg"); }
+.icon-book { --icon: url("/assets/icons/book.svg"); }
+.icon-books { --icon: url("/assets/icons/books.svg"); }
+.icon-bulb { --icon: url("/assets/icons/bulb.svg"); }
+.icon-cards { --icon: url("/assets/icons/cards.svg"); }
+.icon-info { --icon: url("/assets/icons/info.svg"); }
+.icon-warning { --icon: url("/assets/icons/warning.svg"); }
+.icon-party { --icon: url("/assets/icons/party.svg"); }
+.icon-pin { --icon: url("/assets/icons/pin.svg"); }
+.icon-search { --icon: url("/assets/icons/search.svg"); }
+.icon-sad { --icon: url("/assets/icons/sad.svg"); }
+.icon-sparkles { --icon: url("/assets/icons/sparkles.svg"); }
+.icon-speaker { --icon: url("/assets/icons/speaker.svg"); }
+.icon-sprout { --icon: url("/assets/icons/sprout.svg"); }
+.icon-star { --icon: url("/assets/icons/star.svg"); }
+.icon-tap { --icon: url("/assets/icons/tap.svg"); }
+.icon-wave { --icon: url("/assets/icons/wave.svg"); }
+/* ! FIN > ÍCONOS */
+
+/* TODO > FLECHAS SVG */
+.back-arrow,
+.forward-arrow {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+    transition: transform var(--duration-base) var(--ease-spring);
+}
+
+/* La flecha se adelanta un poco en la dirección del enlace */
+:hover > .back-arrow,
+:focus-visible > .back-arrow {
+    transform: translateX(-4px);
+}
+
+:hover > .forward-arrow,
+:focus-visible > .forward-arrow {
+    transform: translateX(4px);
+}
+/* ! FIN > FLECHAS SVG */
+
+/* TODO > EFECTOS ESPECIALES */
+/* Confeti y celebración que crea effects.js */
+.confetti-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti-piece {
+    position: absolute;
+    display: block;
+    will-change: transform, opacity;
+}
+
+/* TODO > CELEBRACIÓN A PANTALLA COMPLETA */
+/* La crea showCelebration() en effects.js. Secuencia (unos 2.5s):
+   el agua sube con una ola → aparece la perla dorada con su estrella y los rayos →
+   caen las letras del título → aparecen los logros y los botones */
+
+/* Mientras está abierta, la página de detrás no hace scroll */
+html:has(dialog.celebration[open]) {
+    overflow: hidden;
+}
+
+dialog.celebration {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    color: #ffffff;
+    background: transparent;
+    border: none;
+}
+
+dialog.celebration[open] {
+    display: grid;
+    place-items: center;
+}
+
+dialog.celebration::backdrop {
+    background-color: rgb(14 40 84 / 0.5);
+    animation: fade-in var(--duration-base) ease-out;
+}
+
+dialog.celebration.is-closing {
+    animation: celebration-out 300ms ease-in forwards;
+}
+
+dialog.celebration.is-closing::backdrop {
+    animation: celebration-out 300ms ease-in forwards;
+}
+
+@keyframes celebration-out {
+    to {
+        opacity: 0;
+    }
+}
+
+/* El agua: sube desde abajo y lleva una ola que se mueve sin parar en su borde */
+.celebration-water {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#1B6FD1, #0E3F7A 85%);
+    animation: water-rise 900ms var(--ease-out) backwards;
+}
+
+.celebration-wave {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% - 1px);
+    width: 200%;
+    height: 48px;
+    fill: #1B6FD1;
+    animation: wave-move 5s linear infinite;
+}
+
+@keyframes water-rise {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+/* El dibujo de la ola se repite dos veces en un ancho de 200%: moverlo la mitad cierra el bucle */
+@keyframes wave-move {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Rayos de luz que giran despacio detrás de la perla */
+.celebration-rays {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160vmax;
+    aspect-ratio: 1;
+    background: repeating-conic-gradient(rgb(255 255 255 / 0.12) 0 9deg, transparent 9deg 18deg);
+    -webkit-mask-image: radial-gradient(circle, #000 0 15%, transparent 55%);
+    mask-image: radial-gradient(circle, #000 0 15%, transparent 55%);
+    translate: -50% -50%;
+    will-change: transform;
+    animation: fade-in 600ms 500ms ease-out backwards, spin 24s linear infinite;
+}
+
+/* Burbujas: cada una tiene su tamaño, posición, duración y retraso (los pone el JS) */
+.celebration-bubble {
+    position: absolute;
+    bottom: -60px;
+    left: var(--x);
+    width: var(--size);
+    aspect-ratio: 1;
+    border: 2px solid rgb(255 255 255 / 0.55);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.7) 0 12%, rgb(255 255 255 / 0.08) 14%);
+    animation: bubble-up var(--duration) ease-in var(--delay) infinite backwards;
+}
+
+@keyframes bubble-up {
+    25% { transform: translate(12px, -28vh); }
+    50% { transform: translate(-10px, -56vh); }
+    75% { transform: translate(8px, -84vh); }
+    to {
+        transform: translate(0, -115vh);
+        opacity: 0.2;
+    }
+}
+
+/* Encima del agua, los rayos y las burbujas */
+.celebration-content {
+    position: relative;
+    z-index: 1;
+    max-width: min(640px, 100%);
+    padding: 24px 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 3vh, 28px);
+    text-align: center;
+}
+
+/* La perla dorada con la estrella: aparece con un rebote y la cruza un destello */
+.celebration-medal {
+    position: relative;
+    width: clamp(120px, 28vmin, 200px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+
+    background: radial-gradient(circle at 35% 30%, #ffffff 0 7%, #FFE680 9%, var(--sunny) 45%, var(--sunny-dark) 100%);
+    border: 6px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 10px 0 rgb(0 0 0 / 0.18), 0 0 0 14px rgb(255 255 255 / 0.15);
+    animation: medal-pop 700ms var(--ease-spring) 500ms backwards;
+}
+
+.celebration-medal::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / 0.75) 50%, transparent 60%);
+    transform: translateX(-120%);
+    animation: medal-shine 900ms ease-in-out 1.4s forwards;
+}
+
+.celebration-star {
+    width: 58%;
+    aspect-ratio: 1;
+    background-color: #ffffff;
+    clip-path: polygon(50% 2%, 62% 36%, 98% 37%, 69% 59%, 80% 95%, 50% 74%, 20% 95%, 31% 59%, 2% 37%, 38% 36%);
+    filter: drop-shadow(0 3px 0 rgb(0 0 0 / 0.15));
+    animation: star-in 800ms var(--ease-spring) 850ms backwards;
+}
+
+@keyframes medal-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.2) translateY(60px);
+    }
+}
+
+@keyframes medal-shine {
+    to {
+        transform: translateX(120%);
+    }
+}
+
+@keyframes star-in {
+    from {
+        opacity: 0;
+        transform: scale(0) rotate(-200deg);
+    }
+}
+
+/* Título: cada letra cae y rebota, una tras otra */
+.celebration-title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    text-shadow: 0 4px 0 rgb(0 0 0 / 0.2);
+}
+
+.celebration-letter {
+    display: inline-block;
+    white-space: pre;
+    animation: letter-drop 550ms var(--ease-spring) backwards;
+    animation-delay: calc(1000ms + var(--i) * 35ms);
+}
+
+@keyframes letter-drop {
+    from {
+        opacity: 0;
+        transform: translateY(-60px) rotate(-12deg);
+    }
+}
+
+/* Logros como etiquetas translúcidas */
+.celebration-stats {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.celebration-stats li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1vw + 0.8rem, 1.25rem);
+    font-weight: 500;
+    background-color: rgb(255 255 255 / 0.15);
+    border: 2px solid rgb(255 255 255 / 0.4);
+    border-radius: 999px;
+    animation: fade-up var(--duration-slow) var(--ease-spring) backwards;
+    animation-delay: calc(1600ms + var(--i) * 120ms);
+}
+
+.celebration-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    animation: fade-up var(--duration-slow) var(--ease-spring) 1900ms backwards;
+}
+
+.celebration-actions .btn {
+    font-size: clamp(1.0625rem, 1vw + 0.8rem, 1.25rem);
+    min-height: 52px;
+    padding: 10px 26px;
+}
+
+.celebration-actions .btn:focus-visible {
+    outline-color: #ffffff;
+}
+/* ! FIN > CELEBRACIÓN A PANTALLA COMPLETA */
+/* ! FIN > EFECTOS ESPECIALES */
+
+/* TODO > ALERTAS */
+/* Las crea showAlert() en alerts.js, en lugar del alert() del navegador.
+   Tarjeta tipo pegatina con un círculo de color asomado arriba */
+.ld-alert {
+    width: min(420px, 100% - 32px);
+    margin: auto;
+    padding: 56px clamp(20px, 5vw, 32px) 28px;
+    overflow: visible;
+
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+
+    color: var(--text-color);
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 0 var(--fourth-color);
+
+    animation: alert-in 450ms var(--ease-spring);
+}
+
+.ld-alert[open] {
+    display: flex;
+}
+
+.ld-alert::backdrop {
+    background-color: rgb(31 42 77 / 0.45);
+    animation: fade-in var(--duration-base) ease-out;
+}
+
+.ld-alert.is-closing,
+.ld-alert.is-closing::backdrop {
+    animation: alert-out 220ms ease-in forwards;
+}
+
+@keyframes alert-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.85);
+    }
+}
+
+@keyframes alert-out {
+    to {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+}
+
+/* Círculo con el ícono, mitad fuera de la tarjeta; da un salto al aparecer */
+.ld-alert-badge {
+    --badge: var(--third-color);
+    --badge-icon: #ffffff;
+
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 72px;
+    height: 72px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 2.25rem;
+    color: var(--badge-icon);
+    background-color: var(--badge);
+    border: 3px solid var(--fourth-color);
+    border-radius: 50%;
+
+    translate: -50% -50%;
+    animation: badge-pop 600ms var(--ease-spring) 120ms backwards;
+}
+
+.ld-alert-error .ld-alert-badge { --badge: var(--coral); --badge-icon: var(--fourth-color); }
+.ld-alert-warning .ld-alert-badge { --badge: var(--sunny); --badge-icon: var(--fourth-color); }
+.ld-alert-success .ld-alert-badge { --badge: var(--mint); --badge-icon: var(--fourth-color); }
+
+/* El ícono de error y el de aviso se sacuden un poco para llamar la atención */
+.ld-alert-error .ld-alert-badge .icon,
+.ld-alert-warning .ld-alert-badge .icon {
+    animation: wiggle 600ms ease-in-out 500ms;
+}
+
+@keyframes badge-pop {
+    from {
+        transform: scale(0) rotate(-90deg);
+    }
+}
+
+.ld-alert-title {
+    font-size: clamp(1.375rem, 1.5vw + 1rem, 1.75rem);
+    font-weight: 700;
+}
+
+.ld-alert-message {
+    color: var(--text-muted);
+}
+
+.ld-alert-message:empty {
+    display: none;
+}
+
+.ld-alert-button {
+    margin-top: 10px;
+    min-width: 160px;
+    min-height: 50px;
+    font-size: 1.125rem;
+}
+/* ! FIN > ALERTAS */
+
+/* TODO > VALIDACIÓN DE FORMULARIOS */
+/* Mensajes de form-validation.js. Rojo intenso sobre rosado (5.6:1): contrasta con el
+   azul, el crema y el amarillo del resto de la página, así se nota enseguida */
+.field-error {
+    position: relative;
+    margin-top: 2px;
+    padding: 8px 12px 8px 38px;
+
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--error-color);
+    background-color: var(--error-bg);
+    border: 2px solid var(--error-color);
+    border-radius: 12px;
+
+    animation: field-error-in 380ms var(--ease-spring);
+}
+
+/* Ícono de aviso a la izquierda del texto */
+.field-error::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    -webkit-mask: url("/assets/icons/warning.svg") center / contain no-repeat;
+    mask: url("/assets/icons/warning.svg") center / contain no-repeat;
+    translate: 0 -50%;
+}
+
+/* Flechita que apunta al campo de arriba, como un globo de diálogo */
+.field-error::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 22px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--error-bg);
+    border-top: 2px solid var(--error-color);
+    border-left: 2px solid var(--error-color);
+    rotate: 45deg;
+}
+
+@keyframes field-error-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.96);
+    }
+}
+
+/* Campo con error: borde rojo (gana a los estilos de cada formulario) */
+form input.is-invalid,
+form input.is-invalid:hover,
+.password-field:has(input.is-invalid) {
+    border-color: var(--error-color) !important;
+}
+
+form input.is-invalid:focus-visible,
+.password-field:has(input.is-invalid):focus-within {
+    box-shadow: 0 0 0 4px rgb(180 35 44 / 0.2) !important;
+}
+
+/* Sacudida del primer campo con error al enviar */
+.shake-field {
+    animation: shake 400ms ease-in-out;
+}
+/* ! FIN > VALIDACIÓN DE FORMULARIOS */
+
+/* TODO > ANIMACIONES */
+
+/* Entrada: aparece subiendo un poco. Con --i (índice) se escalonan las cards.
+   "backwards" solo aplica la animación durante el retraso, así al terminar
+   no bloquea los transform de :hover */
+.fade-up {
+    animation: fade-up var(--duration-slow) var(--ease-spring) backwards;
+    animation-delay: calc(min(var(--i, 0), 12) * 60ms);
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes pop-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+@keyframes shake {
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+@keyframes wiggle {
+    25% { transform: rotate(-14deg); }
+    50% { transform: rotate(10deg); }
+    75% { transform: rotate(-6deg); }
+}
+
+@keyframes bounce {
+    40% { transform: translateY(-8px); }
+    70% { transform: translateY(2px); }
+}
+
+@keyframes float {
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* TODO > ESTADOS DE CARGA */
+
+/* Esqueleto: bloque claro con un brillo que lo recorre mientras llegan los datos.
+   El brillo es una capa aparte que se desliza con transform: así no hay que volver
+   a dibujar el esqueleto en cada fotograma */
+.skeleton,
+.is-loading [data-skeleton] {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--second-color);
+    border-radius: var(--radius-sm);
+}
+
+.skeleton::after,
+.is-loading [data-skeleton]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.65), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* overflow no recorta elementos en línea: el texto en línea pasa a inline-block mientras carga */
+.is-loading span[data-skeleton] {
+    display: inline-block;
+}
+
+/* Un texto que viene de la API se tapa con el esqueleto mientras carga;
+   el texto fijo del HTML conserva su tamaño, así la página no salta al cargar */
+.is-loading [data-skeleton] {
+    color: transparent !important;
+    width: fit-content;
+    max-width: 100%;
+    user-select: none;
+}
+
+.is-loading [data-skeleton] * {
+    visibility: hidden;
+}
+
+.skeleton {
+    display: block;
+    min-height: 1em;
+}
+
+@keyframes shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* Botón o enlace esperando la respuesta de la API: conserva su texto,
+   muestra un círculo girando y no se puede volver a pulsar */
+[aria-busy="true"]:is(button, a) {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+[aria-busy="true"]:is(button, a)::before {
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    vertical-align: -0.15em;
+    border: 2.5px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+/* Zona que se está recargando (p. ej. el texto al cambiar de página): se atenúa */
+[aria-busy="true"]:not(button, a) {
+    opacity: 0.45;
+    cursor: progress;
+    transition: opacity var(--duration-base);
+}
+/* ! FIN > ESTADOS DE CARGA */
+
+/* Mensajes de error y éxito: se animan cada vez que pasan de ocultos a visibles */
+.alert-error {
+    animation: pop-in var(--duration-base) var(--ease-out), shake 400ms 150ms ease-in-out;
+}
+
+.alert-success {
+    animation: pop-in var(--duration-base) var(--ease-spring);
+}
+
+/* Quien pidió reducir el movimiento no ve desplazamientos; los cambios de
+   estado siguen siendo visibles porque no dependen de la animación */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    @view-transition {
+        navigation: none;
+    }
+}
+/* ! FIN > ANIMACIONES */

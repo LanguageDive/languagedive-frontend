@@ -1,0 +1,574 @@
+/*
+ * Página del grimorio (vocabulario).
+ * Mobile-first: en móvil cada palabra es una tarjeta; desde 900px se ve la tabla del wireframe.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
+:root {
+    --page-gutter: clamp(16px, 4vw, 50px);
+    --arrow-size: clamp(22px, 2vw + 12px, 28px);
+
+    --fs-title: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);
+    --fs-text: clamp(1rem, 0.5vw + 0.875rem, 1.125rem);
+    --fs-word: clamp(1.125rem, 0.5vw + 1rem, 1.375rem);
+
+    /* Los mismos colores por nivel que la lección */
+    --level-ignored: #C9D1DE;
+    --level-ignored-base: #9AA5B8;
+    --level-1: #FF7A7A;
+    --level-1-base: #D9534F;
+    --level-2: #FFAA5C;
+    --level-2-base: #D9822B;
+    --level-3: #FFD23F;
+    --level-3-base: #D9A800;
+    --level-4: #A8DB5E;
+    --level-4-base: #7DB32F;
+    --level-5: #5FD39A;
+    --level-5-base: #2F9E66;
+    --level-learned: #2FBF71;
+    --level-learned-base: #1E8C51;
+}
+
+/* TODO > MAIN */
+#vocabulary-page {
+    width: min(100%, calc(1180px + 2 * var(--page-gutter)));
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 40px) var(--page-gutter) 48px;
+
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 2.5vw, 24px);
+}
+
+.page-top .btn-exit {
+    font-size: var(--fs-text);
+}
+
+.back-arrow,
+.forward-arrow {
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+}
+
+/* Título con subrayado ondulado y resumen al lado (debajo en pantallas angostas) */
+.page-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 24px;
+}
+
+.page-title {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    text-decoration: underline wavy var(--sunny) 3px;
+    text-underline-offset: 10px;
+    text-decoration-skip-ink: none;
+}
+
+.summary {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.summary-chip {
+    padding: 6px 14px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    border: 2px solid var(--fourth-color);
+    border-radius: 999px;
+    box-shadow: 0 3px 0 var(--fourth-color);
+}
+
+.summary-number {
+    font-weight: 700;
+}
+
+.summary-total { background-color: var(--surface); }
+.summary-learning { background-color: var(--sunny); }
+.summary-learned { background-color: #CDEFDB; }
+
+#error-message-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: clamp(12px, 3vw, 20px);
+    text-align: center;
+    border: 3px solid var(--error-color);
+    border-radius: var(--radius-md);
+    background-color: var(--error-bg);
+}
+
+#error-message-container p {
+    font-weight: 600;
+    color: var(--error-color);
+}
+
+/* TODO > HERRAMIENTAS */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+}
+
+/* Buscador con lupa dentro del campo */
+.search-field {
+    position: relative;
+    flex: 1 1 260px;
+    max-width: 420px;
+}
+
+.search-field .icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    translate: 0 -50%;
+    pointer-events: none;
+}
+
+.search-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 8px 14px 8px 44px;
+
+    /* 16px como mínimo para que iOS no haga zoom al enfocar */
+    font-size: max(16px, 1rem);
+    background-color: var(--surface);
+    border: 2px solid var(--border-soft);
+    border-radius: 999px;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.search-field input:hover {
+    border-color: var(--third-color);
+}
+
+.search-field input:focus-visible {
+    outline: none;
+    border-color: var(--third-color);
+    box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+}
+
+/* Filtros como pastillas; la activa se marca con aria-pressed */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-chip {
+    min-height: 40px;
+    padding: 4px 16px;
+
+    font-weight: 600;
+    color: var(--third-dark);
+    background-color: var(--surface);
+    border: 2px solid var(--border-soft);
+    border-radius: 999px;
+    transition: background-color var(--duration-fast), border-color var(--duration-fast),
+        transform var(--duration-fast) var(--ease-spring);
+}
+
+.filter-chip:hover {
+    border-color: var(--third-color);
+    transform: translateY(-2px);
+}
+
+.filter-chip:active {
+    transform: scale(0.95);
+}
+
+.filter-chip[aria-pressed="true"] {
+    color: #ffffff;
+    background-color: var(--third-color);
+    border-color: var(--third-dark);
+}
+
+.sort-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+.sort-field select {
+    min-height: 44px;
+    padding: 4px 12px;
+    font: inherit;
+    font-weight: 500;
+    color: var(--fourth-color);
+    background-color: var(--surface);
+    border: 2px solid var(--border-soft);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.sort-field select:focus-visible {
+    outline: none;
+    border-color: var(--third-color);
+    box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+}
+
+/* Paginación: estado a la izquierda, botones a la derecha (como el wireframe) */
+.pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+}
+
+.pager-status {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.pager-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pager-buttons .btn {
+    font-size: var(--fs-text);
+}
+/* ! FIN > HERRAMIENTAS */
+
+/* TODO > TABLA */
+/* Tarjeta tipo pegatina que contiene la tabla */
+.table-card {
+    overflow: hidden;
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sticker);
+}
+
+.vocabulary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-text);
+}
+
+/* Móvil: sin cabecera de tabla; cada fila es una tarjeta con sus etiquetas */
+.vocabulary-table thead {
+    display: none;
+}
+
+.vocabulary-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "word date"
+        "translation translation"
+        "level level";
+    gap: 10px 12px;
+    padding: 16px;
+    border-bottom: 2px dashed var(--border-soft);
+}
+
+.vocabulary-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.vocabulary-table td {
+    display: block;
+    min-width: 0;
+}
+
+.cell-word { grid-area: word; }
+.cell-translation { grid-area: translation; }
+.cell-level { grid-area: level; }
+.cell-date { grid-area: date; }
+
+/* Las filas aparecen una tras otra al cambiar de página o de filtro */
+.vocabulary-table tbody tr {
+    animation: fade-up var(--duration-slow) var(--ease-spring) backwards;
+    animation-delay: calc(min(var(--i, 0), 10) * 35ms);
+    transition: background-color var(--duration-fast);
+}
+
+.vocabulary-table tbody tr:not(.skeleton-row):hover {
+    background-color: var(--first-color);
+}
+
+.word-term {
+    font-family: var(--font-display);
+    font-size: var(--fs-word);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* Palabra aprendida: en verde y subrayada, como en la lección */
+.word-term.is-learned {
+    color: var(--success-color);
+    text-decoration: underline 3px var(--level-learned);
+    text-underline-offset: 5px;
+    text-decoration-skip-ink: none;
+}
+
+.cell-date {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Traducciones guardadas como etiquetas, con el botón para editarlas */
+.translation-view {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.translation-chip {
+    padding: 2px 12px;
+    background-color: var(--second-color);
+    border-radius: 999px;
+}
+
+.translation-empty {
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.edit-translation {
+    min-height: 36px;
+    padding: 2px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--third-dark);
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    transition: background-color var(--duration-fast), border-color var(--duration-fast);
+}
+
+.edit-translation:hover {
+    border-color: var(--third-color);
+    background-color: var(--second-color);
+}
+
+/* Edición en la misma fila */
+.translation-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.translation-form input {
+    flex: 1 1 180px;
+    min-height: 40px;
+    padding: 4px 12px;
+    font-size: max(16px, 1rem);
+    background-color: var(--first-color);
+    border: 2px solid var(--third-color);
+    border-radius: 12px;
+}
+
+.translation-form input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+}
+
+.translation-form .btn {
+    min-height: 40px;
+    padding: 4px 14px;
+    font-size: 0.9375rem;
+}
+
+.translation-hint {
+    flex-basis: 100%;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+/* Botones de nivel: los mismos círculos de colores de la lección, más pequeños */
+.level-buttons {
+    padding: 4px 0 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.level-button {
+    --lvl: var(--surface);
+    --lvl-base: var(--border-soft);
+
+    width: 36px;
+    aspect-ratio: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fourth-color);
+    background-color: var(--lvl);
+    border: 2px solid var(--lvl-base);
+    border-radius: 50%;
+    box-shadow: 0 3px 0 var(--lvl-base);
+
+    transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-press) ease-out;
+}
+
+.level-button[data-status="IGNORED"] { --lvl: var(--level-ignored); --lvl-base: var(--level-ignored-base); }
+.level-button[data-status="NEW"] { --lvl: var(--level-1); --lvl-base: var(--level-1-base); }
+.level-button[data-status="LEVEL_2"] { --lvl: var(--level-2); --lvl-base: var(--level-2-base); }
+.level-button[data-status="LEVEL_3"] { --lvl: var(--level-3); --lvl-base: var(--level-3-base); }
+.level-button[data-status="LEVEL_4"] { --lvl: var(--level-4); --lvl-base: var(--level-4-base); }
+.level-button[data-status="LEVEL_5"] { --lvl: var(--level-5); --lvl-base: var(--level-5-base); }
+.level-button[data-status="LEARNED"] { --lvl: var(--level-learned); --lvl-base: var(--level-learned-base); }
+
+.level-button:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 5px 0 var(--lvl-base);
+}
+
+.level-button:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 var(--lvl-base);
+}
+
+/* El nivel actual sobresale, igual que en la lección */
+.level-button[aria-pressed="true"],
+.level-button[aria-pressed="true"]:hover:not(:disabled) {
+    transform: translateY(-4px) scale(1.12);
+    box-shadow:
+        0 6px 0 var(--lvl-base),
+        0 10px 8px rgb(31 42 77 / 0.22);
+}
+
+.level-button svg {
+    width: 60%;
+    height: auto;
+}
+
+/* Mientras se guarda, el número o la palomita se cambia por el círculo de carga
+   (el círculo es el ::before de common.css; aquí se oculta el contenido y se centra) */
+.level-button[aria-busy="true"] {
+    font-size: 0;
+}
+
+.level-button[aria-busy="true"] > * {
+    display: none;
+}
+
+.level-button[aria-busy="true"]::before {
+    margin-right: 0;
+    font-size: 1rem;
+}
+
+/* Filas de carga */
+.skeleton-row .skeleton {
+    height: 1.1em;
+}
+
+.skeleton-row .skeleton-levels {
+    width: min(100%, 290px);
+    height: 36px;
+    border-radius: 999px;
+}
+
+/* Sin palabras */
+.empty-state {
+    padding: clamp(32px, 6vw, 56px) 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 6px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 2.25rem;
+    color: #ffffff;
+    background-color: var(--third-color);
+    border: 3px solid var(--fourth-color);
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
+    font-weight: 600;
+}
+
+.empty-text {
+    max-width: 44ch;
+    color: var(--text-muted);
+}
+
+.empty-action {
+    margin-top: 10px;
+}
+/* ! FIN > TABLA */
+
+/* Escritorio: tabla de verdad con su cabecera, como en el wireframe */
+@media (min-width: 900px) {
+    .vocabulary-table thead {
+        display: table-header-group;
+    }
+
+    .vocabulary-table tr {
+        display: table-row;
+        padding: 0;
+    }
+
+    .vocabulary-table td,
+    .vocabulary-table th {
+        display: table-cell;
+        padding: 14px 18px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .vocabulary-table th {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: var(--third-color);
+    }
+
+    .vocabulary-table th + th,
+    .vocabulary-table td + td {
+        border-left: 2px dashed var(--border-soft);
+    }
+
+    .vocabulary-table th + th {
+        border-left-color: rgb(255 255 255 / 0.35);
+    }
+
+    .cell-word {
+        width: 22%;
+    }
+
+    .cell-level {
+        width: 320px;
+    }
+
+    .cell-date {
+        width: 1%;
+    }
+}
+/* ! FIN > MAIN */

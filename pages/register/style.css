@@ -1,175 +1,183 @@
-:root{
-    --first-color: #F9F7F7;
-    --second-color: #DBE2EF;
-    --third-color: #3F72AF;
-    --fourth-color: #112D4E;
+/*
+ * Mobile-first: los estilos base son para móvil y se amplían con
+ * tamaños fluidos (clamp/min) y media queries de min-width.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
+:root {
+    /* Tamaños fluidos: mínimo en móvil, máximo en escritorio */
+    --header-height: clamp(56px, 8vw, 70px);
+    --gap-root: clamp(32px, 8vh, 120px);
+    --gap-register: clamp(24px, 4vw, 39px);
+    --gap-form: clamp(12px, 2.5vw, 27px);
+
+    --fs-title: clamp(1.75rem, 5vw + 0.5rem, 2.25rem);
+    --fs-label: clamp(1rem, 1vw + 0.75rem, 1.25rem);
 }
 
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    color: black;
-    
-}
-
-.hr{
-    border: 1px solid rgb(0, 0, 0);
-}
-
-body{
-    background-color: var(--first-color);
-}
-
-
-/* GLOBAL LINKS*/
-
-a{
-    text-decoration: none;
-}
-
-#root{
+#root {
     display: flex;
     flex-direction: column;
-    gap: 120px;
-
+    gap: var(--gap-root);
+    padding-bottom: 40px;
 }
 
-/* HEADER  */
-#header{
-    height: 70px;
+/* REGISTER */
+
+#register {
     display: flex;
     flex-direction: column;
-    background-color: var(--third-color);
-}
+    /* 592px como máximo, con 16px de margen lateral en pantallas estrechas */
+    width: min(592px, 100% - 32px);
+    gap: var(--gap-register);
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 40px);
 
-div.links{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: inherit;
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 0 var(--fourth-color);
 
-    a{
-        height: 97px;
-    }
-
-    .main, .login{
-        color: var(--second-color);
-        &:hover{
-            background-color: var(--first-color);
-            color: var(--fourth-color);
-            /* border-radius: 0 10px 10px 0; */
-        }
-    }
-
-
-    .main{
-        padding:  34px 20px;
-        font-size: 24px;
-        &:hover{
-        background-color: var(--first-color);
-    }
-    }
-    .login{
-        padding: 34px 20px;
-        font-size: 20px;
-    }
-    
-}
-
-#header .hr{
-    margin-top: auto;
-}
-
-/* LOGIN */
-
-div#register{
-    display: flex;
-    flex-direction: column;
-    width: 592px;
-    gap: 39px;
-    margin: auto;
-
-    .label-register, .buttons{
+    .label-register {
         align-self: center;
     }
 }
 
-#registerForm{
+#registerForm {
     display: flex;
     flex-direction: column;
-    gap: 27px;    
+    gap: var(--gap-form);
 }
 
-#registerForm input{
-    height: 50px;
-    padding: 10px;
+/* Etiqueta pegada a su campo; el espacio grande va entre pares */
+#registerForm label + input {
+    margin-top: -8px;
 }
 
-#errorMessage.display{
+#registerForm label {
+    font-weight: 600;
+}
+
+#registerForm input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+
+    /* 16px como mínimo para que iOS no haga zoom al enfocar */
+    font-size: max(16px, 1rem);
+
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    background-color: var(--first-color);
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast), background-color var(--duration-fast);
+
+    &:hover {
+        border-color: var(--third-color);
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: var(--third-color);
+        background-color: var(--surface);
+        box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+    }
+
+}
+
+#errorMessage.display,
+#successMessage.display {
     display: none;
 }
 
-#errorMessage{
+#errorMessage,
+#successMessage {
     text-align: center;
-    padding: 20px;
-    border: 2px solid #ff3333;
-    background-color: rgb(255, 172, 172);
+    padding: clamp(12px, 3vw, 20px);
+    border-radius: var(--radius-md);
 }
 
-#errorMessage p{
+#errorMessage {
+    border: 3px solid var(--error-color);
+    background-color: var(--error-bg);
+}
+
+#successMessage {
+    border: 3px solid var(--success-color);
+    background-color: var(--success-bg);
+}
+
+#errorMessage p,
+#successMessage p {
     font-weight: bold;
-    color: #2f2d2d;
 }
 
-#successMessage.display{
-    display: none;
+#errorMessage p {
+    color: var(--error-color);
 }
 
-#successMessage{
-    text-align: center;
-    padding: 20px;
-    border: 2px solid #108600;
-    background-color: #1086001f;
+#successMessage p {
+    color: var(--success-color);
 }
 
-#successMessage p{
-    font-weight: bold;
-    color: #2f2d2d;
-}
-
-
-#register .buttons{
+/* Botones: en móvil uno debajo del otro, desde tablet lado a lado */
+#register .buttons {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 12px;
 }
 
-#register button{
-    width: 148px;
-    height: 44px;
-    
-    border-radius: 20px;
-    cursor: pointer;
-
-    &:hover{
-        background-color: var(--third-color);
-        color: var(--first-color);
-    }
-    
+/* El aspecto viene de .btn (common.css); aquí solo el tamaño */
+#register button {
+    min-height: 52px;
+    padding: 10px 28px;
 }
 
 /* FONT SIZES */
 
-#register{
-    .label-register{
-        font-size: 36px;
+#register {
+    .label-register {
+        font-size: var(--fs-title);
+        font-weight: 700;
     }
 
-    label, button{
-        font-size: 20px;
+    label,
+    button {
+        font-size: var(--fs-label);
     }
-
 }
 
+@media (min-width: 600px) {
+    #register .buttons {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    #register button {
+        min-width: 148px;
+    }
+}
+
+/* TODO > DETALLES */
+/* Destellos junto al título que se mueven al pasar el ratón por la tarjeta */
+#register .label-register::after {
+    content: "";
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 0.25em;
+    vertical-align: -0.1em;
+    background-color: var(--sunny-dark);
+    -webkit-mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+    mask: url("/assets/icons/sparkles.svg") center / contain no-repeat;
+}
+
+#register:hover .label-register::after {
+    animation: wiggle 700ms ease-in-out;
+}
+
+/* La tarjeta entra con un pequeño rebote */
+#register.fade-up {
+    animation-timing-function: var(--ease-spring);
+}
+/* ! FIN > DETALLES */

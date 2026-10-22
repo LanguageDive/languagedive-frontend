@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada · LanguageDive</title>
+    <!-- Rutas absolutas: esta página puede mostrarse en cualquier dirección que no exista -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Lexend:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/common.css">
+    <link rel="stylesheet" href="/status-page.css">
+</head>
+
+<body>
+
+    <!-- TODO > HEADER -->
+    <header id="header">
+        <nav id="header-links" aria-label="Principal">
+            <a class="logo" href="/">LanguageDive</a>
+
+            <div class="user-access">
+                <a href="/login/" class="guest-only">Iniciar sesión</a>
+                <a href="/register/" class="guest-only">Registrarse</a>
+                <a href="/library/" class="member-only hide">Mi biblioteca</a>
+            </div>
+        </nav>
+    </header>
+    <!-- ! FIN > HEADER -->
+
+    <main class="status-page">
+
+        <!-- Un "404" donde el 0 es una escotilla con Dive asomado buscando, y ondas de sonar (decorativo) -->
+        <div class="status-illustration" aria-hidden="true">
+            <svg viewBox="0 0 420 200">
+                <defs>
+                    <clipPath id="porthole-window">
+                        <circle cx="210" cy="100" r="54" />
+                    </clipPath>
+                </defs>
+
+                <!-- Ondas de sonar -->
+                <g fill="none" stroke="#1B6FD1" stroke-width="3">
+                    <circle class="anim-sonar" cx="210" cy="100" r="66" />
+                    <circle class="anim-sonar" cx="210" cy="100" r="66" />
+                    <circle class="anim-sonar" cx="210" cy="100" r="66" />
+                </g>
+
+                <!-- Los dos 4 -->
+                <g font-family="Fredoka, sans-serif" font-size="170" font-weight="700" fill="#1B6FD1" stroke="#1F2A4D"
+                    stroke-width="6" paint-order="stroke" text-anchor="middle">
+                    <text class="anim-digit" x="72" y="160">4</text>
+                    <text class="anim-digit" x="348" y="160">4</text>
+                </g>
+
+                <!-- Escotilla: agua por dentro y Dive asomado desde abajo -->
+                <circle cx="210" cy="100" r="54" fill="#CFE3FF" />
+                <g clip-path="url(#porthole-window)">
+                    <g class="anim-float">
+                        <ellipse cx="210" cy="140" rx="58" ry="46" fill="#1B6FD1" stroke="#1F2A4D" stroke-width="3" />
+                        <circle cx="172" cy="128" r="6" fill="#FF7A7A" opacity="0.6" />
+                        <circle cx="248" cy="128" r="6" fill="#FF7A7A" opacity="0.6" />
+                        <circle cx="192" cy="110" r="13" fill="#fff" stroke="#1F2A4D" stroke-width="2.5" />
+                        <circle cx="228" cy="110" r="13" fill="#fff" stroke="#1F2A4D" stroke-width="2.5" />
+                        <g class="anim-look">
+                            <circle cx="192" cy="112" r="6" fill="#1F2A4D" />
+                            <circle cx="194" cy="109.5" r="1.8" fill="#fff" />
+                            <circle cx="228" cy="112" r="6" fill="#1F2A4D" />
+                            <circle cx="230" cy="109.5" r="1.8" fill="#fff" />
+                        </g>
+                        <path d="M202 132 Q210 126 218 132" fill="none" stroke="#1F2A4D" stroke-width="3"
+                            stroke-linecap="round" />
+                    </g>
+                </g>
+                <!-- Marco metálico con tornillos -->
+                <circle cx="210" cy="100" r="56" fill="none" stroke="#9AA5B8" stroke-width="12" />
+                <circle cx="210" cy="100" r="62" fill="none" stroke="#1F2A4D" stroke-width="3" />
+                <circle cx="210" cy="100" r="50" fill="none" stroke="#1F2A4D" stroke-width="3" />
+                <g fill="#C9D1DE" stroke="#1F2A4D" stroke-width="2">
+                    <circle cx="210" cy="44" r="4" />
+                    <circle cx="266" cy="100" r="4" />
+                    <circle cx="210" cy="156" r="4" />
+                    <circle cx="154" cy="100" r="4" />
+                </g>
+            </svg>
+        </div>
+
+        <section class="status-card" aria-labelledby="status-title">
+            <span class="status-tag">Error 404</span>
+            <h1 id="status-title" class="status-title">Esta página se perdió en el fondo del mar</h1>
+            <p class="status-text">
+                Dive la buscó por todas partes, pero esta dirección no existe o cambió de lugar.
+                Revisa que esté bien escrita o vuelve a aguas conocidas.
+            </p>
+
+            <div class="status-actions">
+                <a href="/" class="btn btn-primary guest-only">Ir al inicio</a>
+                <a href="/library/" class="btn btn-primary member-only hide">Ir a mi biblioteca</a>
+                <a href="/vocabulary/" class="btn member-only hide">Ver mi grimorio</a>
+                <a href="/login/" class="btn guest-only">Iniciar sesión</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Arena y algas al fondo (decorativo) -->
+    <div class="status-seabed" aria-hidden="true">
+        <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice">
+            <path d="M0 110 Q150 80 300 104 T600 98 T900 108 T1200 92 V200 H0 Z" fill="#FBEFD6" />
+            <path d="M0 140 Q200 118 400 136 T800 132 T1200 138 V200 H0 Z" fill="#F4E1BC" />
+            <path class="seaweed" d="M60 200 C48 168 72 150 60 122 C50 100 68 82 60 58" fill="none" stroke="#2FBF71"
+                stroke-width="10" stroke-linecap="round" />
+            <path class="seaweed" d="M92 200 C84 176 102 160 93 138 C87 122 98 108 94 92" fill="none" stroke="#1E8C51"
+                stroke-width="9" stroke-linecap="round" />
+            <path class="seaweed" d="M1120 200 C1108 168 1132 150 1120 122 C1110 100 1128 82 1120 58" fill="none"
+                stroke="#2FBF71" stroke-width="10" stroke-linecap="round" />
+            <path d="M1060 200 V160 M1060 174 L1046 154 M1060 168 L1074 148" fill="none" stroke="#FF7A7A"
+                stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </div>
+
+    <script type="module" src="/status-page.js"></script>
+</body>
+
+</html>

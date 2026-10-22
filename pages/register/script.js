@@ -1,3 +1,6 @@
+import { setBusy } from '../loading.js';
+import { setupValidation, rules } from '../form-validation.js';
+
 const registerForm = document.querySelector('#registerForm')
 registerForm.addEventListener('submit',
     (event) => { printFieldsContent(event); }
@@ -5,8 +8,36 @@ registerForm.addEventListener('submit',
 
 const registerButton = document.querySelector("#registerButton");
 const cancelButton = document.querySelector("#cancelButton");
+cancelButton.addEventListener("click", () => location.assign("/login/"));
 
 const errorMessage = document.querySelector("#errorMessage");
+
+// Validación con mensajes propios (el formulario tiene novalidate).
+// Los límites son los que acepta la API (RegisterRequest)
+const registerValidation = setupValidation(registerForm, {
+    username: [
+        rules.required("Elige un nombre de usuario."),
+        rules.noSpaces("El nombre de usuario no puede tener espacios."),
+        rules.maxLength(255, "El nombre de usuario es demasiado largo (máximo 255 caracteres).")
+    ],
+    email: [
+        rules.required("Escribe tu correo electrónico."),
+        rules.email("Ese correo no parece válido. Revisa que tenga @ y un dominio, como nombre@correo.com."),
+        rules.maxLength(255, "El correo es demasiado largo (máximo 255 caracteres).")
+    ],
+    password: [
+        rules.required("Crea una contraseña."),
+        rules.minLength(8, "La contraseña necesita al menos 8 caracteres."),
+        rules.maxLength(255, "La contraseña es demasiado larga (máximo 255 caracteres).")
+    ],
+    rptPassword: [
+        rules.required("Repite tu contraseña."),
+        rules.matches("password", "Las contraseñas no coinciden. Escribe la misma en los dos campos.")
+    ]
+}, {
+    // Si cambia la contraseña, se vuelve a revisar la repetida
+    password: ["rptPassword"]
+});
 const successMessage = document.querySelector("#successMessage");
 let loginError = false;
 let loginSuccess = false;
@@ -21,6 +52,8 @@ function printFieldsContent(event) {
     //Evitar que el formulario se mande, de esta manera no se actualiza la pagina.
     event.preventDefault();
 
+    if (!registerValidation.validate()) return;
+
     let userRegistrationData = {}
 
     const inputs = registerForm.querySelectorAll("input");
@@ -31,11 +64,6 @@ function printFieldsContent(event) {
         userRegistrationData[`${fieldName}`] = fieldValue;
     }
 
-    if (userRegistrationData.password !== userRegistrationData.rptPassword) {
-        alert("Las contrasennias no coinciden");
-        return
-    }
-
     registerGet(userRegistrationData);
 }
 
@@ -44,6 +72,8 @@ async function registerGet(userRegistrationData) {
 
     //Crear función de timer para futura espera.
     const waitTimer = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    setBusy(registerButton, true);
 
     try {
         const response = await fetch('https://languagedive.bryanrodriguez.tech/api/auth/register', {
@@ -60,6 +90,7 @@ async function registerGet(userRegistrationData) {
         }).then(data => data);
 
         console.log("Usuario creado!\n", response);
+        setBusy(registerButton, false);
 
         successMessage.classList.toggle("display");
         loginSuccess = true;
@@ -83,6 +114,7 @@ async function registerGet(userRegistrationData) {
     catch (error) {
 
         console.log("Error al crear al usuario:", error);
+        setBusy(registerButton, false);
 
         if (loginSuccess) {
             successMessage.classList.toggle("display");

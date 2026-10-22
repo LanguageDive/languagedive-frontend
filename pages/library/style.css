@@ -1,174 +1,451 @@
+/*
+ * Mobile-first: los estilos base son para móvil y se amplían con
+ * tamaños fluidos (clamp/min) y media queries de min-width.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
 :root {
-    --first-color: #F9F7F7;
-    --second-color: #DBE2EF;
-    --third-color: #3F72AF;
-    --fourth-color: #112D4E;
+    /* Tamaños fluidos: mínimo en móvil, máximo en escritorio */
+    --page-gutter: clamp(16px, 4vw, 50px);
+    /* En móvil el hueco entre cards baja a 16px para que quepan dos */
+    --gap-cards: clamp(16px, 4vw, 70px);
+    --gap-sections: clamp(40px, 7vw, 70px);
+
+    --fs-title: clamp(1.625rem, 2.5vw + 0.875rem, 2.25rem);
+    --fs-text: clamp(1.125rem, 1.5vw + 0.5rem, 1.375rem);
+    --fs-card: clamp(0.9375rem, 0.5vw + 0.8rem, 1.1875rem);
+    --fs-card-small: clamp(0.75rem, 0.5vw + 0.625rem, 0.9375rem);
+
+    /* Ancho mínimo de card: 130px permite 2 cards por fila desde 320px
+       de pantalla (320 - 2*16 de margen - 16 de hueco = 272 → 2 x 136px).
+       Crece hasta 260px en escritorio para no meter demasiadas columnas */
+    --card-min-width: clamp(130px, 18vw, 260px);
 }
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    color: black;
+/* Registrada como <length> para que el JS lea el valor ya resuelto en px */
+@property --card-min-width {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 260px;
 }
-
-/* TODO> HEADER */
-#header {
-    height: 98px;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--third-color);
-}
-
-#header .hr {
-    margin-top: auto;
-}
-
-#header-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: inherit;
-}
-
-#header-links * {
-    color: var(--second-color);
-    text-decoration: none;
-    height: 100%;
-    padding: 0 20px;
-
-    display: flex;
-    align-items: center;
-}
-
-#header-links .main {
-    font-size: 24px;
-}
-
-#header-links .register {
-    font-size: 20px;
-}
-
-#header-links a:hover {
-    background-color: var(--first-color);
-    color: var(--fourth-color);
-}
-
-/* ! FIN HEADER */
 
 /* TODO> MAIN */
-#main-container{
-    margin: 22px 50px 0px;
+#main-container {
+    margin: clamp(28px, 4vw, 40px) var(--page-gutter) 48px;
 }
 
-#api-errors{
+/* TODO > IMPORTAR */
+/* Caja punteada tipo "suelta aquí tu libro": etiqueta y selector se apilan si no caben */
+#import-courses {
     width: fit-content;
-    margin: 0 auto;
+    max-width: 100%;
+    padding: 10px clamp(12px, 2vw, 20px);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+
+    background-color: var(--surface);
+    border: 3px dashed var(--third-color);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast), transform var(--duration-base) var(--ease-spring),
+        background-color var(--duration-fast);
+}
+
+#import-courses:hover,
+#import-courses:focus-within {
+    border-style: solid;
+    background-color: var(--second-color);
+    transform: scale(1.02);
 }
 
 #import-courses .import-label,
-#import-courses input{
-    font-size: 24px;
-    width: fit-content;
-    height: 47px;
-    padding: 10px;
+#import-courses input {
+    font-size: var(--fs-text);
+    min-height: 47px;
 }
 
-#all-courses{
-    margin-top: 25px;
+/* Ícono de libro delante de "Importar:" (decorativo, el texto no cambia) */
+#import-courses .import-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+#import-courses .import-label::before {
+    content: "";
+    width: 1.2em;
+    height: 1.2em;
+    background-color: var(--third-color);
+    -webkit-mask: url("/assets/icons/book.svg") center / contain no-repeat;
+    mask: url("/assets/icons/book.svg") center / contain no-repeat;
+    transition: transform var(--duration-base) var(--ease-spring);
+}
+
+#import-courses:hover .import-label::before {
+    animation: wiggle 600ms ease-in-out;
+}
+
+#import-courses input {
+    max-width: 100%;
+    font-size: var(--fs-card);
+}
+
+/* El botón del selector de archivo es un botón "3D" como los demás */
+#import-courses input::file-selector-button {
+    margin-right: 12px;
+    padding: 10px 18px;
+
+    font-family: var(--font-display);
+    font-size: var(--fs-card);
+    font-weight: 600;
+    color: #ffffff;
+    background-color: var(--third-color);
+    border: 2px solid var(--third-dark);
+    border-radius: 14px;
+    box-shadow: 0 4px 0 var(--third-dark);
+    cursor: pointer;
+
+    transition: transform var(--duration-press) ease-out, box-shadow var(--duration-press) ease-out,
+        background-color var(--duration-fast);
+}
+
+#import-courses input::file-selector-button:hover {
+    background-color: #2479DC;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--third-dark);
+}
+
+#import-courses input::file-selector-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--third-dark);
+}
+
+/* Estado "Importando…" con un círculo que gira mientras se sube el EPUB */
+.import-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fs-card);
+    font-weight: 600;
+    color: var(--third-color);
+}
+
+#import-courses.is-loading .import-status::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 3px solid var(--second-color);
+    border-top-color: var(--third-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+#import-courses.is-loading input {
+    opacity: 0.6;
+    pointer-events: none;
+}
+/* ! FIN > IMPORTAR */
+
+#all-courses {
+    margin-top: clamp(28px, 4vw, 40px);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.header{
+/* Cabecera de sección: título a la izquierda, acciones a la derecha;
+   en móvil las acciones pasan debajo si no hay sitio */
+.header {
     display: flex;
-    justify-content: space-between;
-}
-
-.header .title,
-#api-errors{
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.header .actions{
-    display: flex;
-    justify-content: space-between;
-    gap: 44px;
-}
-
-.header .actions *{
-font-size: 24px;
-}
-
-.cards{
-    margin-top: 10px;
-    padding: 17px 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 70px;
     flex-wrap: wrap;
-}
-
-.card{
-    margin-right: auto;
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    width: min-content;
-
-    cursor: pointer;
+    gap: 12px 24px;
 }
 
-.card .course-creation{
-    font-size: 16px;
+/* Título con un subrayado ondulado amarillo */
+.header .title {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    text-decoration: underline wavy var(--sunny) 3px;
+    text-underline-offset: 10px;
+    text-decoration-skip-ink: none;
 }
 
-.card .course-image{
-    border: solid black 2px;
-    border-radius: 36px 80px 36px 80px;
-    overflow: hidden;
-}
-
-.card img{
-    width: 280px;
-    height: 100%;
-}
-
-.card .course-info{
+.header .actions {
     display: flex;
-    gap: 20px;
-    font-size: 18px;
+    align-items: center;
+    gap: clamp(12px, 3vw, 32px);
+    font-size: var(--fs-text);
 }
 
-.card .course-info > div:last-child{
-    font-weight: bold;
+/* "Ver más" / "Ver menos" como una pastilla que se ilumina */
+.header .actions .see-more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+
+    font-family: var(--font-display);
+    font-size: inherit;
+    font-weight: 600;
+    color: var(--third-color);
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast),
+        transform var(--duration-fast) var(--ease-spring);
 }
 
-#in-progress-courses{
-    margin-top: 70px;
+.header .actions .see-more:hover {
+    color: var(--third-dark);
+    background-color: var(--second-color);
 }
 
-.hide{
+.header .actions .see-more:active {
+    transform: scale(0.95);
+}
+
+/* Abierto ("Ver menos"): queda marcado para que se note que la sección está desplegada */
+.header .actions .see-more[aria-expanded="true"] {
+    border-color: var(--third-color);
+    background-color: var(--second-color);
+}
+
+/* Paso de fila a cuadrícula (y al revés) con View Transitions: cada card se mueve
+   hasta su nuevo sitio de forma suave */
+::view-transition-group(*) {
+    animation-duration: 450ms;
+    animation-timing-function: var(--ease-out);
+}
+
+.btns-page-shift {
+    display: flex;
+    gap: 10px;
+}
+
+.btns-page-shift svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Cuadrícula de tarjetas: tantas columnas como quepan, cada una de
+   al menos 260px (o todo el ancho si la pantalla es más estrecha) */
+.cards {
+    margin-top: 10px;
+    /* Espacio para que la sombra y la inclinación de la card no se recorten */
+    padding: 20px 6px 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min-width), 100%), 1fr));
+    gap: var(--gap-cards);
+}
+
+/* Variante en una sola fila: las cards que no caben siguen a la derecha
+   ocultas y se navega por páginas con los botones (ver cards-pager.js).
+   --cards-per-page lo calcula el JS según el ancho disponible.
+   También se desplaza libremente con Shift + rueda del ratón, el trackpad
+   o deslizando el dedo en móvil; la barra de desplazamiento se oculta */
+.cards.paged {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--cards-per-page, 1) - 1) * var(--gap-cards)) / var(--cards-per-page, 1));
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
+
+.cards.paged::-webkit-scrollbar {
     display: none;
 }
 
-.no-courses-container{
-    margin: 0 auto;
+/* Sin cursos: el mensaje ocupa todo el ancho de la fila */
+.cards.paged:has(> .no-courses-container:not(.hide)) {
+    grid-auto-columns: 100%;
 }
 
-#error-message-container{
+/* TODO > CARD */
+/* Card tipo "pegatina": borde grueso y sombra sólida. Al pasar el ratón se
+   levanta y se inclina un poco (a un lado o al otro según su posición) */
+.card {
+    --tilt: -1.5deg;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 10px);
+    width: 100%;
+    max-width: 340px;
+    justify-self: center;
+    padding: clamp(10px, 1.5vw, 16px);
+
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sticker);
+
+    transition: transform var(--duration-base) var(--ease-spring), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.card:nth-child(even) {
+    --tilt: 1.5deg;
+}
+
+.card:hover,
+.card:focus-visible {
+    transform: translateY(-8px) rotate(var(--tilt));
+    box-shadow: 0 14px 0 var(--fourth-color);
+}
+
+.card:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--fourth-color);
+    transition-duration: var(--duration-press);
+}
+
+.card .course-creation {
+    font-size: var(--fs-card-small);
     text-align: center;
-    padding: 20px;
-    border: 2px solid #ff3333;
-    background-color: rgb(255, 172, 172);
+    color: var(--text-muted);
 }
 
-#error-message-container p{
-    font-weight: bold;
-    color: #2f2d2d;
+.card .course-image {
+    width: 100%;
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background-color: var(--second-color);
+}
+
+.card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* La portada se acerca y gira un poco al pasar el ratón por la card */
+.card:hover img,
+.card:focus-visible img {
+    transform: scale(1.1) rotate(2deg);
+}
+
+.card .course-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(4px, 1vw, 8px) clamp(10px, 2.5vw, 16px);
+    font-size: var(--fs-card);
+    text-align: center;
+}
+
+/* Títulos largos pasan a la línea siguiente en vez de desbordar */
+.card .course-name {
+    min-width: 0;
+    font-size: inherit;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* El separador se vuelve un puntito de color */
+.card .course-info hr {
+    width: 6px;
+    height: 6px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--sunny-dark);
+}
+
+/* Número de lecciones o progreso, como una etiqueta */
+.card .course-info > div:last-child {
+    padding: 2px 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--third-dark);
+    background-color: var(--second-color);
+    border-radius: 999px;
+}
+/* ! FIN > CARD */
+
+#in-progress-courses {
+    margin-top: var(--gap-sections);
+}
+
+/* El mensaje de "sin cursos" ocupa toda la fila de la cuadrícula,
+   con un libro que flota encima */
+.no-courses-container {
+    grid-column: 1 / -1;
+    margin: 0 auto;
+    padding: clamp(20px, 4vw, 36px) clamp(24px, 5vw, 56px);
+    text-align: center;
+
+    font-family: var(--font-display);
+    font-size: var(--fs-title);
+    font-weight: 600;
+    color: var(--third-dark);
+    background-color: var(--surface);
+    border: 3px dashed var(--border-soft);
+    border-radius: var(--radius-lg);
+    animation: pop-in var(--duration-slow) var(--ease-spring);
+}
+
+.no-courses-container::before {
+    content: "";
+    display: block;
+    width: 1.8em;
+    height: 1.8em;
+    margin: 0 auto 8px;
+    background-color: var(--third-color);
+    -webkit-mask: url("/assets/icons/books.svg") center / contain no-repeat;
+    mask: url("/assets/icons/books.svg") center / contain no-repeat;
+    animation: float 3s ease-in-out infinite;
+}
+
+#error-message-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: clamp(12px, 3vw, 20px);
+    text-align: center;
+
+    border: 3px solid var(--error-color);
+    border-radius: var(--radius-md);
+    background-color: var(--error-bg);
+}
+
+#error-message-container::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1.5em;
+    height: 1.5em;
+    background-color: var(--error-color);
+    -webkit-mask: url("/assets/icons/sad.svg") center / contain no-repeat;
+    mask: url("/assets/icons/sad.svg") center / contain no-repeat;
+}
+
+#error-message-container p {
+    font-weight: 600;
+    color: var(--error-color);
 }
 /* ! FIN MAIN */
+
+/* TODO > CARGA */
+/* Tarjeta de carga: misma forma que .card pero sin interacción */
+.card.skeleton-card {
+    pointer-events: none;
+    border-color: var(--border-soft);
+    box-shadow: 0 6px 0 var(--border-soft);
+}
+
+.skeleton-card .course-image-skeleton {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+}
+/* ! FIN > CARGA */

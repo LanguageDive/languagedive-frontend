@@ -1,196 +1,254 @@
-:root{
-    --first-color: #F9F7F7;
-    --second-color: #DBE2EF;
-    --third-color: #3F72AF;
-    --fourth-color: #112D4E;
+/*
+ * Mobile-first: los estilos base son para móvil y se amplían con
+ * tamaños fluidos (clamp/min) y media queries de min-width.
+ * Colores, cabecera, botones y animaciones comunes están en ../common.css.
+ */
+
+:root {
+    /* Tamaños fluidos: mínimo en móvil, máximo en escritorio */
+    --header-height: clamp(56px, 8vw, 70px);
+    /* Los espacios dependen de la altura de la pantalla (vh), no del ancho:
+       así todo el inicio de sesión cabe sin hacer scroll */
+    --gap-root: clamp(12px, 3.5vh, 44px);
+    --gap-login: clamp(14px, 2.4vh, 26px);
+    --gap-form: clamp(10px, 1.8vh, 18px);
+
+    --fs-title: clamp(1.75rem, 5vw + 0.5rem, 2.25rem);
+    --fs-label: clamp(1rem, 1vw + 0.75rem, 1.25rem);
+    --fs-text: clamp(1rem, 1vw + 0.75rem, 1.25rem);
 }
 
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    color: black;
-    
+.hr {
+    border: none;
+    border-top: 1px solid var(--second-color);
 }
 
-.hr{
-    border: 1px solid rgb(0, 0, 0);
+/* Dos filas: la cabecera y el resto de la pantalla. La tarjeta se centra en vertical
+   en la segunda fila (contando el espacio de la mascota, que va en su margen superior) */
+#root {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    row-gap: var(--gap-root);
+    padding-bottom: clamp(12px, 3vh, 32px);
 }
 
-body{
-    background-color: var(--first-color);
-}
-
-#root{
-    display: flex;
-    flex-direction: column;
-    gap: 139px;
-
-    
-}
-
-/* HEADER  */
-#header{
-    height: 70px;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--third-color);
-}
-
-div.links{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: inherit;
-
-    a{
-        height: 97px;
-    }
-
-    .main, .register{
-        color: var(--second-color);
-        &:hover{
-            background-color: var(--first-color);
-            color: var(--fourth-color);
-            border-radius: 0 10px 10px 0;
-        }
-    }
-
-
-    .main{
-        padding:  34px 20px;
-        font-size: 24px;
-        &:hover{
-        background-color: var(--first-color);
-    }
-    }
-    .register{
-        padding: 34px 20px;
-        font-size: 20px;
-    }
-    
-}
-
-#header .hr{
-    margin-top: auto;
+#root > #login {
+    align-self: center;
 }
 
 /* LOGIN */
 
-div#login{
+#login {
     display: flex;
     flex-direction: column;
-    width: 453px;
-    gap: 39px;
-    margin: auto;
+    /* 453px como máximo, con 16px de margen lateral en pantallas estrechas */
+    width: min(453px, 100% - 32px);
+    gap: var(--gap-login);
+    margin: 0 auto;
+    padding: clamp(20px, 3.5vh, 36px) clamp(20px, 5vw, 40px);
 
-    .label-login, 
+    background-color: var(--surface);
+    border: 3px solid var(--fourth-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 0 var(--fourth-color);
+
+    .label-login,
     .forgot-pwd,
-    .hr{
+    .hr {
         align-self: center;
     }
 }
 
-div#no-acc{
+/* "¿Olvidaste tu contraseña?" arriba y, tras la línea, "¿No tienes cuenta? Regístrate aquí"
+   en una sola fila (pasa a dos solo si no cabe) */
+#no-acc {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    gap: 39px;
+    gap: 0 6px;
+    text-align: center;
 }
 
-div#login .hr{
+#no-acc .forgot-pwd,
+#no-acc .hr {
+    flex-basis: 100%;
+    justify-content: center;
+}
+
+#login .hr {
     width: 80%;
+    flex-basis: 80%;
+    margin-block: clamp(4px, 1vh, 10px);
 }
 
-#loginForm{
+#loginForm {
     display: flex;
     flex-direction: column;
-    gap: 27px;    
+    gap: var(--gap-form);
 }
 
-#loginForm input{
-    height: 50px;
-    padding: 10px;
+/* Etiqueta pegada a su campo; el espacio grande va entre pares */
+#loginForm label + input {
+    margin-top: -8px;
 }
 
-#login button{
-    width: 148px;
-    height: 44px;
-    align-self: center;
-    
-    border-radius: 20px;
-    cursor: pointer;
+#loginForm label {
+    font-weight: 600;
+}
 
-    &:hover{
-        background-color: var(--third-color);
-        color: var(--first-color);
+#loginForm input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 15px;
+
+    /* 16px como mínimo para que iOS no haga zoom al enfocar */
+    font-size: max(16px, 1rem);
+
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    background-color: var(--first-color);
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast), background-color var(--duration-fast);
+
+    &:hover {
+        border-color: var(--third-color);
     }
-    
+
+    &:focus-visible {
+        outline: none;
+        border-color: var(--third-color);
+        background-color: var(--surface);
+        box-shadow: 0 0 0 4px rgb(27 111 209 / 0.2);
+    }
 }
 
-#login a:hover{
-    /* text-decoration: none; */
+/* El aspecto viene de .btn .btn-primary (common.css); aquí solo el tamaño */
+#login button {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px 28px;
+}
+
+/* Enlaces con área táctil de al menos 44px de alto */
+#no-acc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--third-color);
+    font-weight: 600;
+}
+
+#login a:hover {
     text-decoration: underline;
-    color: #3F72AF;
-
+    text-underline-offset: 4px;
 }
 
-#errorMessage.display{
+#errorMessage.display,
+#successMessage.display {
     display: none;
 }
 
-#errorMessage{
+#errorMessage,
+#successMessage {
     text-align: center;
-    padding: 20px;
-    border: 2px solid #ff3333;
-    background-color: rgb(255, 172, 172);
+    padding: clamp(12px, 3vw, 20px);
+    border-radius: var(--radius-md);
 }
 
-#errorMessage p{
+#errorMessage {
+    border: 3px solid var(--error-color);
+    background-color: var(--error-bg);
+}
+
+#successMessage {
+    border: 3px solid var(--success-color);
+    background-color: var(--success-bg);
+}
+
+#errorMessage p,
+#successMessage p {
     font-weight: bold;
-    color: #2f2d2d;
 }
 
-#successMessage.display{
-    display: none;
+#errorMessage p {
+    color: var(--error-color);
 }
 
-#successMessage{
-    text-align: center;
-    padding: 20px;
-    border: 2px solid #108600;
-    background-color: #1086001f;
+#successMessage p {
+    color: var(--success-color);
 }
-
-#successMessage p{
-    font-weight: bold;
-    color: #2f2d2d;
-}
-
-/* GLOBAL LINKS*/
-
-a{
-    text-decoration: none;
-}
-
 
 /* FONT SIZES */
 
-#login{
-    .label-login{
-        font-size: 36px;
+#login {
+    .label-login {
+        font-size: var(--fs-title);
+        font-weight: 700;
+        text-align: center;
     }
 
-    label{
-        font-size: 24px;
+    label {
+        font-size: var(--fs-label);
     }
 
-    button, 
+    button,
     .forgot-pwd,
     .no-acc.label,
-    .no-acc.register{
-        font-size: 20px;
+    .no-acc.register {
+        font-size: var(--fs-text);
     }
 }
 
+/* Desde tablet: botón con su ancho original y campos algo más altos */
+@media (min-width: 600px) {
+    #login button {
+        width: auto;
+        min-width: 148px;
+        align-self: center;
+    }
+
+    #loginForm input {
+        min-height: 50px;
+        font-size: 1.125rem;
+    }
+}
+
+/* TODO > DETALLES */
+/* Mano junto al título que saluda al pasar el ratón por la tarjeta */
+#login .label-login::after {
+    content: "";
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 0.25em;
+    vertical-align: -0.1em;
+    background-color: var(--third-color);
+    -webkit-mask: url("/assets/icons/wave.svg") center / contain no-repeat;
+    mask: url("/assets/icons/wave.svg") center / contain no-repeat;
+}
+
+#login:hover .label-login::after {
+    animation: wiggle 700ms ease-in-out;
+}
+
+/* La tarjeta entra con un pequeño rebote */
+#login.fade-up {
+    animation-timing-function: var(--ease-spring);
+}
+/* ! FIN > DETALLES */
+
+/* Pantallas bajas (muchas laptops): un poco más compacto para que quepa sin scroll */
+@media (max-height: 760px) {
+    #loginForm input {
+        min-height: 44px;
+    }
+
+    #login button {
+        min-height: 46px;
+    }
+
+    #login .label-login {
+        font-size: clamp(1.5rem, 4vw + 0.5rem, 1.875rem);
+    }
+}
