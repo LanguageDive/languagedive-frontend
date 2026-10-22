@@ -19,6 +19,30 @@ El front-end consume la API de LanguageDive: `https://languagedive.bryanrodrigue
 - **Grimorio**: lista de las palabras guardadas con su traducción y nivel.
 - **Página 404** propia.
 
+## 📸 Capturas
+
+> Las capturas usan datos de ejemplo (*Alice's Adventures in Wonderland*, de dominio público).
+
+**Landing**
+
+![Landing de LanguageDive](docs/screenshots/landing.png)
+
+**Biblioteca**
+
+![Biblioteca con los cursos importados](docs/screenshots/library.png)
+
+**Curso**
+
+![Detalle de un curso con sus lecciones y progreso](docs/screenshots/course.png)
+
+**Lector de lecciones**: al tocar una palabra se abre el panel con sugerencias de traducción y niveles.
+
+![Lector con el panel de una palabra abierto](docs/screenshots/lesson.png)
+
+**Grimorio**
+
+![Grimorio con las palabras guardadas y su nivel](docs/screenshots/vocabulary.png)
+
 ## 🛠️ Tecnologías
 
 - **HTML**: estructura de las páginas.
@@ -49,6 +73,7 @@ front-end/
 │   ├── effects.js          # Confeti y celebraciones
 │   ├── auth-scene.*        # Escena y mascota de login y registro
 │   └── status-page.*       # Estilos y lógica de las páginas 404 y Próximamente
+├── docs/screenshots/       # Capturas usadas en este README
 ├── wireframes/             # Bocetos de las pantallas
 ├── index.html / script.js  # Página de prueba de la API
 └── README.md
@@ -69,6 +94,19 @@ cd pages && python3 -m http.server 5503
 ```
 
 Luego abre `http://localhost:5503` en el navegador.
+
+## ⚠️ Limitaciones
+
+- **Sugerencias de traducción**: MyMemory permite unos 5.000 caracteres al día por IP. Al pasar el límite dejan de llegar sugerencias, pero se puede seguir escribiendo una traducción propia.
+- **Recuperar contraseña**: todavía no funciona; la página solo muestra *Próximamente*.
+- **Leer en voz alta**: depende de que el navegador soporte la síntesis de voz y tenga una voz para el idioma del libro.
+
+## 👥 Autores
+
+- **Jairo Cortés Morales**: Frontend · [jairocortes.cloud](https://jairocortes.cloud)
+- **Bryan Guadalupe Rodríguez Sánchez**: Backend · [bryanrodriguez.tech](https://bryanrodriguez.tech)
+
+El código del front y del back está en la organización [LanguageDive](https://github.com/LanguageDive) de GitHub.
 
 ## 🎨 Wireframes
 
